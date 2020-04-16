@@ -1,8 +1,8 @@
 {
-  "name": "pre-solace1",
+  "name": "intflask",
   "version": "1.0.0",
   "main": "index.js",
-  "repository": "https://github.com/aris-tech/pre-solace1.git",
+  "repository": "https://github.com/adarkchemist/intflask.git",
   "author": "Richard Ahn <richahn2@gmail.com>",
   "license": "MIT",
   "devDependencies": {

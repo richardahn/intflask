@@ -59,7 +59,7 @@ class Header extends Component {
                 to={homePageUrl}
                 className="col s5 brand-logo center black-text"
               >
-                <span style={{ letterSpacing: '10px' }}>SOLACE</span>
+                <span style={{ letterSpacing: '10px' }}>intflask</span>
               </Link>
 
               {/* Hamburger Menu Button */}
