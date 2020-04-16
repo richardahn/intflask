@@ -61,7 +61,6 @@ export function authenticateJwtFromLocalStorage() {
   return (dispatch) => {
     const { jwtToken: token } = localStorage;
     if (token) {
-      debugger;
       setAuthTokenOnHeader(token);
       const decodedToken = jwt_decode(token);
       dispatch(setCurrentUser(decodedToken));

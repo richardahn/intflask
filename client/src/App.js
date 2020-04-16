@@ -18,6 +18,7 @@ import Footer from './components/Footer';
 import Profile from './pages/Profile';
 import Search from './pages/Search';
 import CounselorSignupPrompt from './pages/CounselorSignupPrompt';
+import Notebook from './pages/Notebook';
 
 // -- Actions --
 import {
@@ -38,6 +39,7 @@ export default function App() {
           <Header />
           <Switch>
             <Route exact path="/" component={Welcome} />
+            <Route exact path="/notebook" component={Notebook} />
             <NonAuthenticatedRoute exact path="/login" component={Login} />
             <NonAuthenticatedRoute exact path="/signup" component={Signup} />
             <NonAuthenticatedRoute
