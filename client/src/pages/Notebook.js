@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { signupUser } from '../actions/auth';
 import classnames from 'classnames';
 import M from 'materialize-css';
-import Editor from '../components/Editor';
+import IntflaskEditor from '../components/IntflaskEditor';
 
 class Notebook extends Component {
   constructor(props) {
@@ -19,7 +19,7 @@ class Notebook extends Component {
           <div className="row">
             <div className="col s12">
               <h4>Editor</h4>
-              <Editor />
+              <IntflaskEditor />
             </div>
           </div>
         </div>
