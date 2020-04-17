@@ -8,6 +8,10 @@ const IntflaskEditor = {
     });
     return !!match;
   },
+  isMarkActive(editor, format) {
+    const marks = Editor.marks(editor); // Returns an object containing all non-text properties from the text nodes basically
+    return marks ? marks[format] === true : false;
+  },
   toggleBlock(editor, format) {
     const isActive = this.isBlockActive(editor, format);
     const isList = isListType(format);
@@ -26,10 +30,6 @@ const IntflaskEditor = {
       Transforms.wrapNodes(editor, block);
     }
   },
-  isMarkActive(editor, format) {
-    const marks = Editor.marks(editor); // Returns an object containing all non-text properties from the text nodes basically
-    return marks ? marks[format] === true : false;
-  },
   toggleMark(editor, format) {
     const isActive = this.isMarkActive(editor, format);
     if (isActive) {
@@ -37,21 +37,6 @@ const IntflaskEditor = {
     } else {
       Editor.addMark(editor, format, true);
     }
-  },
-  isBoldMarkActive(editor) {
-    const [match] = Editor.nodes(editor, {
-      match: (n) => n.bold === true,
-      universal: true,
-    });
-    return !!match;
-  },
-  toggleBoldMark(editor) {
-    const isBold = this.isBoldMarkActive(editor);
-    Transforms.setNodes(
-      editor,
-      { bold: isBold ? null : true },
-      { match: (n) => Text.isText(n), split: true },
-    );
   },
 };
 export default IntflaskEditor;

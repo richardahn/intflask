@@ -15,7 +15,7 @@ const HOTKEYS = {
   'mod+i': { block: NUMBERED_LIST },
   'mod+u': { block: BULLETED_LIST },
   'mod+`': { mark: CODE },
-  'mod+r': { block: HEADING_ONE },
+  'mod+r': { mark: BOLD },
   'mod+b': function () {
     alert('pressed');
   },
