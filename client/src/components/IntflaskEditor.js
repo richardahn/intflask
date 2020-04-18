@@ -4,6 +4,8 @@ import isHotkey from 'is-hotkey';
 import { Editable, withReact, useSlate, Slate } from 'slate-react';
 import { withHistory } from 'slate-history';
 
+import withShortcuts from '../utils/intflask-slate/shortcuts';
+
 import Element from '../utils/intflask-slate/element';
 import Leaf from '../utils/intflask-slate/leaf';
 
@@ -11,7 +13,10 @@ import keyDownHandler from '../utils/intflask-slate/keyDownHandler';
 
 export default function IntflaskEditor() {
   const [value, setValue] = useState(initialValue);
-  const editor = useMemo(() => withHistory(withReact(createEditor())), []);
+  const editor = useMemo(
+    () => withShortcuts(withHistory(withReact(createEditor()))),
+    [],
+  );
   const renderElement = useCallback((props) => <Element {...props} />, []);
   const renderLeaf = useCallback((props) => <Leaf {...props} />, []);
   const onKeyDown = useCallback((event) => keyDownHandler(event, editor), [
