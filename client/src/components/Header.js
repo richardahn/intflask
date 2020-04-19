@@ -34,6 +34,11 @@ class Header extends Component {
         auth: true,
       },
       {
+        name: 'Notebook',
+        to: '/notebook',
+        auth: true,
+      },
+      {
         name: 'Logout',
         to: '',
         onClick: this.onLogoutClick,
