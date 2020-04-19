@@ -30,7 +30,7 @@ export default function IntflaskEditor() {
         renderLeaf={renderLeaf}
         onKeyDown={onKeyDown}
         placeholder="Enter some rich text…"
-        spellCheck
+        spellCheck={false}
         autoFocus
       />
     </Slate>
