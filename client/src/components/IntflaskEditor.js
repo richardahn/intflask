@@ -1,15 +1,13 @@
-import React, { useEffect, useMemo, useState, useCallback } from 'react';
-import { Editor, Transforms, createEditor } from 'slate';
-import isHotkey from 'is-hotkey';
-import { Editable, withReact, useSlate, Slate } from 'slate-react';
+import React, { useMemo, useState, useCallback } from 'react';
+import { createEditor } from 'slate';
+import { Editable, withReact, Slate } from 'slate-react';
 import { withHistory } from 'slate-history';
 
+// Intflask Slate Tools
 import withShortcuts from '../utils/intflask-slate/shortcuts';
-
+import keyDownHandler from '../utils/intflask-slate/keyDownHandler';
 import Element from '../utils/intflask-slate/element';
 import Leaf from '../utils/intflask-slate/leaf';
-
-import keyDownHandler from '../utils/intflask-slate/keyDownHandler';
 
 export default function IntflaskEditor() {
   const [value, setValue] = useState(initialValue);

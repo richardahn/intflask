@@ -15,27 +15,8 @@ class Profile extends Component {
             </div>
             <div className="divider"></div>
             <div className="section" style={{ paddingBottom: '0' }}>
-              <h6>Background</h6>
-              <p>
-                This is my background and this is some text. This is my
-                background and this is some text. This is my background and this
-                is some text.
-              </p>
-            </div>
-            <div className="section" style={{ paddingTop: '0' }}>
-              <h6 style={{ marginBottom: '12px' }}>Worries</h6>
-              <div className="chip">
-                Jealousy
-                <i className="close material-icons">close</i>
-              </div>
-              <div className="chip">
-                Eating Disorder
-                <i className="close material-icons">close</i>
-              </div>
-              <div className="chip">
-                Ex-Girlfriend
-                <i className="close material-icons">close</i>
-              </div>
+              <h6>Statistics</h6>
+              <p>Here are some statistics on your notebook performance.</p>
             </div>
           </div>
         </div>
