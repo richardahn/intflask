@@ -14,24 +14,51 @@ function navigateDomNodesPath(tree, path) {
     domNode = domNode[path[i]].children;
   }
   domNode = domNode[path[path.length - 1]];
+  return domNode;
 }
+
+function Sideblock({ associatedDomNode, value }) {
+  const offsetTop = associatedDomNode.offsetTop;
+  const [divDom, setDivDom] = useState(null);
+  const divRef = useCallback((node) => setDivDom(node));
+  const [marginTop, setMarginTop] = useState(null);
+  useEffect(() => {
+    debugger;
+    if (divDom != null) {
+      if (divDom.offsetTop < offsetTop) {
+        setMarginTop(offsetTop - divDom.offsetTop);
+      } else if (marginTop != null) {
+        setMarginTop(null);
+      }
+    }
+  }, [divDom, offsetTop, value]);
+  debugger;
+  return (
+    <div style={{ marginTop, border: '1px solid black' }} ref={divRef}>
+      hi hi hi hi hi hi hi hi hi hi hi hi hi hi hi hi hi hi hi hi hi hi hi hi hi
+      hi hi hi hi hi hi hi hi hi hi hi hi hi hi hi hi hi hi hi hi hi hi hi hi hi
+      hi hi hi hi hi hi hi hi hi hi hi hi hi hi hi hi hi hi hi hi hi hi hi hi hi
+      hi hi hi hi hi hi hi hi hi hi hi hi hi hi hi hi hi hi hi hi hi hi hi hi hi
+      hi hi hi hi hi hi hi hi hi hi hi hi hi hi hi hi hi hi hi hi hi hi hi hi
+    </div>
+  );
+}
+
 // Manages sideblocks
 export default function Sideblocks({ editorDomNodes, ...rest }) {
   const editor = useSlate();
-  // Create tree hierarchy, which is what it is
-  // First sideblock is always 1st column
-  // Child sideblocks go to nth column
-  // Keep track of path
-  // As you get deeper, append to array, but COPY that array to recursive func
-  // Keep original array as the 'path', and then use that
   const start = Editor.start(editor, [0]);
   const end = Editor.end(editor, [editor.children.length - 1]);
   const range = { anchor: start, focus: end };
-  const sideblock = [
+
+  const sideblocks = [
     ...Editor.nodes(editor, {
       at: range,
       match: (n) => n.sideblock != null,
     }),
-  ];
-  return <div></div>;
+  ].map(([sideblock, path]) => {
+    const domNode = navigateDomNodesPath(editorDomNodes, path);
+    return <Sideblock associatedDomNode={domNode.node} value={sideblock} />;
+  });
+  return <div {...rest}>{sideblocks}</div>;
 }

@@ -57,7 +57,13 @@ function IntflaskEditor(props) {
           backgroundColor: 'lightblue',
         }}
       />
-      <Sideblocks className="col s6" editorDomNodes={editorDomNodes} />
+      {editorDomNodes.length > 0 && (
+        <Sideblocks
+          className="col s6"
+          editorDomNodes={editorDomNodes}
+          style={{ backgroundColor: 'red' }}
+        />
+      )}
     </Slate>
   );
 }
