@@ -28,13 +28,11 @@ const SHORTCUTS = {
 // HOC for the Slate editor
 export default function withShortcuts(editor) {
   const { deleteBackward, insertText } = editor;
-
   editor.insertText = (text) => {
     const { selection } = editor;
 
     // If I pressed ' ', which signals that there a possible shortcut is being created
     if (text === ' ' && selection && Range.isCollapsed(selection)) {
-      debugger;
       const { anchor } = selection;
 
       const block = Editor.above(editor, {

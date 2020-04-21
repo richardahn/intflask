@@ -1,4 +1,4 @@
-import { SET_EDITOR_STATE } from '../actions/editor';
+import { SET_EDITOR_STATE, SET_EDITOR_DOM_STATE } from '../actions/editor';
 
 const initialState = [
   {
@@ -26,20 +26,23 @@ const initialState = [
           ', or add a semantically rendered block quote in the middle of the page, like this:',
       },
     ],
-    sideblock: {
-      text: 'Since its rich text!',
-    },
   },
   {
     type: 'block-quote',
     children: [{ text: 'A wise quote.' }],
+    url: 'https',
+    sideblock: {
+      value: 'THIS BLOCKQUOTE 1',
+      children: [
+        {
+          value: 'THIS BLOCKQUOTE 2',
+        },
+      ],
+    },
   },
   {
     type: 'paragraph',
     children: [{ text: 'Try it out for yourself!' }],
-    sideblock: {
-      text: 'Since its rich text!',
-    },
   },
 ];
 export default function editor(state = initialState, action) {
