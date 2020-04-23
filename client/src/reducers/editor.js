@@ -30,26 +30,30 @@ const initialState = [
   {
     type: 'block-quote',
     children: [{ text: 'A wise quote.' }],
-    sideblock: {
-      text: 'THIS BLOCKQUOTE 1',
-      children: [
-        {
-          text: 'THIS BLOCKQUOTE 2',
-        },
-      ],
-    },
+    sideblock: [
+      {
+        text: 'THIS BLOCKQUOTE 1',
+        children: [
+          {
+            text: 'THIS BLOCKQUOTE 2',
+          },
+        ],
+      },
+    ],
   },
   {
     type: 'paragraph',
     children: [{ text: 'Try it out for yourself!' }],
-    sideblock: {
-      text: 'THIS paragraph 1',
-      children: [
-        {
-          text: 'THIS paragraph 2',
-        },
-      ],
-    },
+    sideblock: [
+      {
+        text: 'THIS paragraph 1',
+        children: [
+          {
+            text: 'THIS paragraph 2',
+          },
+        ],
+      },
+    ],
   },
 ];
 export default function editor(state = initialState, action) {

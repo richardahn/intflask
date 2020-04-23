@@ -12,6 +12,10 @@ const IntflaskEditor = {
     const marks = Editor.marks(editor); // Returns an object containing all non-text properties from the text nodes basically
     return marks ? marks[format] === true : false;
   },
+  isPropertyActive(editor, property) {
+    const [match] = Editor.nodes(editor, { match: (n) => n[property] != null });
+    return !!match;
+  },
   toggleBlock(editor, format) {
     const isActive = this.isBlockActive(editor, format);
     const isList = isListType(format);
@@ -37,6 +41,12 @@ const IntflaskEditor = {
     } else {
       Editor.addMark(editor, format, true);
     }
+  },
+  toggleProperty(editor, property, propertyValue) {
+    const isActive = this.isPropertyActive(editor, property);
+    Transforms.setNodes(editor, {
+      [property]: isActive ? null : propertyValue,
+    });
   },
 };
 export default IntflaskEditor;
