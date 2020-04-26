@@ -8,16 +8,16 @@ function calculatePosition(node) {
   const nodeRect = node.getBoundingClientRect();
   const parentNodeRect = node.offsetParent.getBoundingClientRect();
   return {
-    global: {
-      x: nodeRect.x,
-      y: nodeRect.y,
-      width: nodeRect.width,
-      height: nodeRect.height,
-      top: nodeRect.top,
-      right: nodeRect.right,
-      bottom: nodeRect.bottom,
-      left: nodeRect.left,
-    },
+    // global: {
+    //   x: nodeRect.x,
+    //   y: nodeRect.y,
+    //   width: nodeRect.width,
+    //   height: nodeRect.height,
+    //   top: nodeRect.top,
+    //   right: nodeRect.right,
+    //   bottom: nodeRect.bottom,
+    //   left: nodeRect.left,
+    // },
     relative: {
       x: nodeRect.x - parentNodeRect.x,
       y: nodeRect.y - parentNodeRect.y,
@@ -31,13 +31,12 @@ function calculatePosition(node) {
   };
 }
 
-// Requires the element to have position: true
 export function withPosition(Component) {
   const NewComponent = ({ children, editor, ...props }) => {
     const windowSize = useWindowSize();
     const { dispatch } = useStateToDom();
     const { element: slateElement } = props;
-    const shouldCalculatePosition = !!slateElement.position;
+    const shouldCalculatePosition = !!slateElement.position; // Requires the element to have position: true
     const [position, setPosition] = useState({
       global: null,
       relative: null,

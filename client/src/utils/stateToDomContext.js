@@ -16,7 +16,7 @@ export function StateToDomProvider({ children }) {
       case SET_MAPPING:
         const { map } = state;
         map.set(action.key, action.value);
-        return { map };
+        return { map, ...state };
       default:
         throw new Error();
     }

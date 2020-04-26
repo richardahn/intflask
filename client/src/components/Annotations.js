@@ -16,7 +16,11 @@ export default function Annotations(props) {
   console.log('  Rendering Annotations');
   const annotations = getMappedNodes(editor, state.map).map(
     ({ node, position }) => {
-      return <div>Node at position {position.relative.y}</div>;
+      return (
+        <div style={{ position: 'absolute', top: position.relative.top }}>
+          Text: {node.sideblock[0].text}
+        </div>
+      );
     },
   );
   return <div {...props}>{annotations}</div>;

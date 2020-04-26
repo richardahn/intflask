@@ -33,7 +33,8 @@ const initialState = [
     position: true,
     sideblock: [
       {
-        text: 'THIS BLOCKQUOTE 1',
+        text:
+          'THIS BLOCKQUOTE 1 THIS BLOCKQUOTE 1 THIS BLOCKQUOTE 1 THIS BLOCKQUOTE 1 THIS BLOCKQUOTE 1 THIS BLOCKQUOTE 1 THIS BLOCKQUOTE 1 THIS BLOCKQUOTE 1 THIS BLOCKQUOTE 1 THIS BLOCKQUOTE 1 THIS BLOCKQUOTE 1 THIS BLOCKQUOTE 1 THIS BLOCKQUOTE 1 THIS BLOCKQUOTE 1 THIS BLOCKQUOTE 1 THIS BLOCKQUOTE 1 THIS BLOCKQUOTE 1 THIS BLOCKQUOTE 1 THIS BLOCKQUOTE 1 THIS BLOCKQUOTE 1 THIS BLOCKQUOTE 1 ',
         children: [
           {
             text: 'THIS BLOCKQUOTE 2',
@@ -45,6 +46,7 @@ const initialState = [
   {
     type: 'paragraph',
     children: [{ text: 'Try it out for yourself!' }],
+    position: true,
     sideblock: [
       {
         text: 'THIS paragraph 1',

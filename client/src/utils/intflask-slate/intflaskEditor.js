@@ -42,10 +42,17 @@ const IntflaskEditor = {
       Editor.addMark(editor, format, true);
     }
   },
-  toggleProperty(editor, property, propertyValue) {
+  toggleProperty(editor, property, createPropertyValue) {
     const isActive = this.isPropertyActive(editor, property);
+    let propertyValue = null;
+    if (!isActive) {
+      const block = Editor.nodes(editor, {
+        match: (n) => Editor.isBlock(editor, n),
+      });
+      propertyValue = createPropertyValue(block);
+    }
     Transforms.setNodes(editor, {
-      [property]: isActive ? null : propertyValue,
+      [property]: propertyValue,
     });
   },
   getAllNodes(editor) {
