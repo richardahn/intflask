@@ -48,5 +48,12 @@ const IntflaskEditor = {
       [property]: isActive ? null : propertyValue,
     });
   },
+  getAllNodes(editor) {
+    const lastRowIndex = editor.children.length - 1;
+    const start = Editor.start(editor, [0]);
+    const end = Editor.end(editor, [lastRowIndex]);
+    const range = { anchor: start, focus: end };
+    return [...Editor.nodes(editor, { at: range })];
+  },
 };
 export default IntflaskEditor;

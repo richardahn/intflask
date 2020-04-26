@@ -10,14 +10,11 @@ import {
 } from './element';
 import { BOLD, ITALIC, UNDERLINE, CODE } from './leaf';
 
-import { SIDEBLOCK } from './sideblockElement';
-
 // todo: allow hotkeys from multiple sources by destructuring and restructuring
 const HOTKEYS = {
   'mod+u': { block: BULLETED_LIST },
   'mod+`': { mark: CODE },
   'mod+b': { mark: BOLD },
-  'mod+i': { property: SIDEBLOCK, value: 'default text' },
   'mod+r': function () {
     alert('pressed');
   },

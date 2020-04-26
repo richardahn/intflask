@@ -1,7 +1,5 @@
 import React from 'react';
 
-import Sideblock from './sideblockElement';
-
 export const BLOCK_QUOTE = 'block-quote';
 export const NUMBERED_LIST = 'numbered-list';
 export const BULLETED_LIST = 'bulleted-list';
@@ -20,9 +18,6 @@ export function isListType(type) {
 }
 
 export default function Element({ attributes, children, element }) {
-  if (element.sideblock != null) {
-    children = <Sideblock element={element}>{children}</Sideblock>;
-  }
   switch (element.type) {
     case BLOCK_QUOTE:
       return <blockquote {...attributes}>{children}</blockquote>;

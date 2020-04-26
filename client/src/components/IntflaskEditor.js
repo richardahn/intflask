@@ -11,6 +11,9 @@ import { Editable, withReact, Slate, useSlate } from 'slate-react';
 import { withHistory } from 'slate-history';
 import { connect } from 'react-redux';
 
+// Components
+import Annotations from './Annotations';
+
 // Redux
 import { setEditorState } from '../actions/editor';
 
@@ -21,8 +24,12 @@ import keyDownHandler from '../utils/intflask-slate/keyDownHandler';
 import Element from '../utils/intflask-slate/element';
 import Leaf from '../utils/intflask-slate/leaf';
 
-// Canvas
-import Canvas, { CanvasProvider } from '../utils/canvas';
+// DOM
+import { withPosition } from '../utils/hocs/dom';
+import { StateToDomProvider } from '../utils/stateToDomContext';
+
+// Initialize
+const ElementWithPosition = withPosition(Element);
 
 function IntflaskEditor(props) {
   const editor = useMemo(
@@ -31,7 +38,10 @@ function IntflaskEditor(props) {
     [],
   );
   // Make an HOC that goes on top of Element and pass in the setCanvasState function
-  const renderElement = useCallback((props) => <Element {...props} />, []);
+  const renderElement = useCallback(
+    (props) => <ElementWithPosition {...props} />,
+    [],
+  );
   const renderLeaf = useCallback((props) => <Leaf {...props} />, []);
   const onKeyDown = useCallback((event) => keyDownHandler(event, editor), [
     editor,
@@ -44,7 +54,7 @@ function IntflaskEditor(props) {
         value={props.editor}
         onChange={(value) => props.setEditorState(value)}
       >
-        <CanvasProvider>
+        <StateToDomProvider>
           <Editable
             renderElement={renderElement}
             renderLeaf={renderLeaf}
@@ -57,8 +67,8 @@ function IntflaskEditor(props) {
               backgroundColor: 'lightblue',
             }}
           />
-          <Canvas className="col s6" />
-        </CanvasProvider>
+          <Annotations className="col s6" />
+        </StateToDomProvider>
       </Slate>
     </div>
   );
