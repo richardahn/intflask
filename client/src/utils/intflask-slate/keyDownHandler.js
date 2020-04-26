@@ -12,11 +12,10 @@ import { BOLD, ITALIC, UNDERLINE, CODE } from './leaf';
 
 // todo: allow hotkeys from multiple sources by destructuring and restructuring
 const HOTKEYS = {
-  'mod+i': { block: NUMBERED_LIST },
   'mod+u': { block: BULLETED_LIST },
   'mod+`': { mark: CODE },
-  'mod+r': { mark: BOLD },
-  'mod+b': function () {
+  'mod+b': { mark: BOLD },
+  'mod+r': function () {
     alert('pressed');
   },
 };
@@ -41,6 +40,9 @@ function processCommand(editor, command) {
     }
     if (command.block != null) {
       IntflaskEditor.toggleBlock(editor, command.block);
+    }
+    if (command.property != null) {
+      IntflaskEditor.toggleProperty(editor, command.property, command.value);
     }
   } else if (typeof command === 'function') {
     command(editor);

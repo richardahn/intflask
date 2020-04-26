@@ -1,73 +1,86 @@
-import React, { useMemo, useState, useCallback } from 'react';
-import { createEditor } from 'slate';
-import { Editable, withReact, Slate } from 'slate-react';
+import React, {
+  useMemo,
+  useState,
+  useCallback,
+  useRef,
+  useEffect,
+  useContext,
+} from 'react';
+import { Editor, createEditor } from 'slate';
+import { Editable, withReact, Slate, useSlate } from 'slate-react';
 import { withHistory } from 'slate-history';
+import { connect } from 'react-redux';
+
+// Components
+import Annotations from './Annotations';
+
+// Redux
+import { setEditorState } from '../actions/editor';
 
 // Intflask Slate Tools
 import withShortcuts from '../utils/intflask-slate/shortcuts';
+import withDefaultInsert from '../utils/intflask-slate/defaultInsert';
 import keyDownHandler from '../utils/intflask-slate/keyDownHandler';
 import Element from '../utils/intflask-slate/element';
 import Leaf from '../utils/intflask-slate/leaf';
 
-export default function IntflaskEditor() {
-  const [value, setValue] = useState(initialValue);
+// DOM
+import { withPosition } from '../utils/hocs/dom';
+import { StateToDomProvider } from '../utils/stateToDomContext';
+
+// Initialize
+const ElementWithPosition = withPosition(Element);
+
+function IntflaskEditor(props) {
   const editor = useMemo(
-    () => withShortcuts(withHistory(withReact(createEditor()))),
+    () =>
+      withDefaultInsert(withShortcuts(withHistory(withReact(createEditor())))),
     [],
   );
-  const renderElement = useCallback((props) => <Element {...props} />, []);
+  // Make an HOC that goes on top of Element and pass in the setCanvasState function
+  const renderElement = useCallback(
+    (props) => <ElementWithPosition {...props} />,
+    [],
+  );
   const renderLeaf = useCallback((props) => <Leaf {...props} />, []);
   const onKeyDown = useCallback((event) => keyDownHandler(event, editor), [
     editor,
   ]);
 
   return (
-    <Slate editor={editor} value={value} onChange={(value) => setValue(value)}>
-      <Editable
-        renderElement={renderElement}
-        renderLeaf={renderLeaf}
-        onKeyDown={onKeyDown}
-        placeholder="Enter some rich text…"
-        spellCheck={false}
-        autoFocus
-      />
-    </Slate>
+    <div style={{ position: 'relative' }}>
+      <Slate
+        editor={editor}
+        value={props.editor}
+        onChange={(value) => props.setEditorState(value)}
+      >
+        <StateToDomProvider>
+          <Editable
+            renderElement={renderElement}
+            renderLeaf={renderLeaf}
+            onKeyDown={onKeyDown}
+            placeholder="Enter some rich text…"
+            spellCheck={false}
+            autoFocus
+            className="col s6"
+            style={{
+              backgroundColor: 'lightblue',
+            }}
+          />
+          <Annotations className="col s6" />
+        </StateToDomProvider>
+      </Slate>
+    </div>
   );
 }
 
-const initialValue = [
-  {
-    type: 'paragraph',
-    children: [
-      { text: 'This is editable ' },
-      { text: 'rich', bold: true },
-      { text: ' text, ' },
-      { text: 'much', italic: true },
-      { text: ' better than a ' },
-      { text: '<textarea>', code: true },
-      { text: '!' },
-    ],
-  },
-  {
-    type: 'paragraph',
-    children: [
-      {
-        text:
-          "Since it's rich text, you can do things like turn a selection of text ",
-      },
-      { text: 'bold', bold: true },
-      {
-        text:
-          ', or add a semantically rendered block quote in the middle of the page, like this:',
-      },
-    ],
-  },
-  {
-    type: 'block-quote',
-    children: [{ text: 'A wise quote.' }],
-  },
-  {
-    type: 'paragraph',
-    children: [{ text: 'Try it out for yourself!' }],
-  },
-];
+// Maps store state to props
+const mapStateToProps = (state) => ({
+  editor: state.editor,
+});
+
+const mapDispatchToProps = {
+  setEditorState,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(IntflaskEditor);
