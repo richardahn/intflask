@@ -16,7 +16,7 @@ export default function Annotations(props) {
   console.log('  Rendering Annotations');
   const annotations = getMappedNodes(editor, state.map).map(
     ({ node, position }) => {
-      return <div>Node at position {position.global.y}</div>;
+      return <div>Node at position {position.relative.y}</div>;
     },
   );
   return <div {...props}>{annotations}</div>;

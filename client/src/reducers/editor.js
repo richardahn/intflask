@@ -30,6 +30,7 @@ const initialState = [
   {
     type: 'block-quote',
     children: [{ text: 'A wise quote.' }],
+    position: true,
     sideblock: [
       {
         text: 'THIS BLOCKQUOTE 1',
