@@ -2,8 +2,10 @@ import React, { useState, useCallback } from 'react';
 import { useWindowSize } from '../hooks/window';
 import { useStateToDom, SET_MAPPING } from '../stateToDomContext';
 
+import { connect } from 'react-redux';
+
 export function withPosition(Component) {
-  return ({ children, ...props }) => {
+  const NewComponent = ({ children, editor, ...props }) => {
     const windowSize = useWindowSize();
     const { dispatch } = useStateToDom();
     const { element: slateElement } = props;
@@ -44,7 +46,7 @@ export function withPosition(Component) {
         setPosition(newPosition);
         dispatch({ type: SET_MAPPING, key: slateElement, value: newPosition });
       },
-      [windowSize, slateElement],
+      [windowSize, slateElement, editor],
     );
 
     return (
@@ -55,4 +57,10 @@ export function withPosition(Component) {
       </div>
     );
   };
+
+  const mapStateToProps = (state) => ({
+    editor: state.editor,
+  });
+
+  return connect(mapStateToProps)(NewComponent);
 }
