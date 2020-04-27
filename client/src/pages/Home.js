@@ -2,11 +2,13 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
+import { Container, Typography } from '@material-ui/core';
+
 function Greeting({ user }) {
   return (
-    <h5>
+    <Typography variant="h5">
       Hello, <b>{user.name.split(' ')[0]}</b>
-    </h5>
+    </Typography>
   );
 }
 
@@ -19,16 +21,9 @@ class Home extends Component {
     const { user } = this.props.auth;
 
     return (
-      <div className="container valign-wrapper" style={{ height: '75vh' }}>
-        <div className="row">
-          <div
-            className="col s12 center-align"
-            style={{ marginBottom: '25px' }}
-          >
-            <Greeting user={user} />
-          </div>
-        </div>
-      </div>
+      <Container maxWidth="false">
+        <Greeting user={user} />
+      </Container>
     );
   }
 }

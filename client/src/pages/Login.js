@@ -1,17 +1,29 @@
 /** @jsx jsx */
 import { Component } from 'react';
-import { Link } from 'react-router-dom';
+import { Link as RouterLink } from 'react-router-dom';
+import {
+  Link,
+  Box,
+  TextField,
+  Typography,
+  Grid,
+  Container,
+  Paper,
+  Divider,
+  Button,
+} from '@material-ui/core';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { loginUser } from '../actions/auth';
 import classnames from 'classnames';
 import { css, jsx } from '@emotion/core';
+import PersonIcon from '@material-ui/icons/Person';
 
 const googleButtonStyle = css`
   -webkit-tap-highlight-color: transparent;
   text-decoration: none;
   display: inline-block;
-  max-width: 300px;
+  max-width: 195px;
   margin-top: 50px;
   border: 0;
   padding: 0 18px;
@@ -24,7 +36,7 @@ const googleButtonStyle = css`
   -moz-font-feature-settings: 'liga' on;
   color: rgba(0, 0, 0, 0.84) !important;
   fill: rgba(0, 0, 0, 0.84) !important;
-  box-shadow: 0 1px 7px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 1px 7px rgba(0, 0, 0, 0.2);
   font: inherit;
   outline: none;
 `;
@@ -75,54 +87,48 @@ function GoogleLoginButton(props) {
 function LoginForm({ onSubmit, onInputChange, email, password, errors }) {
   return (
     <form noValidate onSubmit={onSubmit}>
-      <div className="input-field col s12">
-        <input
+      <Box style={{ width: '400px' }}>
+        <TextField
           onChange={onInputChange}
           value={email}
           error={errors.email}
+          label="Email"
           id="email"
           type="email"
+          color="inherit"
+          fullWidth
+          margin="normal"
           className={classnames({
             invalid: errors.email || errors.emailnotfound,
           })}
         />
-        <label htmlFor="email">Email</label>
-        <span className="red-text">
+        <Typography variant="span" style={{ display: 'block', color: 'red' }}>
           {errors.email}
           {errors.emailnotfound}
-        </span>
-      </div>
-      <div className="input-field col s12">
-        <input
+        </Typography>
+        <TextField
           onChange={onInputChange}
           value={password}
           error={errors.password}
+          label="Password"
           id="password"
+          fullWidth
           type="password"
+          color="inherit"
           className={classnames({
             invalid: errors.password || errors.passwordincorrect,
           })}
         />
-        <label htmlFor="password">Password</label>
-        <span className="red-text">
+        <Typography variant="span" style={{ display: 'block', color: 'red' }}>
           {errors.password}
           {errors.passwordincorrect}
-        </span>
-      </div>
-      <div className="col s12" style={{ paddingLeft: '11.25px' }}>
-        <button
-          style={{
-            width: '150px',
-            borderRadius: '3px',
-            letterSpacing: '1.5px',
-            marginTop: '1rem',
-          }}
-          type="submit"
-          className="btn btn-large waves-effect waves-light hoverable blue accent-3"
-        >
-          Login
-        </button>
-      </div>
+        </Typography>
+        <Box mt={3}>
+          <Button type="submit" variant="contained" color="primary">
+            Login
+          </Button>
+        </Box>
+      </Box>
     </form>
   );
 }
@@ -172,31 +178,35 @@ class Login extends Component {
 
   render() {
     return (
-      <div className="container">
-        <div className="row">
-          <div className="col s8 offset-s2">
-            <Link to="/" className="btn-flat waves-effect">
-              <i className="material-icons left">keyboard_backspace</i> Back
-            </Link>
-            <div className="col s12" style={{ paddingLeft: '11.25px' }}>
-              <h3>Login</h3>
-              <p className="grey-text text-darken-1">
-                Don't have an account? <Link to="/signup">Sign Up</Link>
-              </p>
-            </div>
-            <LoginForm
-              onSubmit={this.onFormSubmit}
-              onInputChange={this.onInputChange}
-              email={this.state.email}
-              password={this.state.password}
-              errors={this.state.errors}
-            />
-            <div className="col s12">
-              <GoogleLoginButton />
-            </div>
-          </div>
-        </div>
-      </div>
+      <Container>
+        <Paper variant="outlined">
+          <Box p={3}>
+            <Grid container spacing={3}>
+              <Grid item xs={12}>
+                <Typography variant="h4">Login</Typography>
+                <Typography variant="p">
+                  Don't have an account?{' '}
+                  <Link to="/signup" component={RouterLink}>
+                    Sign Up
+                  </Link>
+                </Typography>
+              </Grid>
+              <Grid item xs={12}>
+                <LoginForm
+                  onSubmit={this.onFormSubmit}
+                  onInputChange={this.onInputChange}
+                  email={this.state.email}
+                  password={this.state.password}
+                  errors={this.state.errors}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <GoogleLoginButton />
+              </Grid>
+            </Grid>
+          </Box>
+        </Paper>
+      </Container>
     );
   }
 }

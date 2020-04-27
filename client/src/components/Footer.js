@@ -1,20 +1,21 @@
 import React, { Component } from 'react';
+import { Box, Typography } from '@material-ui/core';
 
 const currentYear = new Date().getFullYear();
 
+function Copyright() {
+  return (
+    <Typography variant="body2" color="textSecondary" align="center">
+      © {currentYear} Copyright
+    </Typography>
+  );
+}
 class Footer extends Component {
   render() {
     return (
-      <footer className="page-footer white">
-        <div
-          className="footer-copyright right white"
-          style={{ marginRight: '10px' }}
-        >
-          <div className="container black-text" style={{ width: '100%' }}>
-            © {currentYear} Copyright
-          </div>
-        </div>
-      </footer>
+      <Box p={2}>
+        <Copyright />
+      </Box>
     );
   }
 }
