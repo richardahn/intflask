@@ -88,41 +88,49 @@ function LoginForm({ onSubmit, onInputChange, email, password, errors }) {
   return (
     <form noValidate onSubmit={onSubmit}>
       <Box style={{ width: '400px' }}>
-        <TextField
-          onChange={onInputChange}
-          value={email}
-          error={errors.email}
-          label="Email"
-          id="email"
-          type="email"
-          color="inherit"
-          fullWidth
-          margin="normal"
-          className={classnames({
-            invalid: errors.email || errors.emailnotfound,
-          })}
-        />
-        <Typography variant="span" style={{ display: 'block', color: 'red' }}>
-          {errors.email}
-          {errors.emailnotfound}
-        </Typography>
-        <TextField
-          onChange={onInputChange}
-          value={password}
-          error={errors.password}
-          label="Password"
-          id="password"
-          fullWidth
-          type="password"
-          color="inherit"
-          className={classnames({
-            invalid: errors.password || errors.passwordincorrect,
-          })}
-        />
-        <Typography variant="span" style={{ display: 'block', color: 'red' }}>
-          {errors.password}
-          {errors.passwordincorrect}
-        </Typography>
+        <Box>
+          <TextField
+            onChange={onInputChange}
+            value={email}
+            error={!!errors.email || !!errors.emailnotfound}
+            label="Email"
+            id="email"
+            type="email"
+            fullWidth
+            margin="normal"
+            className={classnames({
+              invalid: errors.email || errors.emailnotfound,
+            })}
+          />
+          <Typography
+            variant="caption"
+            style={{ display: 'block', color: 'red' }}
+          >
+            {errors.email}
+            {errors.emailnotfound}
+          </Typography>
+        </Box>
+        <Box>
+          <TextField
+            onChange={onInputChange}
+            value={password}
+            error={!!errors.password}
+            label="Password"
+            id="password"
+            fullWidth
+            type="password"
+            className={classnames({
+              invalid: errors.password || errors.passwordincorrect,
+            })}
+          />
+          <Typography
+            variant="caption"
+            style={{ display: 'block', color: 'red' }}
+          >
+            {errors.password}
+            {errors.passwordincorrect}
+          </Typography>
+        </Box>
         <Box mt={3}>
           <Button type="submit" variant="contained" color="primary">
             Login
@@ -178,13 +186,13 @@ class Login extends Component {
 
   render() {
     return (
-      <Container>
+      <Container component={Box} pt={3}>
         <Paper variant="outlined">
           <Box p={3}>
             <Grid container spacing={3}>
               <Grid item xs={12}>
-                <Typography variant="h4">Login</Typography>
-                <Typography variant="p">
+                <Typography variant="h5">Login</Typography>
+                <Typography variant="caption">
                   Don't have an account?{' '}
                   <Link to="/signup" component={RouterLink}>
                     Sign Up

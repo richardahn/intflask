@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, useEffect } from 'react';
 import { Route, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 
@@ -9,9 +9,15 @@ function PrivateRoute({
   redirect = '/login',
   auth,
   userNotLoggedIn,
+  notLoggedInMessage = 'You are not logged in.',
   ...rest
 }) {
   const { enqueueSnackbar } = useSnackbar();
+  useEffect(() => {
+    if (!auth.isAuthenticated) {
+      enqueueSnackbar(notLoggedInMessage); // Warning: enqueueSnackbar changes state, so must be done outside of rendering
+    }
+  }, [auth]);
   return (
     <Route
       {...rest}
@@ -19,7 +25,6 @@ function PrivateRoute({
         if (auth.isAuthenticated) {
           return <Component {...props} />;
         } else {
-          enqueueSnackbar('You are not logged in.');
           return <Redirect to={redirect} />;
         }
       }}

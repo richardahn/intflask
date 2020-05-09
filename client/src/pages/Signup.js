@@ -1,10 +1,20 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
+import { Link as RouterLink } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { signupUser } from '../actions/auth';
 import classnames from 'classnames';
-import M from 'materialize-css';
+import {
+  Link,
+  Box,
+  TextField,
+  Typography,
+  Grid,
+  Container,
+  Paper,
+  Divider,
+  Button,
+} from '@material-ui/core';
 
 function SignupForm({
   onSubmit,
@@ -18,73 +28,118 @@ function SignupForm({
 }) {
   return (
     <form noValidate onSubmit={onSubmit}>
-      <div className="input-field col s12">
-        <input
-          id="firstName"
-          type="text"
-          value={firstName}
-          onChange={onInputChange}
-          className={classnames({ invalid: errors.firstName })}
-        />
-        <label htmlFor="firstName">First Name</label>
-        <span className="red-text">{errors.firstName}</span>
-      </div>
-      <div className="input-field col s12">
-        <input
-          id="lastName"
-          type="text"
-          value={lastName}
-          onChange={onInputChange}
-          className={classnames({ invalid: errors.lastName })}
-        />
-        <label htmlFor="lastName">Last Name (optional)</label>
-        <span className="red-text">{errors.lastName}</span>
-      </div>
-      <div className="input-field col s12">
-        <input
-          id="email"
-          type="email"
-          value={email}
-          onChange={onInputChange}
-          className={classnames({ invalid: errors.email })}
-        />
-        <label htmlFor="email">Email</label>
-        <span className="red-text">{errors.email}</span>
-      </div>
-      <div className="input-field col s12">
-        <input
-          id="password"
-          type="password"
-          value={password}
-          onChange={onInputChange}
-          className={classnames({ invalid: errors.password })}
-        />
-        <label htmlFor="password">Password</label>
-        <span className="red-text">{errors.password}</span>
-      </div>
-      <div className="input-field col s12">
-        <input
-          id="passwordConfirm"
-          type="password"
-          value={passwordConfirm}
-          onChange={onInputChange}
-        />
-        <label>Confirm Your Password</label>
-        <span className="red-text">{errors.passwordConfirm}</span>
-      </div>
-      <div className="col s12" style={{ paddingLeft: '12.5px' }}>
-        <button
-          type="submit"
-          style={{
-            width: '140px',
-            borderRadius: '3px',
-            letterSpacing: '1.5px',
-          }}
-          className="btn btn-large hoverable waves-effect waves-light blue accent-3"
-        >
-          Sign Up
-        </button>
-      </div>
+      <Box style={{ width: '400px' }}>
+        <Box>
+          <TextField
+            onChange={onInputChange}
+            value={firstName}
+            error={!!errors.firstName}
+            label="First Name"
+            id="firstName"
+            type="text"
+            fullWidth
+            margin="normal"
+            className={classnames({
+              invalid: errors.firstName,
+            })}
+          />
+          <Typography
+            variant="caption"
+            style={{ display: 'block', color: 'red' }}
+          >
+            {errors.firstName}
+          </Typography>
+        </Box>
+        <Box>
+          <TextField
+            onChange={onInputChange}
+            value={lastName}
+            error={!!errors.lastName}
+            label="Last Name"
+            id="lastName"
+            type="text"
+            fullWidth
+            margin="normal"
+            className={classnames({
+              invalid: errors.lastName,
+            })}
+          />
+          <Typography
+            variant="caption"
+            style={{ display: 'block', color: 'red' }}
+          >
+            {errors.lastName}
+          </Typography>
+        </Box>
+        <Box>
+          <TextField
+            onChange={onInputChange}
+            value={email}
+            error={!!errors.email}
+            label="Email"
+            id="email"
+            type="email"
+            fullWidth
+            margin="normal"
+            className={classnames({
+              invalid: errors.email,
+            })}
+          />
+          <Typography
+            variant="caption"
+            style={{ display: 'block', color: 'red' }}
+          >
+            {errors.email}
+          </Typography>
+        </Box>
+        <Box>
+          <TextField
+            onChange={onInputChange}
+            value={password}
+            error={!!errors.password}
+            label="Password"
+            id="password"
+            type="password"
+            fullWidth
+            margin="normal"
+            className={classnames({
+              invalid: errors.password,
+            })}
+          />
+          <Typography
+            variant="caption"
+            style={{ display: 'block', color: 'red' }}
+          >
+            {errors.password}
+          </Typography>
+        </Box>
+        <Box>
+          <TextField
+            onChange={onInputChange}
+            value={passwordConfirm}
+            error={!!errors.passwordConfirm}
+            label="Confirm Your Password"
+            id="passwordConfirm"
+            type="password"
+            fullWidth
+            margin="normal"
+            className={classnames({
+              invalid: errors.passwordConfirm,
+            })}
+          />
+          <Typography
+            variant="caption"
+            style={{ display: 'block', color: 'red' }}
+          >
+            {errors.passwordConfirm}
+          </Typography>
+        </Box>
+        <Box mt={3}>
+          <Button type="submit" variant="contained" color="primary">
+            Sign Up
+          </Button>
+        </Box>
+      </Box>
     </form>
   );
 }
@@ -127,8 +182,11 @@ class Signup extends Component {
       passwordConfirm: this.state.passwordConfirm,
     };
 
-    this.props.signupUser(newUser, this.props.history, () =>
-      M.toast({ html: 'Successfully created account.' }),
+    this.props.signupUser(
+      newUser,
+      this.props.history,
+      () => {},
+      // M.toast({ html: 'Successfully created account.' }),
     );
   }
 
@@ -143,33 +201,35 @@ class Signup extends Component {
 
   render() {
     return (
-      <>
-        <div className="container">
-          <div className="row">
-            <div className="col s8 offset-s2">
-              <Link to="/" className="btn-flat waves-effect">
-                <i className="material-icons left">keyboard_backspace</i> Back
-              </Link>
-              <div className="col s12">
-                <h3>Signup</h3>
-                <p className="grey-text text-darken-1">
-                  Already have an account? <Link to="/login">Login</Link>
-                </p>
-              </div>
-              <SignupForm
-                onSubmit={this.onFormSubmit}
-                onInputChange={this.onInputChange}
-                firstName={this.state.firstName}
-                lastName={this.state.lastName}
-                email={this.state.email}
-                password={this.state.password}
-                passwordConfirm={this.state.passwordConfirm}
-                errors={this.state.errors}
-              />
-            </div>
-          </div>
-        </div>
-      </>
+      <Container component={Box} pt={3}>
+        <Paper variant="outlined">
+          <Box p={3}>
+            <Grid container spacing={3}>
+              <Grid item xs={12}>
+                <Typography variant="h5">Signup</Typography>
+                <Typography variant="caption">
+                  Already have an account?{' '}
+                  <Link to="/signup" component={RouterLink}>
+                    Login
+                  </Link>
+                </Typography>
+              </Grid>
+              <Grid item xs={12}>
+                <SignupForm
+                  onSubmit={this.onFormSubmit}
+                  onInputChange={this.onInputChange}
+                  firstName={this.state.firstName}
+                  lastName={this.state.lastName}
+                  email={this.state.email}
+                  password={this.state.password}
+                  passwordConfirm={this.state.passwordConfirm}
+                  errors={this.state.errors}
+                />
+              </Grid>
+            </Grid>
+          </Box>
+        </Paper>
+      </Container>
     );
   }
 }

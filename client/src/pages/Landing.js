@@ -15,24 +15,25 @@ import { Container, Box } from '@material-ui/core';
 import CoursePreviewCard from '../components/CoursePreviewCard';
 
 class Course {
-  constructor(title, link) {
+  constructor(title, link, image) {
     this.title = title;
     this.link = link;
+    this.image = image;
   }
 }
 
 function Landing(props) {
   const courses = [
-    new Course('Building this Website', '/course/building-this-website'),
-    new Course('Building this Website', '/course/building-this-website'),
-    new Course('Building this Website', '/course/building-this-website'),
-    new Course('Building this Website', '/course/building-this-website'),
-    new Course('Building this Website', '/course/building-this-website'),
-    new Course('Building this Website', '/course/building-this-website'),
-    new Course('Building this Website', '/course/building-this-website'),
-    new Course('Building this Website', '/course/building-this-website'),
-    new Course('Building this Website', '/course/building-this-website'),
-    new Course('Building this Website', '/course/building-this-website'),
+    new Course(
+      'Course 1',
+      '/course-preview/building-this-website',
+      'https://picsum.photos/600',
+    ),
+    new Course(
+      'Course 2',
+      '/course-preview/building-this-website',
+      'https://picsum.photos/500',
+    ),
   ];
   return (
     <Box display="flex" mt={3} px={3}>
@@ -40,7 +41,7 @@ function Landing(props) {
         <Grid container spacing={4}>
           {courses.map((course) => {
             return (
-              <Grid item xs={12} sm={6} md={4} lg={3} xl={2}>
+              <Grid item xs={12} sm={6} md={4} lg={3} xl={2} key={course.title}>
                 <CoursePreviewCard course={course} />
               </Grid>
             );

@@ -8,43 +8,41 @@ import {
   ListItemText,
   Divider,
 } from '@material-ui/core';
+import { Link } from 'react-router-dom';
 
 export default function Courses() {
+  const courses = [
+    {
+      title: 'Course 1',
+      courseId: 'building-this-website',
+    },
+    {
+      title: 'Course 2',
+      courseId: 'building-this-website',
+    },
+  ];
   return (
     <Container>
       <Box pt={2}>
         <Typography variant="h6">My Courses</Typography>
         <List component="nav" aria-labelledby="nested-list-subheader">
-          <ListItem button>
-            <ListItemText
-              disableTypography
-              primary={
-                <Typography variant="span" style={{ fontWeight: 'bold' }}>
-                  Course 1
-                </Typography>
-              }
-            />
-          </ListItem>
-          <ListItem button>
-            <ListItemText
-              disableTypography
-              primary={
-                <Typography variant="span" style={{ fontWeight: 'bold' }}>
-                  Course 2
-                </Typography>
-              }
-            />
-          </ListItem>
-          <ListItem button>
-            <ListItemText
-              disableTypography
-              primary={
-                <Typography variant="span" style={{ fontWeight: 'bold' }}>
-                  Course 3
-                </Typography>
-              }
-            />
-          </ListItem>
+          {courses.map((course) => (
+            <ListItem
+              button
+              component={Link}
+              to={`/course/${course.courseId}`}
+              key={course.title}
+            >
+              <ListItemText
+                disableTypography
+                primary={
+                  <Typography style={{ fontWeight: 'bold' }}>
+                    {course.title}
+                  </Typography>
+                }
+              />
+            </ListItem>
+          ))}
         </List>
       </Box>
     </Container>

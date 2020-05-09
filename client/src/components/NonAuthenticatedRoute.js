@@ -8,12 +8,7 @@ class NonAuthenticatedRoute extends Component {
     auth: PropTypes.object.isRequired,
   };
   render() {
-    const {
-      component: Component,
-      redirect = '/home',
-      auth,
-      ...rest
-    } = this.props;
+    const { component: Component, redirect = '/', auth, ...rest } = this.props;
 
     return (
       <Route

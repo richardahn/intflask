@@ -11,6 +11,8 @@ import {
   List,
   ListItem,
   ListItemText,
+  Menu,
+  MenuItem,
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -95,23 +97,23 @@ function Header(props) {
           to: '/signup',
         },
       ];
-  const navbarList = navbarItems.map((item, index) => (
-    <Button
-      color="inherit"
-      component={RouterLink}
-      to={item.to}
-      onClick={item.onClick}
-      className={classes.menuItemButton}
-    >
-      {item.name}
-    </Button>
-  ));
-  const navbarDrawerList = navbarItems.map((item, index) => (
-    <ListItem button key={item.name} component={RouterLink} to={item.to}>
-      <ListItemText primary={item.name} />
-    </ListItem>
-  ));
   const [menuDrawerOpen, setMenuDrawerOpen] = useState(false);
+
+  const [auth, setAuth] = React.useState(true);
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const open = Boolean(anchorEl);
+
+  const handleChange = (event) => {
+    setAuth(event.target.checked);
+  };
+
+  const handleMenu = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
   return (
     <>
       <Box className={classes.root}>
@@ -132,7 +134,47 @@ function Header(props) {
                 intflask
               </Link>
             </Typography>
-            {navbarList}
+            {navbarItems.map((item, index) => (
+              <Button
+                color="inherit"
+                component={RouterLink}
+                to={item.to}
+                onClick={item.onClick}
+                className={classes.menuItemButton}
+                key={item.name}
+              >
+                {item.name}
+              </Button>
+            ))}
+            <Box>
+              <Button
+                aria-label="account of current user"
+                aria-controls="menu-appbar"
+                aria-haspopup="true"
+                onClick={handleMenu}
+                color="inherit"
+              >
+                Menu
+              </Button>
+              <Menu
+                id="appbar-menu"
+                anchorEl={anchorEl}
+                anchorOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+                keepMounted
+                transformOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+                open={open}
+                onClose={handleClose}
+              >
+                <MenuItem onClick={handleClose}>1</MenuItem>
+                <MenuItem onClick={handleClose}>2</MenuItem>
+              </Menu>
+            </Box>
           </Toolbar>
         </AppBar>
         <SwipeableDrawer
@@ -147,7 +189,18 @@ function Header(props) {
             onClick={() => setMenuDrawerOpen(false)}
             onKeyDown={() => setMenuDrawerOpen(false)}
           >
-            <List>{navbarDrawerList}</List>
+            <List>
+              {navbarItems.map((item, index) => (
+                <ListItem
+                  button
+                  key={item.name}
+                  component={RouterLink}
+                  to={item.to}
+                >
+                  <ListItemText primary={item.name} />
+                </ListItem>
+              ))}
+            </List>
           </Box>
         </SwipeableDrawer>
       </Box>

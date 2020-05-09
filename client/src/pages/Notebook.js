@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { signupUser } from '../actions/auth';
 import classnames from 'classnames';
-import M from 'materialize-css';
 import IntflaskEditor from '../components/IntflaskEditor';
 
 class Notebook extends Component {

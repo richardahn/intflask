@@ -14,9 +14,11 @@ class Profile extends Component {
           <Divider />
           <Box mt={2}>
             <Typography variant="h6">Statistics</Typography>
-            <Typography variant="p">
-              Here are some statistics on your notebook performance.
-            </Typography>
+            <Typography variant="body2">Some statistics</Typography>
+          </Box>
+          <Box mt={2}>
+            <Typography variant="h6">Other</Typography>
+            <Typography variant="body2">Other stuff</Typography>
           </Box>
         </Box>
       </Container>

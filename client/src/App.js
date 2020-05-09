@@ -14,12 +14,12 @@ import Landing from './pages/Landing';
 import Welcome from './pages/Welcome';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
-import Home from './pages/Home';
 import Footer from './components/Footer';
 import Profile from './pages/Profile';
 import Notebook from './pages/Notebook';
-import Course from './pages/Course';
+import CoursePreview from './pages/CoursePreview';
 import Courses from './pages/Courses';
+import Course from './pages/Course';
 
 // -- Actions --
 import {
@@ -40,8 +40,8 @@ store.dispatch(authenticateJwtFromLocalStorage());
 const theme = createMuiTheme({
   palette: {
     background: {
-      paper: 'white',
-      default: 'white',
+      paper: '#fff', // Warning: Notistack snackbar doesn't support 'white', so use '#fff'
+      default: '#fff',
     },
   },
 });
@@ -49,16 +49,25 @@ const theme = createMuiTheme({
 export default function App() {
   return (
     <ThemeProvider theme={theme}>
-      <CssBaseline />
       <Provider store={store}>
         <SnackbarProvider maxSnack={3}>
           <Router>
+            <CssBaseline />
             <Box className="App">
               <Box style={{ minHeight: '100vh' }}>
                 <Header />
                 <Switch>
                   <Route exact path="/" component={Landing} />
-                  <Route exact path="/course/:courseId" component={Course} />
+                  <Route
+                    exact
+                    path="/course-preview/:courseId"
+                    component={CoursePreview}
+                  />
+                  <PrivateRoute
+                    exact
+                    path="/course/:courseId/:pageId?"
+                    component={Course}
+                  />
                   <NonAuthenticatedRoute
                     exact
                     path="/login"
@@ -69,7 +78,6 @@ export default function App() {
                     path="/signup"
                     component={Signup}
                   />
-                  <PrivateRoute exact path="/home" component={Home} />
                   <PrivateRoute exact path="/profile" component={Profile} />
                   <PrivateRoute exact path="/notebook" component={Notebook} />
                   <PrivateRoute exact path="/courses" component={Courses} />
