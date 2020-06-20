@@ -71,11 +71,15 @@ function Header(props) {
         },
         {
           name: 'My Courses',
-          to: '/courses',
+          to: '/my-courses',
         },
         {
           name: 'Notebook',
           to: '/notebook',
+        },
+        {
+          name: 'Admin',
+          to: '/admin',
         },
         {
           name: 'Logout',

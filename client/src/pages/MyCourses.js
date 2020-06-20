@@ -10,7 +10,7 @@ import {
 } from '@material-ui/core';
 import { Link } from 'react-router-dom';
 
-export default function Courses() {
+export default function MyCourses() {
   const courses = [
     {
       title: 'Course 1',

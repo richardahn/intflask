@@ -18,8 +18,10 @@ import Footer from './components/Footer';
 import Profile from './pages/Profile';
 import Notebook from './pages/Notebook';
 import CoursePreview from './pages/CoursePreview';
-import Courses from './pages/Courses';
+import MyCourses from './pages/MyCourses';
 import Course from './pages/Course';
+import Administrator from './pages/Administrator';
+import EditCourse from './pages/EditCourse';
 
 // -- Actions --
 import {
@@ -80,7 +82,17 @@ export default function App() {
                   />
                   <PrivateRoute exact path="/profile" component={Profile} />
                   <PrivateRoute exact path="/notebook" component={Notebook} />
-                  <PrivateRoute exact path="/courses" component={Courses} />
+                  <PrivateRoute
+                    exact
+                    path="/my-courses"
+                    component={MyCourses}
+                  />
+                  <PrivateRoute exact path="/admin" component={Administrator} />
+                  <PrivateRoute
+                    exact
+                    path="/edit-course/:courseId/:pageId?"
+                    component={EditCourse}
+                  />
                 </Switch>
               </Box>
               <Footer />

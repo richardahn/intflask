@@ -1,4 +1,6 @@
 import React from 'react';
+import { Typography } from '@material-ui/core';
+import { Blockquote } from '../intflaskTypography';
 
 export const BLOCK_QUOTE = 'block-quote';
 export const NUMBERED_LIST = 'numbered-list';
@@ -20,7 +22,7 @@ export function isListType(type) {
 export default function Element({ attributes, children, element }) {
   switch (element.type) {
     case BLOCK_QUOTE:
-      return <blockquote {...attributes}>{children}</blockquote>;
+      return <Blockquote {...attributes}>{children}</Blockquote>;
     case NUMBERED_LIST:
       return <ol {...attributes}>{children}</ol>;
     case BULLETED_LIST:
@@ -28,19 +30,47 @@ export default function Element({ attributes, children, element }) {
     case LIST_ITEM:
       return <li {...attributes}>{children}</li>;
     case HEADING_ONE:
-      return <h1 {...attributes}>{children}</h1>;
+      return (
+        <Typography component="h1" {...attributes}>
+          {children}
+        </Typography>
+      );
     case HEADING_TWO:
-      return <h2 {...attributes}>{children}</h2>;
+      return (
+        <Typography component="h2" {...attributes}>
+          {children}
+        </Typography>
+      );
     case HEADING_THREE:
-      return <h3 {...attributes}>{children}</h3>;
+      return (
+        <Typography component="h3" {...attributes}>
+          {children}
+        </Typography>
+      );
     case HEADING_FOUR:
-      return <h4 {...attributes}>{children}</h4>;
+      return (
+        <Typography component="h4" {...attributes}>
+          {children}
+        </Typography>
+      );
     case HEADING_FIVE:
-      return <h5 {...attributes}>{children}</h5>;
+      return (
+        <Typography component="h5" {...attributes}>
+          {children}
+        </Typography>
+      );
     case HEADING_SIX:
-      return <h6 {...attributes}>{children}</h6>;
+      return (
+        <Typography component="h6" {...attributes}>
+          {children}
+        </Typography>
+      );
     case DEFAULT:
     default:
-      return <p {...attributes}>{children}</p>;
+      return (
+        <Typography component="p" {...attributes}>
+          {children}
+        </Typography>
+      );
   }
 }

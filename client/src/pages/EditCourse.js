@@ -1,22 +1,22 @@
-// -- General --
-import React, { Component, useCallback } from 'react';
-import { Box, Typography, Divider } from '@material-ui/core';
+import React, { useState, useCallback } from 'react';
+import { Box } from '@material-ui/core';
 
 // -- Components --
+import IntflaskEditor from '../components/IntflaskEditor';
+import DraftEditor from '../components/DraftEditor';
 import { ContainerWithSidebar } from '../components/sidebar/Sidebar';
-import CourseList from '../components/sidebar-content/CourseList';
+import EditableCourseList from '../components/sidebar-content/EditableCourseList';
 
-function CourseMain({ courseId, pageId }) {
+function CourseMainEditable({ courseId, pageId }) {
   return (
     <Box>
-      <Typography variant="h6">{pageId ?? 'Main'}</Typography>
-      <Typography paragraph>Course ID: {courseId}</Typography>
-      <Typography paragraph>Page ID: {pageId}</Typography>
+      <DraftEditor />
     </Box>
   );
 }
 
-export default function Course({ match }) {
+// TODO: Course in database has bool that indicates whether course is available for public
+export default function EditCourse({ match }) {
   const { courseId, pageId } = match.params;
   const sidebarItems = {
     main: {
@@ -42,9 +42,9 @@ export default function Course({ match }) {
   return (
     <Box display="flex">
       <ContainerWithSidebar
-        sidebarChildren={<CourseList items={sidebarItems} />}
+        sidebarChildren={<EditableCourseList items={sidebarItems} />}
       >
-        <CourseMain courseId={courseId} pageId={pageId} />
+        <CourseMainEditable courseId={courseId} pageId={pageId} />
       </ContainerWithSidebar>
     </Box>
   );

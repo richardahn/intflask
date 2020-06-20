@@ -21,10 +21,11 @@ import keyDownHandler from '../utils/intflask-slate/keyDownHandler';
 import Element from '../utils/intflask-slate/element';
 import Leaf from '../utils/intflask-slate/leaf';
 
+// WARNING: Seems like withShortcuts or withDefaultInsert is causing an issue when holding undo
 function IntflaskEditor(props) {
   const editor = useMemo(
     () =>
-      withDefaultInsert(withShortcuts(withHistory(withReact(createEditor())))),
+      withDefaultInsert(withShortcuts(withReact(withHistory(createEditor())))),
     [],
   );
   // Make an HOC that goes on top of Element and pass in the setCanvasState function
@@ -48,10 +49,6 @@ function IntflaskEditor(props) {
           placeholder="Enter some rich text…"
           spellCheck={false}
           autoFocus
-          className="col s6"
-          style={{
-            backgroundColor: 'lightblue',
-          }}
         />
       </Slate>
     </div>
