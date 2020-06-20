@@ -3,8 +3,8 @@ import React, { Component, useCallback } from 'react';
 import { Box, Typography, Divider } from '@material-ui/core';
 
 // -- Components --
-import { ContainerWithSidebar } from '../components/sidebar/Sidebar';
-import CourseList from '../components/sidebar-content/CourseList';
+import { ContainerWithSidebar } from '../components/Sidebar';
+import CourseList from '../components/Sidebar/CourseList';
 
 function CourseMain({ courseId, pageId }) {
   return (

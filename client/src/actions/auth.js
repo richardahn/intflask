@@ -8,7 +8,7 @@ import { getErrors } from './error';
 export const SET_CURRENT_USER = 'SET_CURRENT_USER';
 
 // -- High-level actions --
-export function signupUser(userData, history, onSuccess) {
+export function signupUser(userData, onSuccess) {
   return (dispatch) => {
     axios
       .post('/api/users/signup', userData)
@@ -16,7 +16,6 @@ export function signupUser(userData, history, onSuccess) {
         if (onSuccess) {
           onSuccess();
         }
-        history.push('/counselor-signup-prompt');
       })
       .catch((err) => dispatch(getErrors(err)));
   };

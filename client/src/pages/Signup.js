@@ -1,9 +1,16 @@
+/** @jsx jsx */
+import { css, jsx } from '@emotion/core';
 import React, { Component } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { signupUser } from '../actions/auth';
 import classnames from 'classnames';
+import {
+  BlackDivider,
+  BasicInputField,
+  GoogleLoginButton,
+} from '../components/basicComponents';
 import {
   Link,
   Box,
@@ -28,110 +35,67 @@ function SignupForm({
 }) {
   return (
     <form noValidate onSubmit={onSubmit}>
-      <Box style={{ width: '400px' }}>
+      <Box
+        css={css`
+          width: 400px;
+        `}
+      >
+        <BasicInputField
+          onChange={onInputChange}
+          value={firstName}
+          error={!!errors.firstName}
+          errorLabels={errors.firstName}
+          label="First Name"
+          id="firstName"
+          type="text"
+          margin="normal"
+        />
+        <BasicInputField
+          onChange={onInputChange}
+          value={lastName}
+          error={!!errors.lastName}
+          errorLabels={errors.lastName}
+          label="Last Name"
+          id="lastName"
+          type="text"
+          margin="normal"
+        />
+        <BasicInputField
+          onChange={onInputChange}
+          value={email}
+          error={!!errors.email}
+          errorLabels={errors.email}
+          label="Email"
+          id="email"
+          type="email"
+          margin="normal"
+        />
+        <BasicInputField
+          onChange={onInputChange}
+          value={password}
+          error={!!errors.password}
+          errorLabels={errors.password}
+          label="Password"
+          id="password"
+          type="password"
+          margin="normal"
+        />
+        <BasicInputField
+          onChange={onInputChange}
+          value={passwordConfirm}
+          error={!!errors.passwordConfirm}
+          errorLabels={errors.passwordConfirm}
+          label="Confirm Your Password"
+          id="passwordConfirm"
+          type="password"
+          margin="normal"
+        />
         <Box>
-          <TextField
-            onChange={onInputChange}
-            value={firstName}
-            error={!!errors.firstName}
-            label="First Name"
-            id="firstName"
-            type="text"
-            fullWidth
-            margin="normal"
-            className={classnames({
-              invalid: errors.firstName,
-            })}
-          />
-          <Typography
-            variant="caption"
-            style={{ display: 'block', color: 'red' }}
-          >
-            {errors.firstName}
-          </Typography>
-        </Box>
-        <Box>
-          <TextField
-            onChange={onInputChange}
-            value={lastName}
-            error={!!errors.lastName}
-            label="Last Name"
-            id="lastName"
-            type="text"
-            fullWidth
-            margin="normal"
-            className={classnames({
-              invalid: errors.lastName,
-            })}
-          />
-          <Typography
-            variant="caption"
-            style={{ display: 'block', color: 'red' }}
-          >
-            {errors.lastName}
-          </Typography>
-        </Box>
-        <Box>
-          <TextField
-            onChange={onInputChange}
-            value={email}
-            error={!!errors.email}
-            label="Email"
-            id="email"
-            type="email"
-            fullWidth
-            margin="normal"
-            className={classnames({
-              invalid: errors.email,
-            })}
-          />
-          <Typography
-            variant="caption"
-            style={{ display: 'block', color: 'red' }}
-          >
-            {errors.email}
-          </Typography>
-        </Box>
-        <Box>
-          <TextField
-            onChange={onInputChange}
-            value={password}
-            error={!!errors.password}
-            label="Password"
-            id="password"
-            type="password"
-            fullWidth
-            margin="normal"
-            className={classnames({
-              invalid: errors.password,
-            })}
-          />
-          <Typography
-            variant="caption"
-            style={{ display: 'block', color: 'red' }}
-          >
-            {errors.password}
-          </Typography>
-        </Box>
-        <Box>
-          <TextField
-            onChange={onInputChange}
-            value={passwordConfirm}
-            error={!!errors.passwordConfirm}
-            label="Confirm Your Password"
-            id="passwordConfirm"
-            type="password"
-            fullWidth
-            margin="normal"
-            className={classnames({
-              invalid: errors.passwordConfirm,
-            })}
-          />
-          <Typography
-            variant="caption"
-            style={{ display: 'block', color: 'red' }}
-          >
-            {errors.passwordConfirm}
+          <Typography variant="caption">
+            By clicking <em>Sign Up</em>, you are agreeing to intflask's{' '}
+            <Link href="#">User Agreement</Link>,{' '}
+            <Link href="#">Privacy Policy</Link>, and{' '}
+            <Link href="#">Cookie Policy</Link>
           </Typography>
         </Box>
         <Box mt={3}>
@@ -182,12 +146,9 @@ class Signup extends Component {
       passwordConfirm: this.state.passwordConfirm,
     };
 
-    this.props.signupUser(
-      newUser,
-      this.props.history,
-      () => {},
-      // M.toast({ html: 'Successfully created account.' }),
-    );
+    this.props.signupUser(newUser, () => {
+      this.props.history.push('/login');
+    });
   }
 
   componentWillReceiveProps(nextProps) {
@@ -225,6 +186,12 @@ class Signup extends Component {
                   passwordConfirm={this.state.passwordConfirm}
                   errors={this.state.errors}
                 />
+              </Grid>
+              <Grid item xs={12}>
+                <BlackDivider />
+              </Grid>
+              <Grid item xs={12}>
+                <GoogleLoginButton />
               </Grid>
             </Grid>
           </Box>

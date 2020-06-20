@@ -20,8 +20,9 @@ import {
   Button,
   IconButton,
   ListItemIcon,
+  ButtonBase,
 } from '@material-ui/core';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, Link } from 'react-router-dom';
 
 // -- Icons --
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
@@ -31,7 +32,7 @@ import HomeIcon from '@material-ui/icons/Home';
 // Initial Setup
 const headerHeight = 48;
 const togglerWidth = 24;
-const drawerWidth = 200;
+const drawerWidth = 300;
 const useStyles = makeStyles((theme) => ({
   drawer: {
     [theme.breakpoints.up('xs')]: {
@@ -43,17 +44,17 @@ const useStyles = makeStyles((theme) => ({
     position: 'absolute',
     right: -togglerWidth,
     width: togglerWidth,
-    height: `calc(100% - ${headerHeight}px)`,
+    height: '100%',
     display: 'flex',
     alignItems: 'center',
     alignContent: 'center',
     visibility: 'visible',
   },
   fixedDrawer: {
-    marginTop: headerHeight,
+    marginTop: (props) => props.topOffset,
     width: drawerWidth,
     overflowY: 'visible',
-    height: `calc(100% - ${headerHeight}px)`,
+    height: (props) => `calc(100% - ${props.topOffset}px)`,
   },
   content: {
     flexGrow: 1,
@@ -62,7 +63,7 @@ const useStyles = makeStyles((theme) => ({
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen,
     }),
-    marginLeft: -drawerWidth,
+    marginLeft: togglerWidth - drawerWidth,
   },
   contentShift: {
     transition: theme.transitions.create('margin', {
@@ -74,13 +75,15 @@ const useStyles = makeStyles((theme) => ({
   nestedSidebarItem: {
     paddingLeft: theme.spacing(4),
   },
-  sidebar: {
-    minHeight: '101%',
-  },
 }));
 
-export function Sidebar({ open, onToggle, children }) {
-  const classes = useStyles();
+export function Sidebar({
+  topOffset = headerHeight,
+  open,
+  onToggle,
+  children,
+}) {
+  const classes = useStyles({ topOffset });
   return (
     <nav className={classes.drawer}>
       <Drawer
@@ -114,33 +117,41 @@ export function Sidebar({ open, onToggle, children }) {
         >
           {children}
         </Box>
-        <Box className={classes.drawerToggler}>
-          <IconButton
-            component="span"
-            style={{ width: '15px', height: '15px' }}
-            onClick={onToggle}
-          >
-            {open ? <ChevronLeftIcon /> : <ChevronRightIcon />}
-          </IconButton>
-        </Box>
+        <Button
+          className={classes.drawerToggler}
+          onClick={onToggle}
+          disableRipple
+          css={css`
+            min-width: auto !important;
+            border-radius: 0 !important;
+          `}
+        >
+          {open ? <ChevronLeftIcon /> : <ChevronRightIcon />}
+        </Button>
       </Drawer>
     </nav>
   );
 }
 
-export function ContainerWithSidebar({ children, sidebarChildren, ...props }) {
+export function ContainerWithSidebar({
+  topOffset = headerHeight,
+  children,
+  sidebarChildren,
+  ...props
+}) {
   const classes = useStyles();
   const [open, setOpen] = React.useState(true);
   const toggleSidebar = useCallback(() => setOpen(!open), [open]);
   return (
     <React.Fragment>
-      <Sidebar open={open} onToggle={toggleSidebar}>
+      <Sidebar open={open} onToggle={toggleSidebar} topOffset={topOffset}>
         {sidebarChildren}
       </Sidebar>
       <Container
         className={clsx(classes.content, {
           [classes.contentShift]: open,
         })}
+        {...props}
       >
         {children}
       </Container>

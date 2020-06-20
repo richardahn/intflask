@@ -19,7 +19,7 @@ router.get(
     generateJwtToken(req.user, (err, token) => {
       console.log('generated ' + token);
       res.cookie('auth', token);
-      res.redirect('/home');
+      res.redirect('/');
     });
   },
 );

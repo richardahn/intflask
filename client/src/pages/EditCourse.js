@@ -4,8 +4,8 @@ import { Box } from '@material-ui/core';
 // -- Components --
 import IntflaskEditor from '../components/IntflaskEditor';
 import DraftEditor from '../components/DraftEditor';
-import { ContainerWithSidebar } from '../components/sidebar/Sidebar';
-import EditableCourseList from '../components/sidebar-content/EditableCourseList';
+import { ContainerWithSidebar } from '../components/Sidebar';
+import EditableCourseList from '../components/Sidebar/EditableCourseList';
 
 function CourseMainEditable({ courseId, pageId }) {
   return (

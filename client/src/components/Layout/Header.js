@@ -1,7 +1,7 @@
 import React, { Component, useCallback, useState } from 'react';
 import { Link as RouterLink, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { logoutUser } from '../actions/auth';
+import { logoutUser } from '../../actions/auth';
 import {
   AppBar,
   IconButton,
