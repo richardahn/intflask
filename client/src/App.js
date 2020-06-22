@@ -7,13 +7,12 @@ import createAppStore from './store/createAppStore';
 // -- Components --
 import PrivateRoute from './components/Routes/PrivateRoute';
 import NonAuthenticatedRoute from './components/Routes/NonAuthenticatedRoute';
-import Layout from './components/Layout';
+import IntflaskLayout from './components/IntflaskLayout';
 
 // -- Pages --
 import Landing from './pages/Landing';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
-import Profile from './pages/Profile';
 import Notebook from './pages/Notebook';
 import CoursePreview from './pages/CoursePreview';
 import MyCourses from './pages/MyCourses';
@@ -21,6 +20,7 @@ import Course from './pages/Course';
 import Administrator from './pages/Administrator';
 import EditCourse from './pages/EditCourse';
 import TeacherSignup from './pages/TeacherSignup';
+import CreateCourse from './pages/CreateCourse';
 
 // -- Actions --
 import {
@@ -37,7 +37,7 @@ export default function App() {
   return (
     <Provider store={store}>
       <Router>
-        <Layout>
+        <IntflaskLayout>
           <Switch>
             <Route exact path="/" component={Landing} />
             <Route
@@ -57,17 +57,21 @@ export default function App() {
               path="/teacher-signup"
               component={TeacherSignup}
             />
-            <PrivateRoute exact path="/profile" component={Profile} />
             <PrivateRoute exact path="/notebook" component={Notebook} />
             <PrivateRoute exact path="/my-courses" component={MyCourses} />
             <PrivateRoute exact path="/admin" component={Administrator} />
             <PrivateRoute
               exact
-              path="/edit-course/:courseId/:pageId?"
+              path="/admin/edit-course/:courseId"
               component={EditCourse}
             />
+            <PrivateRoute
+              exact
+              path="/admin/create-course"
+              component={CreateCourse}
+            />
           </Switch>
-        </Layout>
+        </IntflaskLayout>
       </Router>
     </Provider>
   );

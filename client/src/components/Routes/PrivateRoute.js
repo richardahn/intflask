@@ -2,7 +2,7 @@ import React, { Component, useEffect } from 'react';
 import { Route, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 
-import { useSnackbar } from 'notistack';
+import { notification } from 'antd';
 
 function PrivateRoute({
   component: Component,
@@ -12,10 +12,9 @@ function PrivateRoute({
   notLoggedInMessage = 'You are not logged in.',
   ...rest
 }) {
-  const { enqueueSnackbar } = useSnackbar();
   useEffect(() => {
     if (!auth.isAuthenticated) {
-      enqueueSnackbar(notLoggedInMessage); // Warning: enqueueSnackbar changes state, so must be done outside of rendering
+      notification.open({ message: notLoggedInMessage });
     }
   }, [auth]);
   return (

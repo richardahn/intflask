@@ -1,40 +1,32 @@
 /** @jsx jsx */
 import { css, jsx } from '@emotion/core';
 import React from 'react';
-import { Box, TextField, Typography, Divider, Button } from '@material-ui/core';
+import { Link as RouterLink } from 'react-router-dom';
 
-export const BlackDivider = (props) => (
-  <Divider
-    css={css`
-      background-color: black;
-      height: 0.5px;
-    `}
-    {...props}
-  />
-);
-
-export const BasicInputField = ({ errorLabels, ...props }) => (
-  <Box>
-    <TextField fullWidth {...props} />
-    <Typography
-      variant="caption"
-      css={css`
-        display: block;
-        color: red;
-      `}
-    >
-      {errorLabels}
-    </Typography>
-  </Box>
-);
+import {
+  Card,
+  Layout,
+  Col,
+  Row,
+  Typography,
+  Divider,
+  Form,
+  Input,
+  Button,
+  Checkbox,
+  notification,
+} from 'antd';
+import Sider from 'antd/lib/layout/Sider';
+const { Content, Header } = Layout;
+const { Title, Text, Link } = Typography;
 
 export function GoogleLoginButton(props) {
   return (
     <Button
       href="/auth/google"
-      variant="contained"
       css={css`
         background-color: #fff !important;
+        height: fit-content;
       `}
     >
       <div

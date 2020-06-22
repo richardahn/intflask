@@ -1,146 +1,175 @@
 /** @jsx jsx */
 import { css, jsx } from '@emotion/core';
-import React, { Component } from 'react';
+import React, { Component, useCallback, useEffect } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
-import {
-  Link,
-  Box,
-  Typography,
-  Grid,
-  Container,
-  Paper,
-  Button,
-} from '@material-ui/core';
-import {
-  BlackDivider,
-  BasicInputField,
-  GoogleLoginButton,
-} from '../components/basicComponents';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { loginUser } from '../actions/auth';
+import { GoogleLoginButton } from '../components/basic-components/GoogleLoginButton';
+import { UserOutlined, LockOutlined } from '@ant-design/icons';
+import {
+  Card,
+  Layout,
+  Col,
+  Row,
+  Typography,
+  Divider,
+  Form,
+  Input,
+  Button,
+  Checkbox,
+} from 'antd';
+const { Content } = Layout;
+const { Title, Text, Link } = Typography;
 
-function LoginForm({ onSubmit, onInputChange, email, password, errors }) {
+const layout = {
+  labelCol: {
+    span: 24,
+  },
+  wrapperCol: {
+    span: 23,
+  },
+};
+const tailLayout = {
+  wrapperCol: { span: 16 },
+};
+
+function LoginForm({ onLogin, serversideValidationErrors }) {
+  const [form] = Form.useForm();
+  const onFinish = useCallback((values) => {
+    console.log('Client side validation succeeded: ', values);
+    onLogin(values); // Server side validation
+  });
+  const onFinishFailed = useCallback((errorInfo) => {
+    console.log('Client side validation failed: ', errorInfo);
+  });
+  useEffect(() => {
+    if (serversideValidationErrors) {
+      const errs = [];
+      if (
+        serversideValidationErrors.email ||
+        serversideValidationErrors.emailnotfound
+      ) {
+        errs.push({
+          name: 'email',
+          errors: [
+            serversideValidationErrors.email,
+            serversideValidationErrors.emailnotfound,
+          ],
+        });
+      }
+      if (
+        serversideValidationErrors.password ||
+        serversideValidationErrors.passwordincorrect
+      ) {
+        errs.push({
+          name: 'password',
+          errors: [
+            serversideValidationErrors.password,
+            serversideValidationErrors.passwordincorrect,
+          ],
+        });
+      }
+      form.setFields(errs);
+    }
+  }, [serversideValidationErrors]);
+
   return (
-    <form noValidate onSubmit={onSubmit}>
-      <Box
-        css={css`
-          width: 400px;
-        `}
+    <Form
+      form={form}
+      layout="vertical"
+      name="basic"
+      initialValues={{ remember: true }}
+      onFinish={onFinish}
+      onFinishFailed={onFinishFailed}
+      validateMessages={{
+        types: {
+          email: 'Not a valid ${type}',
+        },
+      }}
+      {...layout}
+    >
+      <Form.Item
+        label="Email"
+        name="email"
+        css={{ marginBottom: '0.5rem' }}
+        rules={[{ type: 'email' }]}
       >
-        <BasicInputField
-          onChange={onInputChange}
-          value={email}
-          error={!!errors.email || !!errors.emailnotfound}
-          errorLabels={errors.email || errors.emailnotfound}
-          label="Email"
-          id="email"
-          type="email"
-          margin="normal"
-        />
-        <BasicInputField
-          onChange={onInputChange}
-          value={password}
-          error={!!errors.password}
-          errorLabels={errors.password || errors.passwordincorrect}
-          label="Password"
-          id="password"
-          type="password"
-        />
-        <Box mt={3}>
-          <Button type="submit" variant="contained" color="primary">
-            Login
-          </Button>
-        </Box>
-      </Box>
-    </form>
+        <Input prefix={<UserOutlined />} />
+      </Form.Item>
+      <Form.Item
+        label="Password"
+        name="password"
+        css={{ marginBottom: '0.25rem' }}
+      >
+        <Input.Password prefix={<LockOutlined />} />
+      </Form.Item>
+      <Form.Item>
+        <div css={{ justifyContent: 'space-between', display: 'flex' }}>
+          <Form.Item name="remember" valuePropName="checked" noStyle>
+            <Checkbox>Remember me</Checkbox>
+          </Form.Item>
+          <Text>
+            <Link>Forgot your password?</Link>
+          </Text>
+        </div>
+      </Form.Item>
+      <Form.Item {...tailLayout} css={{ marginBottom: 0 }}>
+        <Button type="primary" htmlType="submit">
+          Login
+        </Button>
+      </Form.Item>
+    </Form>
   );
 }
 
-class Login extends Component {
-  static propTypes = {
-    loginUser: PropTypes.func.isRequired,
-    auth: PropTypes.object.isRequired,
-    errors: PropTypes.object.isRequired,
-  };
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      email: '',
-      password: '',
-      errors: {},
-    };
-
-    this.onInputChange = this.onInputChange.bind(this);
-    this.onFormSubmit = this.onFormSubmit.bind(this);
-  }
-
-  onInputChange(event) {
-    this.setState({ [event.target.id]: event.target.value });
-  }
-
-  onFormSubmit(event) {
-    event.preventDefault();
-
-    const userData = {
-      email: this.state.email,
-      password: this.state.password,
-    };
-
-    this.props.loginUser(userData);
-  }
-  // Why put logic here? Because redux maps state to props, so if we want to do something whenever redux sends props here, we would put that logic here
-  componentWillReceiveProps(nextProps) {
-    // Merge errors from redux with the errors in this react component's state
-    if (nextProps.errors) {
-      this.setState({
-        errors: nextProps.errors,
-      });
-    }
-  }
-
-  render() {
-    return (
-      <Container component={Box} pt={3}>
-        <Paper variant="outlined">
-          <Box p={3}>
-            <Grid container spacing={3}>
-              <Grid item xs={12}>
-                <Typography variant="h5">Login</Typography>
-                <Typography variant="caption">
-                  Don't have an account?{' '}
-                  <Link to="/signup" component={RouterLink}>
-                    Sign Up
-                  </Link>
-                </Typography>
-              </Grid>
-              <Grid item xs={12}>
-                <LoginForm
-                  onSubmit={this.onFormSubmit}
-                  onInputChange={this.onInputChange}
-                  email={this.state.email}
-                  password={this.state.password}
-                  errors={this.state.errors}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <BlackDivider />
-              </Grid>
-              <Grid item xs={12}>
-                <GoogleLoginButton />
-              </Grid>
-            </Grid>
-          </Box>
-        </Paper>
-      </Container>
-    );
-  }
+function Login({ loginUser, serversideValidationErrors }) {
+  return (
+    <Content
+      css={{
+        backgroundColor: 'white',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'flex-start',
+        paddingTop: '2rem',
+      }}
+    >
+      <Card css={{ margin: '1rem', maxWidth: '600px', flexGrow: 1 }}>
+        <Row>
+          <Col span={24}>
+            <Title level={3} css={{ marginBottom: '0 !important' }}>
+              Login
+            </Title>
+            <Text>
+              Don't have an account?{' '}
+              <RouterLink to="/signup">Sign up</RouterLink>
+            </Text>
+          </Col>
+        </Row>
+        <Row css={{ marginTop: '1rem' }}>
+          <Col xs={24} lg={15}>
+            <LoginForm
+              onLogin={loginUser}
+              serversideValidationErrors={serversideValidationErrors}
+            />
+          </Col>
+          <Col xs={0} lg={1}>
+            <Divider type="vertical" css={{ height: '100%' }} />
+          </Col>
+          <Col xs={24} lg={0}>
+            <Divider type="horizontal" css={{ marginTop: '1.5rem' }} />
+          </Col>
+          <Col xs={24} lg={8}>
+            <GoogleLoginButton />
+          </Col>
+        </Row>
+      </Card>
+    </Content>
+  );
 }
-
 const mapStateToProps = (state) => ({
   auth: state.auth,
-  errors: state.errors,
+  serversideValidationErrors: state.errors,
 });
 
 const mapDispatchToProps = {
