@@ -10,17 +10,13 @@ import NonAuthenticatedRoute from './components/Routes/NonAuthenticatedRoute';
 import IntflaskLayout from './components/IntflaskLayout';
 
 // -- Pages --
+import Administrator from './pages/Administrator';
+import CreateCourse from './pages/CreateCourse';
+import EditCourse from './pages/EditCourse';
 import Landing from './pages/Landing';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
-import Notebook from './pages/Notebook';
-import CoursePreview from './pages/CoursePreview';
-import MyCourses from './pages/MyCourses';
-import Course from './pages/Course';
-import Administrator from './pages/Administrator';
-import EditCourse from './pages/EditCourse';
 import TeacherSignup from './pages/TeacherSignup';
-import CreateCourse from './pages/CreateCourse';
 
 // -- Actions --
 import {
@@ -40,16 +36,6 @@ export default function App() {
         <IntflaskLayout>
           <Switch>
             <Route exact path="/" component={Landing} />
-            <Route
-              exact
-              path="/course-preview/:courseId"
-              component={CoursePreview}
-            />
-            <PrivateRoute
-              exact
-              path="/course/:courseId/:pageId?"
-              component={Course}
-            />
             <NonAuthenticatedRoute exact path="/login" component={Login} />
             <NonAuthenticatedRoute exact path="/signup" component={Signup} />
             <PrivateRoute
@@ -57,8 +43,6 @@ export default function App() {
               path="/teacher-signup"
               component={TeacherSignup}
             />
-            <PrivateRoute exact path="/notebook" component={Notebook} />
-            <PrivateRoute exact path="/my-courses" component={MyCourses} />
             <PrivateRoute exact path="/admin" component={Administrator} />
             <PrivateRoute
               exact
