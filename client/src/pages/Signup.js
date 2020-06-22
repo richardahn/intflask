@@ -1,182 +1,199 @@
-import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
+/** @jsx jsx */
+import { css, jsx } from '@emotion/core';
+import React, { Component, useCallback, useEffect } from 'react';
+import { Link as RouterLink } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { signupUser } from '../actions/auth';
-import classnames from 'classnames';
-import M from 'materialize-css';
+import SignupImage from '../assets/signup.jpg';
 
-function SignupForm({
-  onSubmit,
-  onInputChange,
-  firstName,
-  lastName,
-  email,
-  password,
-  passwordConfirm,
-  errors,
-}) {
+import {
+  Card,
+  Layout,
+  Col,
+  Row,
+  Typography,
+  Divider,
+  Form,
+  Input,
+  Button,
+  Checkbox,
+  notification,
+} from 'antd';
+import Sider from 'antd/lib/layout/Sider';
+import { GoogleLoginButton } from '../components/basic-components/GoogleLoginButton';
+const { Content, Header } = Layout;
+const { Title, Text, Link } = Typography;
+
+function SignupForm({ onSignup, errors }) {
+  const [form] = Form.useForm();
+  const onFinish = useCallback((values) => {
+    console.log('Client side validation succeeded: ', values);
+    onSignup(values);
+  });
+  const onFinishFailed = useCallback((errorInfo) => {
+    console.log('Client side validation failed: ', errorInfo);
+  });
+  useEffect(() => {
+    const errs = [];
+    if (errors.firstName) {
+      errs.push({
+        name: 'firstName',
+        errors: [errors.firstName],
+      });
+    }
+    if (errors.email) {
+      errs.push({
+        name: 'email',
+        errors: [errors.email],
+      });
+    }
+    if (errors.password) {
+      errs.push({
+        name: 'password',
+        errors: [errors.password],
+      });
+    }
+    if (errors.passwordConfirm) {
+      errs.push({
+        name: 'passwordConfirm',
+        errors: [errors.passwordConfirm],
+      });
+    }
+    form.setFields(errs);
+  }, [errors]);
   return (
-    <form noValidate onSubmit={onSubmit}>
-      <div className="input-field col s12">
-        <input
-          id="firstName"
-          type="text"
-          value={firstName}
-          onChange={onInputChange}
-          className={classnames({ invalid: errors.firstName })}
-        />
-        <label htmlFor="firstName">First Name</label>
-        <span className="red-text">{errors.firstName}</span>
+    <Form
+      form={form}
+      layout="vertical"
+      name="basic"
+      onFinish={onFinish}
+      onFinishFailed={onFinishFailed}
+      validateMessages={{
+        types: {
+          email: 'Not a valid ${type}',
+        },
+      }}
+    >
+      <Form.Item label="Name" css={{ marginBottom: '0.5rem' }}>
+        <Row gutter={6}>
+          <Col lg={12} xs={24}>
+            <Form.Item
+              name="firstName"
+              rules={[{ required: true, message: 'First name is required' }]}
+              css={{ marginBottom: 0 }}
+            >
+              <Input placeholder="First Name" />
+            </Form.Item>
+          </Col>
+          <Col xs={24} lg={0} css={{ height: '0.2rem' }}></Col>
+          <Col lg={12} xs={24}>
+            <Form.Item name="lastName" css={{ marginBottom: 0 }}>
+              <Input placeholder="Last Name(optional)" />
+            </Form.Item>
+          </Col>
+        </Row>
+      </Form.Item>
+      <Form.Item
+        label="Email"
+        name="email"
+        css={{ marginBottom: '0.5rem' }}
+        rules={[
+          { required: true, message: 'Email is required' },
+          { type: 'email' },
+        ]}
+      >
+        <Input />
+      </Form.Item>
+      <Form.Item
+        label="Password"
+        name="password"
+        css={{ marginBottom: '0.25rem' }}
+        rules={[{ required: true, message: 'Password is required' }]}
+      >
+        <Input.Password />
+      </Form.Item>
+      <div>
+        <Text>Use at least 6 characters(and at least 1 number)</Text>
       </div>
-      <div className="input-field col s12">
-        <input
-          id="lastName"
-          type="text"
-          value={lastName}
-          onChange={onInputChange}
-          className={classnames({ invalid: errors.lastName })}
-        />
-        <label htmlFor="lastName">Last Name (optional)</label>
-        <span className="red-text">{errors.lastName}</span>
+      <Form.Item
+        label="Confirm Password"
+        name="passwordConfirm"
+        css={{ marginBottom: '1.3rem' }}
+        rules={[{ required: true, message: 'This field is required' }]}
+      >
+        <Input.Password />
+      </Form.Item>
+
+      <div css={{ marginBottom: '0.4rem' }}>
+        <Text>
+          By clicking Signup, you agree to our <Link>Terms</Link>,{' '}
+          <Link>Data Policy</Link> and <Link>Cookie Policy</Link>.
+        </Text>
       </div>
-      <div className="input-field col s12">
-        <input
-          id="email"
-          type="email"
-          value={email}
-          onChange={onInputChange}
-          className={classnames({ invalid: errors.email })}
-        />
-        <label htmlFor="email">Email</label>
-        <span className="red-text">{errors.email}</span>
-      </div>
-      <div className="input-field col s12">
-        <input
-          id="password"
-          type="password"
-          value={password}
-          onChange={onInputChange}
-          className={classnames({ invalid: errors.password })}
-        />
-        <label htmlFor="password">Password</label>
-        <span className="red-text">{errors.password}</span>
-      </div>
-      <div className="input-field col s12">
-        <input
-          id="passwordConfirm"
-          type="password"
-          value={passwordConfirm}
-          onChange={onInputChange}
-        />
-        <label>Confirm Your Password</label>
-        <span className="red-text">{errors.passwordConfirm}</span>
-      </div>
-      <div className="col s12" style={{ paddingLeft: '12.5px' }}>
-        <button
-          type="submit"
-          style={{
-            width: '140px',
-            borderRadius: '3px',
-            letterSpacing: '1.5px',
-          }}
-          className="btn btn-large hoverable waves-effect waves-light blue accent-3"
-        >
-          Sign Up
-        </button>
-      </div>
-    </form>
+      <Form.Item css={{ marginBottom: 0 }}>
+        <Button type="primary" htmlType="submit">
+          Signup
+        </Button>
+      </Form.Item>
+    </Form>
   );
 }
 
-class Signup extends Component {
-  static propTypes = {
-    signupUser: PropTypes.func.isRequired,
-    auth: PropTypes.object.isRequired,
-    errors: PropTypes.object.isRequired,
-  };
-
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      firstName: '',
-      lastName: '',
-      email: '',
-      password: '',
-      passwordConfirm: '',
-      errors: {},
-    };
-
-    this.onInputChange = this.onInputChange.bind(this);
-    this.onFormSubmit = this.onFormSubmit.bind(this);
-  }
-
-  onInputChange(event) {
-    this.setState({ [event.target.id]: event.target.value });
-  }
-
-  onFormSubmit(event) {
-    event.preventDefault();
-
-    const newUser = {
-      firstName: this.state.firstName,
-      lastName: this.state.lastName,
-      email: this.state.email,
-      password: this.state.password,
-      passwordConfirm: this.state.passwordConfirm,
-    };
-
-    this.props.signupUser(newUser, this.props.history, () =>
-      M.toast({ html: 'Successfully created account.' }),
-    );
-  }
-
-  componentWillReceiveProps(nextProps) {
-    // Mix redux errors with component state errors
-    if (nextProps.errors) {
-      this.setState({
-        errors: nextProps.errors,
+function Signup({ signupUser, errors, history }) {
+  const onSignup = useCallback(
+    (values) => {
+      signupUser(values, () => {
+        history.push('/login');
+        notification.open({ message: 'Successfully created an account' });
       });
-    }
-  }
-
-  render() {
-    return (
-      <>
-        <div className="container">
-          <div className="row">
-            <div className="col s8 offset-s2">
-              <Link to="/" className="btn-flat waves-effect">
-                <i className="material-icons left">keyboard_backspace</i> Back
-              </Link>
-              <div className="col s12">
-                <h3>Signup</h3>
-                <p className="grey-text text-darken-1">
-                  Already have an account? <Link to="/login">Login</Link>
-                </p>
-              </div>
-              <SignupForm
-                onSubmit={this.onFormSubmit}
-                onInputChange={this.onInputChange}
-                firstName={this.state.firstName}
-                lastName={this.state.lastName}
-                email={this.state.email}
-                password={this.state.password}
-                passwordConfirm={this.state.passwordConfirm}
-                errors={this.state.errors}
-              />
+    },
+    [signupUser, history],
+  );
+  return (
+    <Layout
+      css={{
+        backgroundColor: 'white',
+        paddingTop: '2rem',
+      }}
+    >
+      <Content
+        css={{ maxWidth: '1200px', margin: '0 auto', padding: '0 2rem' }}
+      >
+        <Row align="stretch">
+          <Col xs={24} sm={12} css={{ padding: '2rem' }}>
+            <div css={{ marginBottom: '1.5rem' }}>
+              <Title level={3} css={{ marginBottom: '0 !important' }}>
+                Sign up
+              </Title>
+              <Text>
+                Already have an account?{' '}
+                <RouterLink to="/login">Login</RouterLink>
+              </Text>
             </div>
-          </div>
-        </div>
-      </>
-    );
-  }
+            <SignupForm onSignup={onSignup} errors={errors} />
+            <Col span={24}>
+              <Divider type="horizontal" css={{ marginTop: '1.5rem' }} />
+            </Col>
+            <Col span={24}>
+              <GoogleLoginButton />
+            </Col>
+          </Col>
+          <Col xs={0} sm={12}>
+            <img
+              src={SignupImage}
+              alt={'Sign Up Image'}
+              css={{ maxWidth: '100%' }}
+            />
+          </Col>
+        </Row>
+      </Content>
+    </Layout>
+  );
 }
 
 // Maps store state to props
 const mapStateToProps = (state) => ({
-  auth: state.auth,
   errors: state.errors,
 });
 
@@ -185,11 +202,3 @@ const mapDispatchToProps = {
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Signup);
-
-/*
-Goals: 
-- Have validation done in real time
-  - (1) Debounce (2) After blur (3) OnKeyDown
-- Server must also do validation
-- Both validation checks should interact with same error system
-*/

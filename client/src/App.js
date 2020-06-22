@@ -5,18 +5,18 @@ import { Provider } from 'react-redux';
 import createAppStore from './store/createAppStore';
 
 // -- Components --
-import Header from './components/Header';
-import PrivateRoute from './components/PrivateRoute';
-import NonAuthenticatedRoute from './components/NonAuthenticatedRoute';
+import PrivateRoute from './components/Routes/PrivateRoute';
+import NonAuthenticatedRoute from './components/Routes/NonAuthenticatedRoute';
+import IntflaskLayout from './components/IntflaskLayout';
 
 // -- Pages --
-import Welcome from './pages/Welcome';
+import Administrator from './pages/Administrator';
+import CreateCourse from './pages/CreateCourse';
+import EditCourse from './pages/EditCourse';
+import Landing from './pages/Landing';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
-import Home from './pages/Home';
-import Footer from './components/Footer';
-import Profile from './pages/Profile';
-import Notebook from './pages/Notebook';
+import TeacherSignup from './pages/TeacherSignup';
 
 // -- Actions --
 import {
@@ -24,7 +24,7 @@ import {
   authenticateJwtFromLocalStorage,
 } from './actions/auth';
 
-// These functions only get called when the App component refreshes, which will only happen when you refresh the page
+// Setup store
 const store = createAppStore();
 store.dispatch(moveJwtFromCookiesToLocalStorage());
 store.dispatch(authenticateJwtFromLocalStorage());
@@ -33,18 +33,29 @@ export default function App() {
   return (
     <Provider store={store}>
       <Router>
-        <div className="App">
-          <Header />
+        <IntflaskLayout>
           <Switch>
-            <Route exact path="/" component={Welcome} />
+            <Route exact path="/" component={Landing} />
             <NonAuthenticatedRoute exact path="/login" component={Login} />
             <NonAuthenticatedRoute exact path="/signup" component={Signup} />
-            <PrivateRoute exact path="/home" component={Home} />
-            <PrivateRoute exact path="/profile" component={Profile} />
-            <PrivateRoute exact path="/notebook" component={Notebook} />
+            <PrivateRoute
+              exact
+              path="/teacher-signup"
+              component={TeacherSignup}
+            />
+            <PrivateRoute exact path="/admin" component={Administrator} />
+            <PrivateRoute
+              exact
+              path="/admin/edit-course/:courseId"
+              component={EditCourse}
+            />
+            <PrivateRoute
+              exact
+              path="/admin/create-course"
+              component={CreateCourse}
+            />
           </Switch>
-          <Footer />
-        </div>
+        </IntflaskLayout>
       </Router>
     </Provider>
   );
