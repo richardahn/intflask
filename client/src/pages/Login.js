@@ -1,8 +1,7 @@
 /** @jsx jsx */
-import { css, jsx } from '@emotion/core';
-import React, { Component, useCallback, useEffect } from 'react';
+import { jsx } from '@emotion/core';
+import React, { useCallback, useEffect } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
-import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { loginUser } from '../actions/auth';
 import { GoogleLoginButton } from '../components/basic-components/GoogleLoginButton';
