@@ -13,7 +13,7 @@ export default function Settings(props) {
   return (
     <Layout>
       <Header css={{ backgroundColor: 'white' }}>
-        <Title level={3}>Settings</Title>
+        <Title level={4}>Settings</Title>
       </Header>
       <Layout>
         <Sider theme="light" breakpoint="lg" collapsedWidth="0">

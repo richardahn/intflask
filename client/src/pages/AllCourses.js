@@ -11,7 +11,7 @@ import {
 } from '@ant-design/icons';
 
 const { Content, Header, Footer, Sider } = Layout;
-const { Text } = Typography;
+const { Text, Title } = Typography;
 
 const listData = [];
 for (let i = 0; i < 23; i++) {
@@ -91,22 +91,26 @@ function Courses() {
 export default function AllCourses(props) {
   return (
     <Layout>
-      <Sider theme="light" breakpoint="lg" collapsedWidth="0">
-        <Menu mode="inline">
-          <Menu.Item key="0" disabled>
-            Filter
-          </Menu.Item>
-          <Menu.Item key="1">
-            <GoogleOutlined />
-            <Text>Option 1</Text>
-          </Menu.Item>
-        </Menu>
-      </Sider>
+      <Header css={{ backgroundColor: 'white' }}>
+        <Title level={4}>All Courses</Title>
+      </Header>
       <Layout>
-        <Header css={{ backgroundColor: 'white' }}>All Courses</Header>
-        <Content css={{ backgroundColor: 'white', padding: '0 50px' }}>
-          <Courses />
-        </Content>
+        <Sider theme="light" breakpoint="lg" collapsedWidth="0">
+          <Menu mode="inline">
+            <Menu.Item key="0" disabled>
+              Filter
+            </Menu.Item>
+            <Menu.Item key="1">
+              <GoogleOutlined />
+              <Text>Option 1</Text>
+            </Menu.Item>
+          </Menu>
+        </Sider>
+        <Layout>
+          <Content css={{ backgroundColor: 'white', padding: '0 50px' }}>
+            <Courses />
+          </Content>
+        </Layout>
       </Layout>
     </Layout>
   );

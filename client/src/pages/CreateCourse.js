@@ -25,7 +25,7 @@ const { Content, Header } = Layout;
 const { Title, Text } = Typography;
 
 export default function CreateCourse({ history }) {
-  const onBack = useCallback(() => history.goBack(), [history]);
+  const goBack = useCallback(() => history.goBack(), [history]);
   const onFinish = useCallback((values) => {
     console.log('Success: ', values);
   }, []);
@@ -37,7 +37,7 @@ export default function CreateCourse({ history }) {
       <PageHeader
         css={{ backgroundColor: 'white' }}
         className="site-page-header"
-        onBack={onBack}
+        onBack={goBack}
         title="Create Course"
         subTitle="Subtitle"
       >
@@ -75,7 +75,9 @@ export default function CreateCourse({ history }) {
               </Form.Item>
               <Form.Item css={{ marginBottom: 0 }}>
                 <Space>
-                  <Button type="secondary">Cancel</Button>
+                  <Button type="secondary" onClick={goBack}>
+                    Cancel
+                  </Button>
                   <RouterLink to="/admin/edit-course/777">
                     <Button type="primary" htmlType="submit">
                       Start Editing

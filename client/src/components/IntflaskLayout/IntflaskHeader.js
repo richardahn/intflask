@@ -55,6 +55,14 @@ function IntflaskHeader(props) {
   const navbarItems = props.auth.isAuthenticated
     ? [
         {
+          name: 'All Courses',
+          to: '/all-courses',
+        },
+        {
+          name: 'My Courses',
+          to: '/my-courses',
+        },
+        {
           name: 'Settings',
           to: '/settings',
         },

@@ -39,7 +39,7 @@ export default function Administrator() {
   return (
     <Layout>
       <Header css={{ backgroundColor: 'white' }}>
-        <Title level={3}>Administrator Dashboard</Title>
+        <Title level={4}>Administrator Dashboard</Title>
       </Header>
       <Content css={{ backgroundColor: 'white', padding: '0 3rem' }}>
         <Space align="center">
