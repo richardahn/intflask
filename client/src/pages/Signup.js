@@ -6,6 +6,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { signupUser } from '../actions/auth';
 import SignupImage from '../assets/signup.jpg';
+import SignupImageTiny from '../assets/signup-tiny.jpg';
 
 import {
   Card,
@@ -22,6 +23,7 @@ import {
 } from 'antd';
 import Sider from 'antd/lib/layout/Sider';
 import { GoogleLoginButton } from '../components/basic-components/GoogleLoginButton';
+import ProgressiveImage from '../components/ProgressiveImage';
 const { Content, Header } = Layout;
 const { Title, Text, Link } = Typography;
 
@@ -180,10 +182,11 @@ function Signup({ signupUser, errors, history }) {
             </Col>
           </Col>
           <Col xs={0} sm={12}>
-            <img
+            <ProgressiveImage
               src={SignupImage}
-              alt={'Sign Up Image'}
-              css={{ maxWidth: '100%' }}
+              placeholderSrc={SignupImageTiny}
+              alt="Signup Image"
+              css={{ maxWidth: '100%', width: '10000px' }}
             />
           </Col>
         </Row>

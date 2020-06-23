@@ -93,12 +93,22 @@ export default function Administrator() {
               <List.Item.Meta
                 avatar={<Avatar src={item.avatar} />}
                 title={
-                  <React.Fragment>
-                    <a css={{ marginRight: '1rem' }}>{item.title}</a>
-                    <Tag icon={<CheckCircleOutlined />} color="success">
-                      deployed
-                    </Tag>
-                  </React.Fragment>
+                  <div
+                    css={{ display: 'flex', justifyContent: 'space-between' }}
+                  >
+                    <div>
+                      <a css={{ marginRight: '1rem' }}>
+                        <Text>{item.title}</Text>
+                      </a>
+                      <Tag icon={<CheckCircleOutlined />} color="success">
+                        deployed
+                      </Tag>
+                    </div>
+                    <Space>
+                      <Button>View</Button>
+                      <Button>Edit</Button>
+                    </Space>
+                  </div>
                 }
                 description={item.description}
               />
