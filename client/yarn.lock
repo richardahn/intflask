@@ -9150,7 +9150,7 @@ prompts@^2.0.1:
     kleur "^3.0.3"
     sisteransi "^1.0.4"
 
-prop-types@^15.6.2, prop-types@^15.7.2:
+prop-types@^15.5.7, prop-types@^15.6.2, prop-types@^15.7.2:
   version "15.7.2"
   resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.7.2.tgz#52c41e75b8c87e72b9d9360e0206b99dcbffa6c5"
   integrity sha512-8QQikdH7//R2vurIJSutZ1smHYTcLpRWEOlHnzcWHmBYrOGUysKwSsrC89BCiFj3CbrfJ/nXFdJepOVrY1GCHQ==
@@ -9789,6 +9789,14 @@ react-scripts@3.4.1:
     workbox-webpack-plugin "4.3.1"
   optionalDependencies:
     fsevents "2.1.2"
+
+react-split@^2.0.7:
+  version "2.0.7"
+  resolved "https://registry.yarnpkg.com/react-split/-/react-split-2.0.7.tgz#083b26edf208daefdc9a6638f1e0836be727acb2"
+  integrity sha512-g8knkXF2unPS7XKqFVX3Z7s+ZuSjAq4lElxEy6GG7ZACyK/G1oLkdUYR/W6WwOQgMFskFpacLEnHJDZl40eO1w==
+  dependencies:
+    prop-types "^15.5.7"
+    split.js "^1.5.9"
 
 react-transition-group@^4.4.0:
   version "4.4.1"
@@ -10758,6 +10766,11 @@ split-string@^3.0.1, split-string@^3.0.2:
   integrity sha512-NzNVhJDYpwceVVii8/Hu6DKfD2G+NrQHlS/V/qgv763EYudVwEcMQNxd2lh+0VrUByXN/oJkl5grOhYWvQUYiw==
   dependencies:
     extend-shallow "^3.0.0"
+
+split.js@^1.5.9:
+  version "1.6.0"
+  resolved "https://registry.yarnpkg.com/split.js/-/split.js-1.6.0.tgz#bc49bb484eeea0785192a62d9b748c0f5e673954"
+  integrity sha512-83xRNcvWNuLDdBHpfm25Lzj3H2yCAXvPb+7QIKQMCSd3yjhSMSjLvr7+FZYJb3qc0/U0V2B5QRBrzfAVXSw36g==
 
 sprintf-js@~1.0.2:
   version "1.0.3"
