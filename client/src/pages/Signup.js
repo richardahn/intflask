@@ -19,7 +19,7 @@ import {
   Input,
   Button,
   Checkbox,
-  notification,
+  message,
 } from 'antd';
 import Sider from 'antd/lib/layout/Sider';
 import { GoogleLoginButton } from '../components/basic-components/GoogleLoginButton';
@@ -147,7 +147,7 @@ function Signup({ signupUser, errors, history }) {
     (values) => {
       signupUser(values, () => {
         history.push('/login');
-        notification.open({ message: 'Successfully created an account' });
+        message.success('Successfully created an account');
       });
     },
     [signupUser, history],

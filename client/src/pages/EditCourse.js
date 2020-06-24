@@ -31,6 +31,7 @@ const scrollbarCss = [
 ];
 
 const { Content, Header, Sider } = Layout;
+const { Text } = Typography;
 
 const mainHeaderHeight = 64;
 const pageHeaderHeight = 72;
@@ -51,6 +52,21 @@ class TopicOrPage {
   }
 }
 
+function EmptyMenuItem() {
+  return (
+    <li
+      css={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: '36px',
+      }}
+    >
+      <Text type="secondary">Empty</Text>
+    </li>
+  );
+}
+
 function Breadcrumbs({ items }) {
   return (
     <Breadcrumb>
@@ -64,45 +80,37 @@ function Breadcrumbs({ items }) {
   );
 }
 
-function CourseView({ course }) {
+function CourseView({ course, onCourseChange }) {
   const [collapsedTopic, setCollapsedTopic] = useState(false);
   const onCollapseTopic = useCallback(
     (collapsed) => setCollapsedTopic(collapsed),
-    [setCollapsedTopic],
+    [],
   );
-
   const [collapsedPage, setCollapsedPage] = useState(false);
   const onCollapsePage = useCallback(
     (collapsed) => setCollapsedPage(collapsed),
-    [setCollapsedPage],
+    [],
   );
 
+  // Represents the currently selected topic and page, and the curren
   const [topicIndex, setTopicIndexRaw] = useState(null);
-  const [pageIndex, setPageIndexRaw] = useState(null);
-  const [content, setContent] = useState(course.main.content);
-  const [breadcrumbItems, setBreadcrumbItems] = useState(null);
-  const setPageIndex = useCallback(
-    (pageIndex) => {
-      setPageIndexRaw(pageIndex);
-      setContent(course.topics[topicIndex].children[pageIndex].content);
-    },
-    [course, topicIndex, setPageIndexRaw, setContent],
-  );
+  const [pageIndex, setPageIndex] = useState(null);
   const setTopicIndex = useCallback(
     (topicIndex) => {
       setTopicIndexRaw(topicIndex);
-      setPageIndexRaw(null);
-      setContent(course.topics[topicIndex].content);
+      setPageIndex(null);
     },
-    [course, setTopicIndexRaw, setPageIndexRaw, setContent],
+    [course],
   );
   const setMain = useCallback(() => {
     setTopicIndexRaw(null);
-    setPageIndexRaw(null);
-    setContent(course.main.content);
-  }, [course, setTopicIndexRaw, setPageIndexRaw]);
+    setPageIndex(null);
+  }, []);
 
+  const [breadcrumbItems, setBreadcrumbItems] = useState(null);
+  const [content, setContent] = useState(null);
   useEffect(() => {
+    // Set breadcrumb
     const items = [{ content: <HomeOutlined />, onClick: setMain }];
     if (topicIndex != null) {
       items.push({
@@ -116,8 +124,76 @@ function CourseView({ course }) {
       });
     }
     setBreadcrumbItems(items);
-  }, [setMain, setTopicIndex, topicIndex, pageIndex, course]);
+
+    // Set content
+    if (pageIndex != null) {
+      setContent(course.topics[topicIndex].children[pageIndex].content);
+    } else if (topicIndex != null) {
+      setContent(course.topics[topicIndex].content);
+    } else {
+      setContent(course.main.content);
+    }
+  }, [topicIndex, pageIndex, course]);
+
+  const addTopicGroup = useCallback(() => {
+    const newTopics = course.topics.map((topic) => {
+      const newTopic = {
+        ...topic,
+      };
+      if (topic.children != null) {
+        newTopic['children'] = topic.children.map((page) => ({ ...page }));
+      }
+      return newTopic;
+    });
+    newTopics.push({
+      name: 'New Topic',
+      content: 'Newly added topic group',
+      children: [],
+    });
+    onCourseChange({ ...course, main: { ...course.main }, topics: newTopics });
+  }, [course, onCourseChange]);
+  const addTopic = useCallback(() => {
+    const newTopics = course.topics.map((topic) => {
+      const newTopic = {
+        ...topic,
+      };
+      if (topic.children != null) {
+        newTopic['children'] = topic.children.map((page) => ({ ...page }));
+      }
+      return newTopic;
+    });
+    newTopics.push({
+      name: 'New Topic',
+      content: 'Newly added topic page',
+    });
+    onCourseChange({ ...course, main: { ...course.main }, topics: newTopics });
+  }, [course, onCourseChange]);
+  const addPage = useCallback(() => {
+    const newTopics = course.topics.map((topic, index) => {
+      const newTopic = {
+        ...topic,
+      };
+      if (topic.children != null) {
+        newTopic['children'] = topic.children.map((page) => ({ ...page }));
+
+        if (index === topicIndex) {
+          newTopic.children.push({
+            name: 'New Page',
+            content: 'Newly added page',
+          });
+        }
+      }
+      return newTopic;
+    });
+    onCourseChange({ ...course, main: { ...course.main }, topics: newTopics });
+  }, [course, onCourseChange, topicIndex]);
+
+  // Debug
+  console.log('-- Rendering EditCourse -- ');
   console.log(`Topic = ${topicIndex}, Page = ${pageIndex}`);
+  console.log(course);
+  console.log('');
+
   return (
     <React.Fragment>
       {/* Status Bar */}
@@ -153,17 +229,15 @@ function CourseView({ course }) {
           onCollapse={onCollapseTopic}
           width={courseSidebarWidth}
         ></Sider>
-        {topicIndex != null &&
-          course.topics[topicIndex].children &&
-          course.topics[topicIndex].children.length > 0 && (
-            <Sider
-              theme="light"
-              collapsible
-              collapsed={collapsedPage}
-              onCollapse={onCollapsePage}
-              width={courseSidebarWidth}
-            ></Sider>
-          )}
+        {topicIndex != null && course.topics[topicIndex].children && (
+          <Sider
+            theme="light"
+            collapsible
+            collapsed={collapsedPage}
+            onCollapse={onCollapsePage}
+            width={courseSidebarWidth}
+          ></Sider>
+        )}
 
         {/* Fixed Sidebar Container */}
         <div
@@ -201,7 +275,7 @@ function CourseView({ course }) {
                 Main
               </Menu.Item>
               <Menu.Divider />
-              {course.topics &&
+              {course.topics && course.topics.length > 0 ? (
                 course.topics.map((item, index) => (
                   <Menu.Item
                     key={index}
@@ -217,10 +291,17 @@ function CourseView({ course }) {
                   >
                     {item.name}
                   </Menu.Item>
-                ))}
+                ))
+              ) : (
+                <EmptyMenuItem />
+              )}
               <Menu.Divider />
-              <Menu.Item icon={<PlusOutlined />}>Add Topic Group</Menu.Item>
-              <Menu.Item icon={<PlusOutlined />}>Add Topic</Menu.Item>
+              <Menu.Item icon={<PlusOutlined />} onClick={addTopicGroup}>
+                Add Topic Group
+              </Menu.Item>
+              <Menu.Item icon={<PlusOutlined />} onClick={addTopic}>
+                Add Topic
+              </Menu.Item>
             </Menu>
           </Sider>
           {/* Pages Sidebar */}
@@ -238,13 +319,19 @@ function CourseView({ course }) {
                 mode="inline"
                 selectedKeys={[String(pageIndex)]}
               >
-                {course.topics[topicIndex].children.map((item, index) => (
-                  <Menu.Item key={index} onClick={() => setPageIndex(index)}>
-                    {item.name}
-                  </Menu.Item>
-                ))}
+                {course.topics[topicIndex].children.length > 0 ? (
+                  course.topics[topicIndex].children.map((item, index) => (
+                    <Menu.Item key={index} onClick={() => setPageIndex(index)}>
+                      {item.name}
+                    </Menu.Item>
+                  ))
+                ) : (
+                  <EmptyMenuItem />
+                )}
                 <Menu.Divider />
-                <Menu.Item icon={<PlusOutlined />}>Add Page</Menu.Item>
+                <Menu.Item icon={<PlusOutlined />} onClick={addPage}>
+                  Add Page
+                </Menu.Item>
               </Menu>
             </Sider>
           )}
@@ -270,57 +357,12 @@ export default function EditCourse({ match, history }) {
   const { courseId, pageId } = match.params;
   const onBack = useCallback(() => history.goBack(), [history]);
 
-  const course = {
+  const [course, setCourse] = useState({
     main: {
-      content: 'hey this is main',
+      content: 'Main Course',
     },
-    topics: [
-      {
-        name: 'Topic 1',
-        content: 'hey this is Topic 1',
-        children: [
-          { name: 'Subtopic 1', content: 'h1' },
-          { name: 'Subtopic 2', content: 'h2' },
-          { name: 'Subtopic 3', content: 'h3' },
-          { name: 'Subtopic 4', content: 'h4' },
-        ],
-      },
-      {
-        name: 'Topic 2',
-        content: 'hey this is Topic 2',
-        children: [
-          { name: 'Subtopic 1', content: 'h1' },
-          { name: 'Subtopic 2', content: 'h2' },
-          { name: 'Subtopic 3', content: 'h3' },
-          { name: 'Subtopic 4', content: 'h4' },
-        ],
-      },
-      {
-        name: 'Review',
-        content: 'hey this is Review',
-      },
-      {
-        name: 'Topic 3',
-        content: 'hey this is Topic 3',
-        children: [
-          { name: 'Subtopic 1', content: 'h1' },
-          { name: 'Subtopic 2', content: 'h2' },
-          { name: 'Subtopic 3', content: 'h3' },
-          { name: 'Subtopic 4', content: 'h4' },
-        ],
-      },
-      {
-        name: 'Topic 4',
-        content: 'hey this is Topic 4',
-        children: [
-          { name: 'Subtopic 1', content: 'h1' },
-          { name: 'Subtopic 2', content: 'h2' },
-          { name: 'Subtopic 3', content: 'h3' },
-          { name: 'Subtopic 4', content: 'h4' },
-        ],
-      },
-    ],
-  };
+    topics: [],
+  });
 
   return (
     <React.Fragment>
@@ -332,7 +374,7 @@ export default function EditCourse({ match, history }) {
         subTitle="Course 777"
       />
       <Layout>
-        <CourseView course={course} />
+        <CourseView course={course} onCourseChange={setCourse} />
       </Layout>
     </React.Fragment>
   );

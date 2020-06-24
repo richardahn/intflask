@@ -4,6 +4,7 @@ import { Editor, Transforms, Range, Point, createEditor } from 'slate';
 import { withHistory } from 'slate-history';
 
 import { Typography } from 'antd';
+import { Blockquote, Feedback } from '../styles';
 const { Text, Paragraph, Title } = Typography;
 
 const SHORTCUTS = {
@@ -117,7 +118,7 @@ const withShortcuts = (editor) => {
 const Element = ({ attributes, children, element }) => {
   switch (element.type) {
     case 'block-quote':
-      return <blockquote {...attributes}>{children}</blockquote>;
+      return <Blockquote {...attributes}>{children}</Blockquote>;
     case 'bulleted-list':
       return <ul {...attributes}>{children}</ul>;
     case 'heading-one':
@@ -135,7 +136,7 @@ const Element = ({ attributes, children, element }) => {
     case 'list-item':
       return <li {...attributes}>{children}</li>;
     default:
-      return <p {...attributes}>{children}</p>;
+      return <Feedback {...attributes}>{children}</Feedback>;
   }
 };
 

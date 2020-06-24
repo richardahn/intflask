@@ -1,7 +1,7 @@
 /** @jsx jsx */
 import { css, jsx } from '@emotion/core';
-
-// todo: consider using the styled-components syntax instead@@@@@@@@@@@@@
+import styled from '@emotion/styled';
+import React from 'react';
 
 // -- Scrollbar --
 export const scrollbarCss = css({
@@ -53,3 +53,58 @@ export const paddedContentCss = css([
     padding: '0 3rem',
   },
 ]);
+
+export const Blockquote = styled.blockquote`
+  margin: 20px 0;
+  padding-left: 1.5rem;
+  border-left: 5px solid #ee6e73;
+`;
+
+export const Feedback = React.forwardRef(function (
+  { children, ...props },
+  ref,
+) {
+  return (
+    <React.Fragment>
+      <div
+        {...props}
+        css={css`
+          position: relative;
+          display: inline-block;
+
+          .feedback-hover {
+            visibility: hidden;
+            width: 120px;
+            background-color: black;
+            color: white;
+            text-align: center;
+            padding: 5px 0;
+
+            position: absolute;
+            z-index: 1;
+            top: -5px;
+            left: 100%;
+          }
+
+          &:hover .feedback-hover {
+            visibility: visible;
+          }
+
+          .feedback-hover:hover {
+            visibility: visible;
+          }
+        `}
+        ref={ref}
+      >
+        {children}
+        <div
+          className="feedback-hover"
+          contentEditable={false}
+          css={{ userSelect: 'none' }}
+        >
+          Overlay
+        </div>
+      </div>
+    </React.Fragment>
+  );
+});
