@@ -2,7 +2,7 @@
 import { css, jsx } from '@emotion/core';
 import styled from '@emotion/styled';
 import React from 'react';
-import { Button, Tooltip, Space, Popover } from 'antd';
+import { Button, Tooltip, Space, Popover, Badge } from 'antd';
 import {
   QuestionOutlined,
   HeartOutlined,
@@ -118,25 +118,32 @@ export const Feedback = React.forwardRef(function (
         <div className="feedback-hover-zone" contentEditable={false}>
           <div className="feedback-hover-content">
             <Space>
-              <Tooltip title="Helpful!" color="#eb2f96">
-                <Button shape="circle" icon={<HeartOutlined />} />
-              </Tooltip>
-              <Tooltip title="Confused?" color="#fa541c">
-                <Button shape="circle" icon={<QuestionOutlined />} />
-              </Tooltip>
+              <Badge count={5}>
+                <Tooltip title="Helpful!" color="#eb2f96">
+                  <Button shape="circle" icon={<HeartOutlined />} />
+                </Tooltip>
+              </Badge>
+
+              <Badge count={5}>
+                <Tooltip title="Confused?" color="#fa541c">
+                  <Button shape="circle" icon={<QuestionOutlined />} />
+                </Tooltip>
+              </Badge>
               <Popover
                 placement="bottomRight"
                 title={<span>Comments</span>}
                 content={<div>Comments Body</div>}
                 trigger="click"
               >
-                <Tooltip
-                  title="Add a Comment"
-                  placement="topRight"
-                  color="#08979c"
-                >
-                  <Button shape="circle" icon={<CommentOutlined />} />
-                </Tooltip>
+                <Badge count={5}>
+                  <Tooltip
+                    title="Add a Comment"
+                    placement="topRight"
+                    color="#08979c"
+                  >
+                    <Button shape="circle" icon={<CommentOutlined />} />
+                  </Tooltip>
+                </Badge>
               </Popover>
             </Space>
           </div>

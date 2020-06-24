@@ -8,6 +8,7 @@ import { withHistory } from 'slate-history';
 
 import { Typography, Button, Alert } from 'antd';
 import { Blockquote, Feedback } from '../styles';
+import Base from 'antd/lib/typography/Base';
 const { Text, Paragraph, Title } = Typography;
 
 const SHORTCUTS = {
@@ -25,17 +26,25 @@ const SHORTCUTS = {
 
 const MarkdownShortcutsExample = () => {
   // Feedback Column
-  const [feedbackColumnOpen, setFeedbackColumnOpen] = useState(true);
+  const [feedbackOn, setFeedbackOn] = useState(true);
 
   const [value, setValue] = useState(initialValue);
-  const renderElement = useCallback((props) => <Element {...props} />, []);
+  const renderElement = useCallback(
+    (props) =>
+      feedbackOn ? (
+        React.createElement(withFeedback(Element), props)
+      ) : (
+        <Element {...props} />
+      ),
+    [feedbackOn],
+  );
   const editor = useMemo(
     () => withShortcuts(withReact(withHistory(createEditor()))),
     [],
   );
 
   return (
-    <div css={{ marginRight: feedbackColumnOpen ? '5rem' : 0 }}>
+    <div css={{ marginRight: feedbackOn ? '5rem' : 0 }}>
       <Alert
         message="Feedback"
         type="info"
@@ -43,7 +52,7 @@ const MarkdownShortcutsExample = () => {
         closable
         showIcon
       />
-      <Button onClick={() => setFeedbackColumnOpen(!feedbackColumnOpen)}>
+      <Button onClick={() => setFeedbackOn(!feedbackOn)}>
         Toggle Feedback
       </Button>
       <Slate
@@ -159,9 +168,15 @@ const Element = ({ attributes, children, element }) => {
     case 'list-item':
       return <li {...attributes}>{children}</li>;
     default:
-      return <Feedback {...attributes}>{children}</Feedback>;
+      return <p {...attributes}>{children}</p>;
   }
 };
+
+const withFeedback = (BaseComponent) => ({ children, ...props }) => (
+  <Feedback>
+    <BaseComponent {...props}>{children}</BaseComponent>
+  </Feedback>
+);
 
 const initialValue = [
   {
