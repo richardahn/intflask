@@ -39,7 +39,6 @@ export default function CreateCourse({ history }) {
         className="site-page-header"
         onBack={goBack}
         title="Create Course"
-        subTitle="Subtitle"
       >
         <Text type="secondary">
           This course will not be immediately available to the public. You will

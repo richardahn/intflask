@@ -370,8 +370,8 @@ export default function EditCourse({ match, history }) {
         css={fixedHeaderCssAtHeight(mainHeaderHeight)}
         className="site-page-header"
         onBack={onBack}
-        title="Edit Course"
-        subTitle="Course 777"
+        title="React App Tutorial"
+        subTitle="Editing Mode"
       />
       <Layout>
         <CourseView course={course} onCourseChange={setCourse} />
