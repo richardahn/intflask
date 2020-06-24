@@ -2,6 +2,12 @@
 import { css, jsx } from '@emotion/core';
 import styled from '@emotion/styled';
 import React from 'react';
+import { Button, Tooltip, Space, Popover } from 'antd';
+import {
+  QuestionOutlined,
+  HeartOutlined,
+  CommentOutlined,
+} from '@ant-design/icons';
 
 // -- Scrollbar --
 export const scrollbarCss = css({
@@ -70,39 +76,70 @@ export const Feedback = React.forwardRef(function (
         {...props}
         css={css`
           position: relative;
-          display: inline-block;
+          width: 100%;
+          .feedback-hover-zone {
+            /* Hide initially */
+            opacity: 0;
+            transition: opacity 0.1s ease-in;
 
-          .feedback-hover {
-            visibility: hidden;
-            width: 120px;
-            background-color: black;
-            color: white;
-            text-align: center;
-            padding: 5px 0;
+            /* General css */
+            width: 4rem;
+            padding-left: 0.5rem;
 
+            /* Positioning */
             position: absolute;
             z-index: 1;
-            top: -5px;
+            top: 0;
             left: 100%;
-          }
+            height: 100%;
 
-          &:hover .feedback-hover {
-            visibility: visible;
-          }
+            /* Important to avoid issue with slate.js */
+            user-select: none;
 
-          .feedback-hover:hover {
-            visibility: visible;
+            /* Child positioning */
+            display: flex;
+            align-items: center;
+          }
+          &:hover .feedback-hover-zone {
+            opacity: 1;
+          }
+          .feedback-hover-zone:hover {
+            opacity: 1;
+          }
+          .feedback-hover-content {
+            color: white;
+            text-align: center;
+            padding: 0.3rem;
           }
         `}
         ref={ref}
       >
         {children}
-        <div
-          className="feedback-hover"
-          contentEditable={false}
-          css={{ userSelect: 'none' }}
-        >
-          Overlay
+        <div className="feedback-hover-zone" contentEditable={false}>
+          <div className="feedback-hover-content">
+            <Space>
+              <Tooltip title="Helpful!" color="#eb2f96">
+                <Button shape="circle" icon={<HeartOutlined />} />
+              </Tooltip>
+              <Tooltip title="Confused?" color="#fa541c">
+                <Button shape="circle" icon={<QuestionOutlined />} />
+              </Tooltip>
+              <Popover
+                placement="bottomRight"
+                title={<span>Comments</span>}
+                content={<div>Comments Body</div>}
+                trigger="click"
+              >
+                <Tooltip
+                  title="Add a Comment"
+                  placement="topRight"
+                  color="#08979c"
+                >
+                  <Button shape="circle" icon={<CommentOutlined />} />
+                </Tooltip>
+              </Popover>
+            </Space>
+          </div>
         </div>
       </div>
     </React.Fragment>

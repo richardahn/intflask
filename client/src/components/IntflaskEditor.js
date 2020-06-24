@@ -1,9 +1,12 @@
+/** @jsx jsx */
+// -- General Imports --
+import { css, jsx } from '@emotion/core';
 import React, { useState, useCallback, useMemo } from 'react';
 import { Slate, Editable, withReact } from 'slate-react';
 import { Editor, Transforms, Range, Point, createEditor } from 'slate';
 import { withHistory } from 'slate-history';
 
-import { Typography } from 'antd';
+import { Typography, Button, Alert } from 'antd';
 import { Blockquote, Feedback } from '../styles';
 const { Text, Paragraph, Title } = Typography;
 
@@ -21,21 +24,41 @@ const SHORTCUTS = {
 };
 
 const MarkdownShortcutsExample = () => {
+  // Feedback Column
+  const [feedbackColumnOpen, setFeedbackColumnOpen] = useState(true);
+
   const [value, setValue] = useState(initialValue);
   const renderElement = useCallback((props) => <Element {...props} />, []);
   const editor = useMemo(
     () => withShortcuts(withReact(withHistory(createEditor()))),
     [],
   );
+
   return (
-    <Slate editor={editor} value={value} onChange={(value) => setValue(value)}>
-      <Editable
-        renderElement={renderElement}
-        placeholder="Write some markdown..."
-        spellCheck
-        autoFocus
+    <div css={{ marginRight: feedbackColumnOpen ? '5rem' : 0 }}>
+      <Alert
+        message="Feedback"
+        type="info"
+        description="Remember to add your feedback on the right!"
+        closable
+        showIcon
       />
-    </Slate>
+      <Button onClick={() => setFeedbackColumnOpen(!feedbackColumnOpen)}>
+        Toggle Feedback
+      </Button>
+      <Slate
+        editor={editor}
+        value={value}
+        onChange={(value) => setValue(value)}
+      >
+        <Editable
+          renderElement={renderElement}
+          placeholder="Write some markdown..."
+          spellCheck
+          autoFocus
+        />
+      </Slate>
+    </div>
   );
 };
 
