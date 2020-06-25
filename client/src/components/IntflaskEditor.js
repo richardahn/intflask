@@ -7,7 +7,8 @@ import { Editor, Transforms, Range, Point, createEditor } from 'slate';
 import { withHistory } from 'slate-history';
 
 import { Typography, Button, Alert } from 'antd';
-import { Blockquote, Feedback } from '../styles';
+import { Blockquote } from '../styles';
+import withFeedback from '../hocs/slate/withFeedback';
 import Base from 'antd/lib/typography/Base';
 const { Text, Paragraph, Title } = Typography;
 
@@ -24,15 +25,17 @@ const SHORTCUTS = {
   '######': 'heading-six',
 };
 
+const feedbackColumnWidth = 140;
 const MarkdownShortcutsExample = () => {
   // Feedback Column
   const [feedbackOn, setFeedbackOn] = useState(true);
+  const [readOnly, setReadOnly] = useState(false);
 
   const [value, setValue] = useState(initialValue);
   const renderElement = useCallback(
     (props) =>
       feedbackOn ? (
-        React.createElement(withFeedback(Element), props)
+        React.createElement(withFeedback(Element, feedbackColumnWidth), props)
       ) : (
         <Element {...props} />
       ),
@@ -44,7 +47,7 @@ const MarkdownShortcutsExample = () => {
   );
 
   return (
-    <div css={{ marginRight: feedbackOn ? '5rem' : 0 }}>
+    <div css={{ marginRight: feedbackOn ? feedbackColumnWidth : 0 }}>
       <Alert
         message="Feedback"
         type="info"
@@ -55,6 +58,7 @@ const MarkdownShortcutsExample = () => {
       <Button onClick={() => setFeedbackOn(!feedbackOn)}>
         Toggle Feedback
       </Button>
+      <Button onClick={() => setReadOnly(!readOnly)}>Toggle ReadOnly</Button>
       <Slate
         editor={editor}
         value={value}
@@ -65,6 +69,7 @@ const MarkdownShortcutsExample = () => {
           placeholder="Write some markdown..."
           spellCheck
           autoFocus
+          readOnly={readOnly}
         />
       </Slate>
     </div>
@@ -171,12 +176,6 @@ const Element = ({ attributes, children, element }) => {
       return <p {...attributes}>{children}</p>;
   }
 };
-
-const withFeedback = (BaseComponent) => ({ children, ...props }) => (
-  <Feedback>
-    <BaseComponent {...props}>{children}</BaseComponent>
-  </Feedback>
-);
 
 const initialValue = [
   {
