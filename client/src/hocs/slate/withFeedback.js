@@ -14,6 +14,7 @@ function BadgeTooltipButton({
   badgeColor,
   buttonColor,
   icon,
+  tooltip,
   ...props
 }) {
   return (
@@ -27,7 +28,7 @@ function BadgeTooltipButton({
       {...props}
     >
       <Tooltip
-        title="Helpful!"
+        title={tooltip}
         color={buttonColor}
         css={css`
           &:hover {
@@ -80,6 +81,7 @@ const FeedbackContent = function ({
       >
         <Space>
           <BadgeTooltipButton
+            tooltip="Helpful"
             css={css`
               visibility: ${loveCount !== 0 ? 'visible' : 'hidden'};
             `}
@@ -90,6 +92,7 @@ const FeedbackContent = function ({
           />
 
           <BadgeTooltipButton
+            tooltip="Confusing"
             css={css`
               visibility: ${confusingCount !== 0 ? 'visible' : 'hidden'};
             `}
@@ -110,6 +113,7 @@ const FeedbackContent = function ({
             trigger="click"
           >
             <BadgeTooltipButton
+              tooltip="Add a Comment"
               count={comments?.length ?? 0}
               badgeColor="#fa541c"
               buttonColor="#08979c"

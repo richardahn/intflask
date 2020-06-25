@@ -3,13 +3,16 @@
 import { css, jsx } from '@emotion/core';
 import React, { useCallback, useState, useEffect } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
-import { Layout, Typography, PageHeader, Menu, Breadcrumb } from 'antd';
+import { Layout, Typography, PageHeader, Menu, Breadcrumb, Tag } from 'antd';
 import {
   HomeOutlined,
   UserOutlined,
   PlusOutlined,
   FolderOutlined,
   FileOutlined,
+  SyncOutlined,
+  CheckCircleOutlined,
+  ClockCircleOutlined,
 } from '@ant-design/icons';
 
 // -- Css --
@@ -38,20 +41,6 @@ const pageHeaderHeight = 72;
 const statusBarHeight = 24;
 const courseSidebarWidth = 200;
 
-class TopicGroup {
-  constructor(name, content, children) {
-    this.name = name;
-    this.content = content;
-    this.children = children;
-  }
-}
-class TopicOrPage {
-  constructor(name, content) {
-    this.name = name;
-    this.content = content;
-  }
-}
-
 function EmptyMenuItem() {
   return (
     <li
@@ -77,6 +66,45 @@ function Breadcrumbs({ items }) {
           </Breadcrumb.Item>
         ))}
     </Breadcrumb>
+  );
+}
+const saveStates = {
+  UNSAVED: '0',
+  SAVING: '1',
+  SAVED: '2',
+};
+function StatusBar({ breadcrumbItems, saveState }) {
+  saveState = saveStates.UNSAVED;
+  return (
+    <div
+      css={[
+        {
+          height: `${statusBarHeight}px`,
+          display: 'flex',
+          justifyContent: 'space-between',
+        },
+        fixedHeaderCssAtHeight(mainHeaderHeight + pageHeaderHeight),
+      ]}
+    >
+      <div css={{ marginLeft: '1.5rem' }}>
+        <Breadcrumbs items={breadcrumbItems} />
+      </div>
+      <div css={{ marginRight: '1.5rem' }}>
+        {saveState === saveStates.UNSAVED ? (
+          <Tag color="warning" icon={<ClockCircleOutlined />}>
+            unsaved
+          </Tag>
+        ) : saveState === saveStates.SAVING ? (
+          <Tag color="processing" icon={<SyncOutlined spin />}>
+            saving
+          </Tag>
+        ) : (
+          <Tag color="success" icon={<CheckCircleOutlined />}>
+            saved
+          </Tag>
+        )}
+      </div>
+    </div>
   );
 }
 
@@ -197,18 +225,7 @@ function CourseView({ course, onCourseChange }) {
   return (
     <React.Fragment>
       {/* Status Bar */}
-      <div
-        css={[
-          {
-            height: `${statusBarHeight}px`,
-          },
-          fixedHeaderCssAtHeight(mainHeaderHeight + pageHeaderHeight),
-        ]}
-      >
-        <div css={{ marginLeft: '1.5rem' }}>
-          <Breadcrumbs items={breadcrumbItems} />
-        </div>
-      </div>
+      <StatusBar breadcrumbItems={breadcrumbItems} />
 
       {/* Sidebar */}
       <div

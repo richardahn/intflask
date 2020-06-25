@@ -1,4 +1,4 @@
-import { SET_EDITOR_STATE, SET_EDITOR_DOM_STATE } from '../actions/editor';
+import { SET_EDITOR_STATE } from '../actions/editor';
 
 const initialState = [
   {

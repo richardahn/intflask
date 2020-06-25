@@ -10,6 +10,7 @@ import { Typography, Button, Alert } from 'antd';
 import { Blockquote } from '../styles';
 import withFeedback from '../hocs/slate/withFeedback';
 import Base from 'antd/lib/typography/Base';
+import debounce from '../utils/debounce';
 const { Text, Paragraph, Title } = Typography;
 
 const SHORTCUTS = {
@@ -46,15 +47,12 @@ const MarkdownShortcutsExample = () => {
     [],
   );
 
+  const saveEditor = useCallback(
+    debounce((value) => console.log(value)),
+    [],
+  );
   return (
     <div css={{ marginRight: feedbackOn ? feedbackColumnWidth : 0 }}>
-      <Alert
-        message="Feedback"
-        type="info"
-        description="Remember to add your feedback on the right!"
-        closable
-        showIcon
-      />
       <Button onClick={() => setFeedbackOn(!feedbackOn)}>
         Toggle Feedback
       </Button>
@@ -62,7 +60,10 @@ const MarkdownShortcutsExample = () => {
       <Slate
         editor={editor}
         value={value}
-        onChange={(value) => setValue(value)}
+        onChange={(value) => {
+          setValue(value);
+          saveEditor(value);
+        }}
       >
         <Editable
           renderElement={renderElement}

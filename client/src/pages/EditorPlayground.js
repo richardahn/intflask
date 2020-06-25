@@ -6,7 +6,7 @@ import { Layout, Menu, Typography, Row, Col, Space } from 'antd';
 import { Link as RouterLink } from 'react-router-dom';
 import { GoogleOutlined } from '@ant-design/icons';
 
-import MarkdownShortcutsExample from '../components/IntflaskEditor';
+import MarkdownShortcutsExample from '../components/IntflaskEditorTest';
 
 const { Content, Header, Footer, Sider } = Layout;
 const { Text, Title } = Typography;
