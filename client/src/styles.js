@@ -9,6 +9,7 @@ import {
   CommentOutlined,
 } from '@ant-design/icons';
 
+/* CSS */
 // -- Scrollbar --
 export const scrollbarCss = css({
   overscrollBehavior: 'contain',
@@ -60,8 +61,15 @@ export const paddedContentCss = css([
   },
 ]);
 
+/* Styled Components */
 export const Blockquote = styled.blockquote`
   margin: 20px 0;
   padding-left: 1.5rem;
   border-left: 5px solid #ee6e73;
 `;
+
+/* Layout Values */
+export const mainHeaderHeight = 64;
+export const pageHeaderHeight = 72;
+export const statusBarHeight = 24;
+export const courseSidebarWidth = 200;

@@ -13,10 +13,10 @@ import {
   Form,
   Input,
   Button,
+  Breadcrumb,
   Checkbox,
   notification,
 } from 'antd';
-import Sider from 'antd/lib/layout/Sider';
 const { Content, Header } = Layout;
 const { Title, Text, Link } = Typography;
 
@@ -74,5 +74,31 @@ export function GoogleLoginButton(props) {
         <span className="button-label">Sign in with Google</span>
       </div>
     </Button>
+  );
+}
+export function Breadcrumbs({ items }) {
+  return (
+    <Breadcrumb>
+      {items &&
+        items.map((item, index) => (
+          <Breadcrumb.Item onClick={item.onClick} key={index}>
+            {index === items.length - 1 ? item.content : <a>{item.content}</a>}
+          </Breadcrumb.Item>
+        ))}
+    </Breadcrumb>
+  );
+}
+export function EmptyMenuItem() {
+  return (
+    <li
+      css={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: '36px',
+      }}
+    >
+      <Text type="secondary">Empty</Text>
+    </li>
   );
 }

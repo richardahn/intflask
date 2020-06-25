@@ -4,7 +4,7 @@ import React, { useCallback, useEffect } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { loginUser } from '../actions/auth';
-import { GoogleLoginButton } from '../components/GoogleLoginButton';
+import { GoogleLoginButton } from '../components/intflask-antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import {
   Card,

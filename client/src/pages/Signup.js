@@ -22,7 +22,7 @@ import {
   message,
 } from 'antd';
 import Sider from 'antd/lib/layout/Sider';
-import { GoogleLoginButton } from '../components/GoogleLoginButton';
+import { GoogleLoginButton } from '../components/intflask-antd';
 import ProgressiveImage from '../components/ProgressiveImage';
 const { Content, Header } = Layout;
 const { Title, Text, Link } = Typography;

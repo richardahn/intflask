@@ -3,7 +3,7 @@ const DEFAULT_DEBOUNCE_TIME = 3000;
 const debounce = (func, wait = DEFAULT_DEBOUNCE_TIME) => {
   let timeout; // Shared state for the returned function
 
-  return function executedFunction(...args) {
+  function executedFunction(...args) {
     // Create the function to be invoked when the debounce period ends
     const later = () => {
       timeout = null;
@@ -13,7 +13,12 @@ const debounce = (func, wait = DEFAULT_DEBOUNCE_TIME) => {
     // Refresh timeout
     clearTimeout(timeout);
     timeout = setTimeout(later, wait);
+  }
+  executedFunction.cancel = function () {
+    clearTimeout(timeout);
   };
+
+  return executedFunction;
 };
 
 export default debounce;
