@@ -5,11 +5,21 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "type": "chrome",
+      "type": "node",
       "request": "launch",
-      "name": "Launch Chrome against localhost",
-      "url": "http://localhost:3000",
-      "webRoot": "${workspaceRoot}/src"
+      "name": "Launch Program",
+      "protocol": "inspector",
+      "runtimeExecutable": "yarn",
+      "runtimeArgs": ["dev"],
+      "program": "${workspaceFolder}/src/server.js",
+      "port": 9222,
+      "restart": true,
+      "env": {
+        "BABEL_DISABLE_CACHE": "1",
+        "NODE_ENV": "development"
+      },
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen"
     }
   ]
 }

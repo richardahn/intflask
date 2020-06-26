@@ -17,7 +17,7 @@
   "scripts": {
     "client-install": "npm install --prefix client",
     "start": "node src/server.js",
-    "server": "nodemon src/server.js",
+    "server": "nodemon --inspect=9222 src/server.js",
     "client": "npm start --prefix client",
     "dev": "concurrently \"yarn server\" \"yarn client\"",
     "prettier": "prettier --write \"**/*.js\""

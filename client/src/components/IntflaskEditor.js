@@ -25,6 +25,7 @@ const SHORTCUTS = {
   '######': 'heading-six',
 };
 
+const FEEDBACK_TOP = 50;
 const FEEDBACK_WIDTH = 140;
 export default function IntflaskEditor({
   showFeedback = false,
@@ -32,6 +33,7 @@ export default function IntflaskEditor({
   value,
   onChange,
   feedbackWidth = FEEDBACK_WIDTH,
+  feedbackTop = FEEDBACK_TOP,
   ...props
 }) {
   // Feedback Column
@@ -49,7 +51,13 @@ export default function IntflaskEditor({
     [],
   );
   return (
-    <div style={{ marginRight: showFeedback ? feedbackWidth : 0 }} {...props}>
+    <div
+      style={{
+        marginRight: showFeedback ? feedbackWidth : 0,
+        marginTop: showFeedback ? feedbackTop : 0,
+      }}
+      {...props}
+    >
       <Slate
         editor={editor}
         value={value}
