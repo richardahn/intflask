@@ -43,8 +43,8 @@ function EditCourse({ match, history, setCourse, reset }) {
         css={fixedHeaderCssAtHeight(mainHeaderHeight)}
         className="site-page-header"
         onBack={onBack}
-        title="React App Tutorial"
-        subTitle="Editing Mode"
+        title="How To Build a MERN Stack Website"
+        subTitle="Editing"
       />
       <CourseEditor />
     </React.Fragment>

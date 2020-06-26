@@ -8,9 +8,9 @@ import {
   SET_MAIN,
   SET_CONTENT,
   RESET,
-  APPLY_SAVE_OPERATION,
+  SET_SAVE_STATE,
 } from '../actions/editCourse';
-import { applyOperation, saveOperations, saveStates } from '../enums/saveState';
+import saveStates, { getNextState } from '../enums/saveStates';
 
 const initialState = {
   saveState: null,
@@ -46,7 +46,7 @@ export default function editCourse(state = initialState, action) {
   switch (action.type) {
     case SET_COURSE:
       return {
-        saveState: saveStates.SAVED,
+        saveState: getNextState(state.saveState, saveStates.SAVED),
         currentTopicIndex: null,
         currentPageIndex: null,
         course: action.course,
@@ -97,10 +97,11 @@ export default function editCourse(state = initialState, action) {
         currentPageIndex: null,
       };
     case SET_CONTENT:
+      const nextSaveState = getNextState(state.saveState, saveStates.MODIFIED);
       if (action.pageIndex != null) {
         return {
           ...state,
-          saveState: saveStates.MODIFIED,
+          saveState: nextSaveState,
           course: {
             ...state.course,
             topics: state.course.topics.map((topic, i) =>
@@ -123,7 +124,7 @@ export default function editCourse(state = initialState, action) {
       } else if (action.topicIndex != null) {
         return {
           ...state,
-          saveState: saveStates.MODIFIED,
+          saveState: nextSaveState,
           course: {
             ...state.course,
             topics: state.course.topics.map((item, index) =>
@@ -139,7 +140,7 @@ export default function editCourse(state = initialState, action) {
       } else {
         return {
           ...state,
-          saveState: saveStates.MODIFIED,
+          saveState: nextSaveState,
           course: {
             ...state.course,
             main: {
@@ -155,11 +156,10 @@ export default function editCourse(state = initialState, action) {
         currentPageIndex: null,
         course: null,
       };
-
-    case APPLY_SAVE_OPERATION:
+    case SET_SAVE_STATE:
       return {
         ...state,
-        saveState: applyOperation(state.saveState, action.operation),
+        saveState: getNextState(state.saveState, action.state),
       };
     default:
       return state;

@@ -57,9 +57,8 @@ export default function IntflaskEditor({
       >
         <Editable
           renderElement={renderElement}
-          placeholder="Write some markdown..."
-          spellCheck
-          autoFocus
+          placeholder="Write something..."
+          spellCheck="false"
           readOnly={readOnly}
           css={{ height: '100%' }}
         />

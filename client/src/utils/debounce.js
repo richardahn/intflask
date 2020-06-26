@@ -1,4 +1,4 @@
-const DEFAULT_DEBOUNCE_TIME = 3000;
+const DEFAULT_DEBOUNCE_TIME = 2000;
 
 const debounce = (func, wait = DEFAULT_DEBOUNCE_TIME) => {
   let timeout; // Shared state for the returned function

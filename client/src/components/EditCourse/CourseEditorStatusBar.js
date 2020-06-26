@@ -2,7 +2,7 @@
 // -- General Imports --
 import { css, jsx } from '@emotion/core';
 import React, { useState, useEffect } from 'react';
-import { Tag } from 'antd';
+import { Tag, Space } from 'antd';
 import { Breadcrumbs } from '../intflask-antd';
 import {
   HomeOutlined,
@@ -10,7 +10,7 @@ import {
   CheckCircleOutlined,
   ClockCircleOutlined,
 } from '@ant-design/icons';
-import { isSaving, isSaved, isModified } from '../../enums/saveState';
+import saveStates from '../../enums/saveStates';
 
 // -- Redux --
 import { connect } from 'react-redux';
@@ -25,28 +25,28 @@ import {
 } from '../../styles';
 
 function saveStateToTag(saveState) {
-  if (saveState == null) {
-    return (
-      <Tag color="default" icon={<SyncOutlined spin />}>
-        loading
-      </Tag>
-    );
-  } else if (isModified(saveState)) {
-    return <Tag color="warning">modified</Tag>;
-  } else if (isSaved(saveState)) {
-    return (
-      <Tag color="success" icon={<CheckCircleOutlined />}>
-        saved
-      </Tag>
-    );
-  } else if (isSaving(saveState)) {
-    return (
-      <Tag color="processing" icon={<SyncOutlined spin />}>
-        saving
-      </Tag>
-    );
+  switch (saveState) {
+    case saveStates.MODIFIED:
+      return <Tag color="warning">modified</Tag>;
+    case saveStates.SAVED:
+      return (
+        <Tag color="success" icon={<CheckCircleOutlined />}>
+          saved
+        </Tag>
+      );
+    case saveStates.SAVING:
+      return (
+        <Tag color="processing" icon={<SyncOutlined spin />}>
+          saving
+        </Tag>
+      );
+    default:
+      return (
+        <Tag color="default" icon={<SyncOutlined spin />}>
+          loading
+        </Tag>
+      );
   }
-  return <Tag>unknown</Tag>;
 }
 
 function getBreadcrumbItems(
@@ -58,13 +58,13 @@ function getBreadcrumbItems(
 ) {
   const items = [{ content: <HomeOutlined />, onClick: setMain }];
   if (currentTopicIndex != null) {
-    items.push({
+    items.unshift({
       content: course.topics[currentTopicIndex].name,
       onClick: () => setTopicIndex(currentTopicIndex),
     });
   }
   if (currentPageIndex != null) {
-    items.push({
+    items.unshift({
       content: course.topics[currentTopicIndex].children[currentPageIndex].name,
     });
   }
@@ -99,17 +99,15 @@ function CourseEditorStatusBar({
         {
           height: `${statusBarHeight}px`,
           display: 'flex',
-          justifyContent: 'space-between',
+          justifyContent: 'flex-end',
         },
         fixedHeaderCssAtHeight(mainHeaderHeight + pageHeaderHeight),
       ]}
     >
-      {/* Breadcrumbs */}
-      <div css={{ marginLeft: '1.5rem' }}>
+      <Space css={{ marginRight: '1.5rem' }}>
         <Breadcrumbs items={breadcrumbItems} />
-      </div>
-      {/* Saving Status */}
-      <div css={{ marginRight: '1.5rem' }}>{saveStateToTag(saveState)}</div>
+        <div css={{ minWidth: '100px' }}>{saveStateToTag(saveState)}</div>
+      </Space>
     </div>
   );
 }
