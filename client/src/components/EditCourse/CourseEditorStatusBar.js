@@ -10,7 +10,7 @@ import {
   CheckCircleOutlined,
   ClockCircleOutlined,
 } from '@ant-design/icons';
-import saveStates from '../../enums/courseEditorSaveStates';
+import { isSaving, isSaved, isModified } from '../../enums/saveState';
 
 // -- Redux --
 import { connect } from 'react-redux';
@@ -25,34 +25,28 @@ import {
 } from '../../styles';
 
 function saveStateToTag(saveState) {
-  switch (saveState) {
-    case null:
-      return (
-        <Tag color="default" icon={<SyncOutlined spin />}>
-          loading
-        </Tag>
-      );
-    case saveStates.UNSAVED:
-      return (
-        <Tag color="warning" icon={<ClockCircleOutlined />}>
-          unsaved
-        </Tag>
-      );
-    case saveStates.SAVING:
-      return (
-        <Tag color="processing" icon={<SyncOutlined spin />}>
-          saving
-        </Tag>
-      );
-    case saveStates.SAVED:
-      return (
-        <Tag color="success" icon={<CheckCircleOutlined />}>
-          saved
-        </Tag>
-      );
-    default:
-      return <Tag>unknown</Tag>;
+  if (saveState == null) {
+    return (
+      <Tag color="default" icon={<SyncOutlined spin />}>
+        loading
+      </Tag>
+    );
+  } else if (isModified(saveState)) {
+    return <Tag color="warning">modified</Tag>;
+  } else if (isSaved(saveState)) {
+    return (
+      <Tag color="success" icon={<CheckCircleOutlined />}>
+        saved
+      </Tag>
+    );
+  } else if (isSaving(saveState)) {
+    return (
+      <Tag color="processing" icon={<SyncOutlined spin />}>
+        saving
+      </Tag>
+    );
   }
+  return <Tag>unknown</Tag>;
 }
 
 function getBreadcrumbItems(
@@ -121,7 +115,7 @@ function CourseEditorStatusBar({
 }
 
 const mapStateToProps = (state) => ({
-  saveState: state.saveState,
+  saveState: state.editCourse.saveState,
   currentTopicIndex: state.editCourse.currentTopicIndex,
   currentPageIndex: state.editCourse.currentPageIndex,
   course: state.editCourse.course,

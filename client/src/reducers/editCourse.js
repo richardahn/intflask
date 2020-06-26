@@ -8,7 +8,9 @@ import {
   SET_MAIN,
   SET_CONTENT,
   RESET,
+  APPLY_SAVE_OPERATION,
 } from '../actions/editCourse';
+import { applyOperation, saveOperations, saveStates } from '../enums/saveState';
 
 const initialState = {
   saveState: null,
@@ -44,7 +46,7 @@ export default function editCourse(state = initialState, action) {
   switch (action.type) {
     case SET_COURSE:
       return {
-        saveState: null,
+        saveState: saveStates.SAVED,
         currentTopicIndex: null,
         currentPageIndex: null,
         course: action.course,
@@ -98,6 +100,7 @@ export default function editCourse(state = initialState, action) {
       if (action.pageIndex != null) {
         return {
           ...state,
+          saveState: saveStates.MODIFIED,
           course: {
             ...state.course,
             topics: state.course.topics.map((topic, i) =>
@@ -120,6 +123,7 @@ export default function editCourse(state = initialState, action) {
       } else if (action.topicIndex != null) {
         return {
           ...state,
+          saveState: saveStates.MODIFIED,
           course: {
             ...state.course,
             topics: state.course.topics.map((item, index) =>
@@ -135,6 +139,7 @@ export default function editCourse(state = initialState, action) {
       } else {
         return {
           ...state,
+          saveState: saveStates.MODIFIED,
           course: {
             ...state.course,
             main: {
@@ -149,6 +154,12 @@ export default function editCourse(state = initialState, action) {
         currentTopicIndex: null,
         currentPageIndex: null,
         course: null,
+      };
+
+    case APPLY_SAVE_OPERATION:
+      return {
+        ...state,
+        saveState: applyOperation(state.saveState, action.operation),
       };
     default:
       return state;

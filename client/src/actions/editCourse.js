@@ -1,3 +1,5 @@
+import { saveOperations } from '../enums/saveState';
+
 export const SET_COURSE = 'SET_COURSE';
 export const ADD_TOPIC_GROUP = 'ADD_TOPIC_GROUP';
 export const ADD_TOPIC = 'ADD_TOPIC';
@@ -7,11 +9,17 @@ export const SET_PAGE_INDEX = 'SET_PAGE_INDEX';
 export const SET_MAIN = 'SET_MAIN';
 export const SET_CONTENT = 'SET_CONTENT';
 export const RESET = 'RESET';
+export const APPLY_SAVE_OPERATION = 'APPLY_SAVE_OPERATION';
 
 // -- Thunks --
 export function saveCourse(course) {
   return (dispatch) => {
-    console.log('saved course!');
+    console.log('begining to save course...');
+    dispatch(applySaveOperation(saveOperations.QUEUE_SAVE));
+    setTimeout(() => {
+      console.log('saved course!');
+      dispatch(applySaveOperation(saveOperations.DEQUEUE_SAVE));
+    }, 4000);
   };
 }
 
@@ -65,5 +73,13 @@ export function setContent(content, topicIndex, pageIndex) {
 export function reset() {
   return {
     type: RESET,
+  };
+}
+
+// Saving state
+export function applySaveOperation(operation) {
+  return {
+    type: APPLY_SAVE_OPERATION,
+    operation,
   };
 }
