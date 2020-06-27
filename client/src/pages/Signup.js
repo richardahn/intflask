@@ -129,13 +129,13 @@ function SignupForm({ onSignup, errors }) {
 
       <div css={{ marginBottom: '0.4rem' }}>
         <Text>
-          By clicking Signup, you agree to our <Link>Terms</Link>,{' '}
+          By clicking Sign up, you agree to our <Link>Terms</Link>,{' '}
           <Link>Data Policy</Link> and <Link>Cookie Policy</Link>.
         </Text>
       </div>
       <Form.Item css={{ marginBottom: 0 }}>
         <Button type="primary" htmlType="submit">
-          Signup
+          Sign up
         </Button>
       </Form.Item>
     </Form>
