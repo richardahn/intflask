@@ -3,6 +3,7 @@ import { css, jsx } from '@emotion/core';
 
 import React, { useCallback } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
+import axios from 'axios';
 import {
   Card,
   Layout,
@@ -15,7 +16,7 @@ import {
   Button,
   Checkbox,
   Space,
-  notification,
+  message,
   PageHeader,
   InputNumber,
 } from 'antd';
@@ -27,10 +28,15 @@ const { Title, Text } = Typography;
 export default function CreateCourse({ history }) {
   const goBack = useCallback(() => history.goBack(), [history]);
   const onFinish = useCallback((values) => {
-    console.log('Success: ', values);
-  }, []);
-  const onFinishFailed = useCallback((errorInfo) => {
-    console.log('Failure: ', errorInfo);
+    axios.post('/api/courses', values).then(
+      (response) => {
+        message.success('Successfully created course');
+        history.push(`/admin/edit-course/${response.data.slug}`);
+      },
+      (error) => {
+        message.error('Failed to create the course');
+      },
+    );
   }, []);
   return (
     <Layout>
@@ -50,11 +56,14 @@ export default function CreateCourse({ history }) {
           <Col>
             <Form
               onFinish={onFinish}
-              onFinishFailed={onFinishFailed}
               initialValues={{ coursePrice: 5 }}
               layout="vertical"
             >
-              <Form.Item label="Course Name" name="courseName">
+              <Form.Item
+                label="Course Name"
+                name="courseName"
+                rules={[{ required: true, message: 'Course name is required' }]}
+              >
                 <Input />
               </Form.Item>
               <Form.Item label="Technology Stack" name="technologyStack">
@@ -77,11 +86,9 @@ export default function CreateCourse({ history }) {
                   <Button type="secondary" onClick={goBack}>
                     Cancel
                   </Button>
-                  <RouterLink to="/admin/edit-course/777">
-                    <Button type="primary" htmlType="submit">
-                      Start Editing
-                    </Button>
-                  </RouterLink>
+                  <Button type="primary" htmlType="submit">
+                    Start Editing
+                  </Button>
                 </Space>
               </Form.Item>
             </Form>

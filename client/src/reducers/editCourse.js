@@ -42,6 +42,35 @@ function generateNewPage() {
   return { name: 'New Page', content: generateNewEditorContent() };
 }
 
+function addTopic(state, newTopic) {
+  return {
+    ...state,
+    course: {
+      ...state.course,
+      data: {
+        ...state.course.data,
+        children: [...state.course.data.children, newTopic],
+      },
+    },
+  };
+}
+function addPage(state, newPage) {
+  return {
+    ...state,
+    course: {
+      ...state.course,
+      data: {
+        ...state.course.data,
+        children: state.course.data.children.map((topic, i) =>
+          i === state.currentTopicIndex
+            ? { ...topic, children: [...topic.children, newPage] }
+            : topic,
+        ),
+      },
+    },
+  };
+}
+
 export default function editCourse(state = initialState, action) {
   switch (action.type) {
     case SET_COURSE:
@@ -52,33 +81,11 @@ export default function editCourse(state = initialState, action) {
         course: action.course,
       };
     case ADD_TOPIC_GROUP:
-      return {
-        ...state,
-        course: {
-          ...state.course,
-          topics: [...state.course.topics, generateNewTopicGroup()],
-        },
-      };
+      return addTopic(state, generateNewTopicGroup());
     case ADD_TOPIC:
-      return {
-        ...state,
-        course: {
-          ...state.course,
-          topics: [...state.course.topics, generateNewTopic()],
-        },
-      };
+      return addTopic(state, generateNewTopic());
     case ADD_PAGE:
-      return {
-        ...state,
-        course: {
-          ...state.course,
-          topics: state.course.topics.map((topic, i) =>
-            i === state.currentTopicIndex
-              ? { ...topic, children: [...topic.children, generateNewPage()] }
-              : topic,
-          ),
-        },
-      };
+      return addPage(state, generateNewPage());
     case SET_TOPIC_INDEX:
       return {
         ...state,
@@ -104,21 +111,24 @@ export default function editCourse(state = initialState, action) {
           saveState: nextSaveState,
           course: {
             ...state.course,
-            topics: state.course.topics.map((topic, i) =>
-              i === state.currentTopicIndex
-                ? {
-                    ...topic,
-                    children: topic.children.map((page, j) =>
-                      j === state.currentPageIndex
-                        ? {
-                            ...page,
-                            content: action.content,
-                          }
-                        : page,
-                    ),
-                  }
-                : topic,
-            ),
+            data: {
+              ...state.course.data,
+              children: state.course.data.children.map((topic, i) =>
+                i === state.currentTopicIndex
+                  ? {
+                      ...topic,
+                      children: topic.children.map((page, j) =>
+                        j === state.currentPageIndex
+                          ? {
+                              ...page,
+                              content: action.content,
+                            }
+                          : page,
+                      ),
+                    }
+                  : topic,
+              ),
+            },
           },
         };
       } else if (action.topicIndex != null) {
@@ -127,14 +137,17 @@ export default function editCourse(state = initialState, action) {
           saveState: nextSaveState,
           course: {
             ...state.course,
-            topics: state.course.topics.map((item, index) =>
-              index === state.currentTopicIndex
-                ? {
-                    ...item,
-                    content: action.content,
-                  }
-                : item,
-            ),
+            data: {
+              ...state.course.data,
+              children: state.course.data.children.map((topic, i) =>
+                i === state.currentTopicIndex
+                  ? {
+                      ...topic,
+                      content: action.content,
+                    }
+                  : topic,
+              ),
+            },
           },
         };
       } else {
@@ -143,8 +156,12 @@ export default function editCourse(state = initialState, action) {
           saveState: nextSaveState,
           course: {
             ...state.course,
-            main: {
-              content: action.content,
+            data: {
+              ...state.course.data,
+              main: {
+                ...state.course.data.main,
+                content: action.content,
+              },
             },
           },
         };

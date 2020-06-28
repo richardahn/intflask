@@ -9,7 +9,7 @@ const app = express();
 addMiddleware(app);
 addRoutes(app);
 
-// -- Configure connection to MongoDB --
+// -- Connect mongoose --
 mongoose
   .connect(connectionString, {
     useNewUrlParser: true,

@@ -52,7 +52,7 @@ export default function App() {
             <PrivateRoute exact path="/admin" component={Administrator} />
             <PrivateRoute
               exact
-              path="/admin/edit-course/:courseId"
+              path="/admin/edit-course/:slug"
               component={EditCourse}
             />
             <PrivateRoute

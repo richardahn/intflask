@@ -2,8 +2,10 @@
 // -- General Imports --
 import { css, jsx } from '@emotion/core';
 import React, { useCallback, useEffect, useMemo } from 'react';
-import { PageHeader } from 'antd';
+import axios from 'axios';
+import { PageHeader, message } from 'antd';
 import CourseEditor from '../components/EditCourse/CourseEditor';
+import { parseCourseContent } from '../utils/course';
 
 // -- Redux --
 import { connect } from 'react-redux';
@@ -12,30 +14,26 @@ import { setCourse, reset } from '../actions/editCourse';
 // -- Css --
 import { fixedHeaderCssAtHeight, mainHeaderHeight } from '../styles';
 
+// -- Helpers --
 function EditCourse({ match, history, setCourse, reset }) {
-  const { courseId } = match.params;
+  const { slug } = match.params;
   const onBack = useCallback(() => history.goBack(), [history]);
 
   useEffect(() => {
-    let timeout = setTimeout(() => {
-      setCourse({
-        main: {
-          content: [
-            {
-              type: 'paragraph',
-              children: [{ text: '' }],
-            },
-          ],
-        },
-        topics: [],
-      });
-    }, 1000);
+    axios.get(`/api/courses/${slug}`).then(
+      (response) => {
+        setCourse(parseCourseContent(response.data));
+      },
+      (error) => {
+        console.error(error);
+        message.error('Failed to get course');
+      },
+    );
 
     return function cleanup() {
       reset();
-      clearTimeout(timeout);
     };
-  }, []);
+  }, [slug]);
 
   return (
     <React.Fragment>

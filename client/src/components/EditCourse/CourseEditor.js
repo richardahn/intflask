@@ -31,11 +31,12 @@ function CourseEditor({
   if (course != null) {
     if (currentPageIndex != null) {
       editorValue =
-        course.topics[currentTopicIndex].children[currentPageIndex].content;
+        course.data.children[currentTopicIndex].children[currentPageIndex]
+          .content;
     } else if (currentTopicIndex != null) {
-      editorValue = course.topics[currentTopicIndex].content;
+      editorValue = course.data.children[currentTopicIndex].content;
     } else {
-      editorValue = course.main.content;
+      editorValue = course.data.main.content;
     }
   }
   console.log(`Topic: ${currentTopicIndex}, Page: ${currentPageIndex}`);
@@ -44,9 +45,9 @@ function CourseEditor({
   const onChange = useCallback(
     (value) => {
       setContent(value, currentTopicIndex, currentPageIndex); // Update redux store every key press
-      debouncedSaveCourse(value); // This function saves the redux store to the database with debounce
+      debouncedSaveCourse(course); // This function saves the redux store to the database with debounce
     },
-    [currentTopicIndex, currentPageIndex],
+    [currentTopicIndex, currentPageIndex, course],
   );
   return (
     <Layout>

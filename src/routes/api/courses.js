@@ -1,27 +1,80 @@
 const express = require('express');
+const mongoose = require('mongoose');
 const router = express.Router();
 const bcrypt = require('bcryptjs');
 const passport = require('passport');
 const jwt = require('jsonwebtoken');
 const config = require('../../config');
 
-const Course = require('../../models/Course');
-const User = require('../../models/User');
+const getEmptyCourseData = require('../../utils/course').getEmptyCourseData;
 
-router.get(
-  '/:courseId',
-  // passport.authenticate('jwt', { session: false }),
+const Course = require('../../models/Course');
+
+// -- Create --
+router.post(
+  '/',
+  passport.authenticate('jwt', { session: false }),
   (req, res) => {
-    console.log('GET course');
-    res.json({ message: 'received GET' });
+    const course = new Course({
+      userId: mongoose.Types.ObjectId(req.user.id),
+      courseName: req.body.courseName,
+      price: req.body.price,
+      data: getEmptyCourseData(),
+    });
+
+    course
+      .save()
+      .then((course) => res.json(course))
+      .catch((error) => {
+        console.log(error);
+        res.status(500).send('Failed to create course');
+      });
   },
 );
-router.put(
-  '/:courseId',
+
+// -- Read --
+/** Sends back all the courses' metadata(excludes the course content) */
+router.get(
+  '/',
   // passport.authenticate('jwt', { session: false }),
   (req, res) => {
-    console.log('PUT course');
-    res.json({ message: 'received PUT' });
+    Course.find((err, courses) => {
+      if (err) {
+        console.error(err);
+        res.status(500).send('Error getting courses');
+      } else {
+        res.json(courses);
+      }
+    });
+  },
+);
+router.get(
+  '/:slug',
+  passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+    Course.findOne({ slug: req.params.slug }, (err, course) => {
+      if (course) {
+        res.json(course);
+      } else {
+        console.error(err);
+        res.status(404).send('Could not find course.');
+      }
+    });
+  },
+);
+
+// -- Update --
+router.put(
+  '/:slug',
+  // passport.authenticate('jwt', { session: false }),
+  async (req, res) => {
+    try {
+      await Course.findOneAndUpdate({ slug: req.params.slug }, req.body).exec(); // exec() returns a Promise
+      res.status(204).end(); // No data needs to be sent back
+    } catch (err) {
+      console.log(err);
+      res.status(500).send('Failed to update course');
+    }
   },
 );
 

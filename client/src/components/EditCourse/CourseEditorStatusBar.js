@@ -59,13 +59,14 @@ function getBreadcrumbItems(
   const items = [{ content: <HomeOutlined />, onClick: setMain }];
   if (currentTopicIndex != null) {
     items.unshift({
-      content: course.topics[currentTopicIndex].name,
+      content: course.data.children[currentTopicIndex].name,
       onClick: () => setTopicIndex(currentTopicIndex),
     });
   }
   if (currentPageIndex != null) {
     items.unshift({
-      content: course.topics[currentTopicIndex].children[currentPageIndex].name,
+      content:
+        course.data.children[currentTopicIndex].children[currentPageIndex].name,
     });
   }
   return items;

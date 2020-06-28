@@ -64,11 +64,11 @@ function CourseEditorSidebar({
     [],
   );
 
-  const showTopicsSidebar = course != null && course.topics != null;
+  const showTopicsSidebar = course != null && course.data.children != null;
   const showPagesSidebar =
     course != null &&
     currentTopicIndex != null &&
-    course.topics[currentTopicIndex].children != null;
+    course.data.children[currentTopicIndex].children != null;
 
   return (
     <div
@@ -142,8 +142,8 @@ function CourseEditorSidebar({
                 Main
               </Menu.Item>
               <Menu.Divider />
-              {showTopicsSidebar && course.topics.length > 0 ? (
-                course.topics.map((item, index) => (
+              {showTopicsSidebar && course.data.children.length > 0 ? (
+                course.data.children.map((item, index) => (
                   <Menu.Item
                     key={index}
                     css={{ fontWeight: 'bold' }}
@@ -188,12 +188,14 @@ function CourseEditorSidebar({
               mode="inline"
               selectedKeys={[String(currentPageIndex)]}
             >
-              {course.topics[currentTopicIndex].children.length > 0 ? (
-                course.topics[currentTopicIndex].children.map((item, index) => (
-                  <Menu.Item key={index} onClick={() => setPageIndex(index)}>
-                    {item.name}
-                  </Menu.Item>
-                ))
+              {course.data.children[currentTopicIndex].children.length > 0 ? (
+                course.data.children[currentTopicIndex].children.map(
+                  (item, index) => (
+                    <Menu.Item key={index} onClick={() => setPageIndex(index)}>
+                      {item.name}
+                    </Menu.Item>
+                  ),
+                )
               ) : (
                 <EmptyMenuItem />
               )}

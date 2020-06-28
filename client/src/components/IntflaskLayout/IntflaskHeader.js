@@ -43,16 +43,16 @@ function FixedHeader({ children, ...props }) {
   );
 }
 
-function IntflaskHeader(props) {
+function IntflaskHeader({ logoutUser, history, auth }) {
   const onLogoutClick = useCallback(
     (event) => {
       event.preventDefault();
-      props.logoutUser(props.history);
+      logoutUser(history);
     },
-    [props.logoutUser, props.history],
+    [logoutUser, history],
   );
 
-  const navbarItems = props.auth.isAuthenticated
+  const navbarItems = auth.isAuthenticated
     ? [
         {
           name: 'All Courses',

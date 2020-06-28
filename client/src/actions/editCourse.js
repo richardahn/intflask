@@ -1,4 +1,7 @@
 import saveStates from '../enums/saveStates';
+import axios from 'axios';
+import { message } from 'antd';
+import { stringifyCourseContent } from '../utils/course';
 
 export const SET_COURSE = 'SET_COURSE';
 export const ADD_TOPIC_GROUP = 'ADD_TOPIC_GROUP';
@@ -13,13 +16,17 @@ export const SET_SAVE_STATE = 'SET_SAVE_STATE';
 
 // -- Thunks --
 export function saveCourse(course) {
-  return (dispatch, getState) => {
-    console.log('begining to save course...');
+  return (dispatch) => {
     dispatch(setSaveState(saveStates.SAVING));
-    setTimeout(() => {
-      console.log('saved course!');
-      dispatch(setSaveState(saveStates.SAVED));
-    }, 1000);
+    axios
+      .put(`/api/courses/${course.slug}`, stringifyCourseContent(course))
+      .then(
+        () => dispatch(setSaveState(saveStates.SAVED)),
+        (error) => {
+          console.log(error);
+          dispatch(setSaveState(saveStates.MODIFIED));
+        },
+      );
   };
 }
 
