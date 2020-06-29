@@ -38,7 +38,7 @@ router.get(
   '/',
   passport.authenticate('jwt', { session: false }),
   (req, res) => {
-    Course.find({}, { data: 0 }, (err, courses) => {
+    Course.find({ userId: req.user.id }, { data: 0 }, (err, courses) => {
       if (err) {
         console.error(err);
         res.status(500).send('Error getting courses');
@@ -52,14 +52,17 @@ router.get(
   '/:slug',
   passport.authenticate('jwt', { session: false }),
   (req, res) => {
-    Course.findOne({ slug: req.params.slug }, (err, course) => {
-      if (course) {
-        res.json(course);
-      } else {
-        console.error(err);
-        res.status(404).send('Could not find course.');
-      }
-    });
+    Course.findOne(
+      { userId: req.user.id, slug: req.params.slug },
+      (err, course) => {
+        if (course) {
+          res.json(course);
+        } else {
+          console.error(err);
+          res.status(404).send('Could not find course.');
+        }
+      },
+    );
   },
 );
 
@@ -69,7 +72,10 @@ router.put(
   // passport.authenticate('jwt', { session: false }),
   async (req, res) => {
     try {
-      await Course.findOneAndUpdate({ slug: req.params.slug }, req.body).exec(); // exec() returns a Promise
+      await Course.findOneAndUpdate(
+        { userId: req.user.id, slug: req.params.slug },
+        req.body,
+      ).exec(); // exec() returns a Promise
       res.status(204).end(); // No data needs to be sent back
     } catch (error) {
       console.error(error);
