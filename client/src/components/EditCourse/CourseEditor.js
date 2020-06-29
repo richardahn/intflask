@@ -39,8 +39,6 @@ function CourseEditor({
       editorValue = course.data.main.content;
     }
   }
-  console.log(`Topic: ${currentTopicIndex}, Page: ${currentPageIndex}`);
-
   const debouncedSaveCourse = useCallback(debounce(saveCourse), []);
   const onChange = useCallback(
     (value) => {

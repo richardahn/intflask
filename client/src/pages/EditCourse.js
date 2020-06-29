@@ -1,7 +1,7 @@
 /** @jsx jsx */
 // -- General Imports --
 import { css, jsx } from '@emotion/core';
-import React, { useCallback, useEffect, useMemo } from 'react';
+import React, { useCallback, useState, useEffect, useMemo } from 'react';
 import axios from 'axios';
 import { PageHeader, message } from 'antd';
 import CourseEditor from '../components/EditCourse/CourseEditor';
@@ -18,6 +18,7 @@ import { fixedHeaderCssAtHeight, mainHeaderHeight } from '../styles';
 function EditCourse({ match, history, setCourse, reset }) {
   const { slug } = match.params;
   const onBack = useCallback(() => history.goBack(), [history]);
+  const [noCourse, setNoCourse] = useState(false);
 
   useEffect(() => {
     axios.get(`/api/courses/${slug}`).then(
@@ -27,6 +28,7 @@ function EditCourse({ match, history, setCourse, reset }) {
       (error) => {
         console.error(error);
         message.error('Failed to get course');
+        setNoCourse(true);
       },
     );
 
@@ -44,7 +46,7 @@ function EditCourse({ match, history, setCourse, reset }) {
         title="How To Build a MERN Stack Website"
         subTitle="Editing"
       />
-      <CourseEditor />
+      {noCourse ? <div>Course not found</div> : <CourseEditor />}
     </React.Fragment>
   );
 }

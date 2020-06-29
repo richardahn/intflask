@@ -27,7 +27,7 @@ module.exports = (passport) => {
           }
           return done(null, false);
         })
-        .catch((err) => console.log(err));
+        .catch((err) => console.error(err));
     }),
   );
   // Note: This is called in the google login/callback stages. This is NOT used to make endpoints protected
@@ -41,7 +41,7 @@ module.exports = (passport) => {
           },
           function (err, user) {
             if (err) {
-              console.log(err);
+              console.error(err);
               return done(err);
             }
 
@@ -56,7 +56,7 @@ module.exports = (passport) => {
               });
               user.save(function (err) {
                 if (err) {
-                  console.log(err);
+                  console.error(err);
                 } else {
                   console.log(`Created new google oauth user: ${user}`);
                 }

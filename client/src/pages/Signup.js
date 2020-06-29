@@ -30,11 +30,7 @@ const { Title, Text, Link } = Typography;
 function SignupForm({ onSignup, errors }) {
   const [form] = Form.useForm();
   const onFinish = useCallback((values) => {
-    console.log('Client side validation succeeded: ', values);
     onSignup(values);
-  });
-  const onFinishFailed = useCallback((errorInfo) => {
-    console.log('Client side validation failed: ', errorInfo);
   });
   useEffect(() => {
     const errs = [];
@@ -70,7 +66,6 @@ function SignupForm({ onSignup, errors }) {
       layout="vertical"
       name="basic"
       onFinish={onFinish}
-      onFinishFailed={onFinishFailed}
       validateMessages={{
         types: {
           email: 'Not a valid ${type}',

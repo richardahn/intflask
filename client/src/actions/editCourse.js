@@ -23,7 +23,7 @@ export function saveCourse(course) {
       .then(
         () => dispatch(setSaveState(saveStates.SAVED)),
         (error) => {
-          console.log(error);
+          console.error(error);
           dispatch(setSaveState(saveStates.MODIFIED));
         },
       );

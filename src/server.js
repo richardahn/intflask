@@ -16,7 +16,7 @@ mongoose
     useUnifiedTopology: true,
   })
   .then(() => console.log('MongoDB successfully connected'))
-  .catch((err) => console.log(err));
+  .catch((err) => console.error(err));
 
 // -- Host server --
 const port = process.env.PORT || 5000;

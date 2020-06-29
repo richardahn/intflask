@@ -26,7 +26,7 @@ router.post(
       .save()
       .then((course) => res.json(course))
       .catch((error) => {
-        console.log(error);
+        console.error(error);
         res.status(500).send('Failed to create course');
       });
   },
@@ -36,9 +36,9 @@ router.post(
 /** Sends back all the courses' metadata(excludes the course content) */
 router.get(
   '/',
-  // passport.authenticate('jwt', { session: false }),
+  passport.authenticate('jwt', { session: false }),
   (req, res) => {
-    Course.find((err, courses) => {
+    Course.find({}, { data: 0 }, (err, courses) => {
       if (err) {
         console.error(err);
         res.status(500).send('Error getting courses');
@@ -71,8 +71,8 @@ router.put(
     try {
       await Course.findOneAndUpdate({ slug: req.params.slug }, req.body).exec(); // exec() returns a Promise
       res.status(204).end(); // No data needs to be sent back
-    } catch (err) {
-      console.log(err);
+    } catch (error) {
+      console.error(error);
       res.status(500).send('Failed to update course');
     }
   },
