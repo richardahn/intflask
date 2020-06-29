@@ -110,7 +110,7 @@ export default function Administrator() {
   const [courses, setCourses] = useState(null);
   useEffect(() => {
     axios
-      .get('/api/courses')
+      .get('/api/admin/courses')
       .then((response) => response.data)
       .then(convertFormat)
       .then((courses) => setCourses(courses));

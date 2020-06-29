@@ -26,9 +26,9 @@ const { Content, Header } = Layout;
 const { Title, Text } = Typography;
 
 export default function CreateCourse({ history }) {
-  const goBack = useCallback(() => history.goBack(), [history]);
+  const goBack = useCallback(() => history.push('/admin'), [history]);
   const onFinish = useCallback((values) => {
-    axios.post('/api/courses', values).then(
+    axios.post('/api/admin/courses', values).then(
       (response) => {
         message.success('Successfully created course');
         history.push(`/admin/edit-course/${response.data.slug}`);

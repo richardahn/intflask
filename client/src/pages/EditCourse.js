@@ -26,11 +26,11 @@ const { Title } = Typography;
 // -- Helpers --
 function EditCourse({ match, history, setCourse, reset }) {
   const { slug } = match.params;
-  const onBack = useCallback(() => history.goBack(), [history]);
+  const onBack = useCallback(() => history.push('/admin'), [history]);
   const [noCourse, setNoCourse] = useState(false);
 
   useEffect(() => {
-    axios.get(`/api/courses/${slug}`).then(
+    axios.get(`/api/admin/courses/${slug}`).then(
       (response) => {
         setCourse(parseCourseContent(response.data));
       },

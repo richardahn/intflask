@@ -19,11 +19,12 @@ export function saveCourse(course) {
   return (dispatch) => {
     dispatch(setSaveState(saveStates.SAVING));
     axios
-      .put(`/api/courses/${course.slug}`, stringifyCourseContent(course))
+      .put(`/api/admin/courses/${course.slug}`, stringifyCourseContent(course))
       .then(
         () => dispatch(setSaveState(saveStates.SAVED)),
         (error) => {
           console.error(error);
+          message.error('Failed to save');
           dispatch(setSaveState(saveStates.MODIFIED));
         },
       );
