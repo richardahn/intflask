@@ -13,10 +13,12 @@ export const SET_MAIN = 'SET_MAIN';
 export const SET_CONTENT = 'SET_CONTENT';
 export const RESET = 'RESET';
 export const SET_SAVE_STATE = 'SET_SAVE_STATE';
+export const SET_NAME = 'SET_NAME';
 
 // -- Thunks --
-export function saveCourse(course) {
-  return (dispatch) => {
+export function saveCourse() {
+  return (dispatch, getState) => {
+    const course = getState().editCourse.course;
     dispatch(setSaveState(saveStates.SAVING));
     axios
       .put(`/api/admin/courses/${course.slug}`, stringifyCourseContent(course))
@@ -87,5 +89,11 @@ export function setSaveState(state) {
   return {
     type: SET_SAVE_STATE,
     state,
+  };
+}
+export function setName(name) {
+  return {
+    type: SET_NAME,
+    name,
   };
 }

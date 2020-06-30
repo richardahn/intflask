@@ -12,5 +12,5 @@ export default function createAppStore() {
     app,
     initialState,
     composeEnhancers(applyMiddleware(...middleware)),
-  ); // optionally specify initial state to hydrate the store with the state from the server
+  );
 }

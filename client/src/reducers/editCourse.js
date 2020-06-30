@@ -9,6 +9,7 @@ import {
   SET_CONTENT,
   RESET,
   SET_SAVE_STATE,
+  SET_NAME,
 } from '../actions/editCourse';
 import saveStates, { getNextState } from '../enums/saveStates';
 
@@ -178,6 +179,52 @@ export default function editCourse(state = initialState, action) {
         ...state,
         saveState: getNextState(state.saveState, action.state),
       };
+    case SET_NAME:
+      if (state.currentPageIndex != null) {
+        return {
+          ...state,
+          course: {
+            ...state.course,
+            data: {
+              ...state.course.data,
+              children: state.course.data.children.map((topic, i) =>
+                i === state.currentTopicIndex
+                  ? {
+                      ...topic,
+                      children: topic.children.map((page, j) =>
+                        j === state.currentPageIndex
+                          ? {
+                              ...page,
+                              name: action.name,
+                            }
+                          : page,
+                      ),
+                    }
+                  : topic,
+              ),
+            },
+          },
+        };
+      } else if (state.currentTopicIndex != null) {
+        return {
+          ...state,
+          course: {
+            ...state.course,
+            data: {
+              ...state.course.data,
+              children: state.course.data.children.map((topic, i) =>
+                i === state.currentTopicIndex
+                  ? {
+                      ...topic,
+                      name: action.name,
+                    }
+                  : topic,
+              ),
+            },
+          },
+        };
+      }
+      return state;
     default:
       return state;
   }
