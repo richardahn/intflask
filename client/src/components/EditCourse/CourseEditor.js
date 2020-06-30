@@ -107,6 +107,8 @@ function CourseEditor({
         css={[
           {
             marginTop: `${pageHeaderHeight + statusBarHeight}px`,
+            display: 'flex',
+            flexDirection: 'column',
           },
           paddedContentCss,
         ]}
@@ -114,7 +116,7 @@ function CourseEditor({
         {editorValue != null ? (
           <React.Fragment>
             <Row>{courseName}</Row>
-            <Row>
+            <Row css={{ flex: '1 1 auto' }}>
               <IntflaskEditor
                 value={editorValue}
                 onChange={onChange}

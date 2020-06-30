@@ -3,9 +3,17 @@
 import { css, jsx } from '@emotion/core';
 import React, { useCallback, useState, useEffect, useMemo } from 'react';
 import axios from 'axios';
-import { PageHeader, message, Layout, Typography } from 'antd';
+import { PageHeader, message, Layout, Typography, Button, Tag } from 'antd';
 import CourseEditor from '../components/EditCourse/CourseEditor';
 import { parseCourseContent } from '../utils/course';
+import {
+  MessageOutlined,
+  LikeOutlined,
+  StarOutlined,
+  CheckCircleOutlined,
+  EyeOutlined,
+  EyeInvisibleOutlined,
+} from '@ant-design/icons';
 
 // -- Redux --
 import { connect } from 'react-redux';
@@ -54,6 +62,11 @@ function EditCourse({ match, history, setCourse, reset }) {
         onBack={onBack}
         title="How To Build a MERN Stack Website"
         subTitle="Editing"
+        extra={[
+          <Button danger icon={<EyeInvisibleOutlined />}>
+            Hide Course
+          </Button>,
+        ]}
       />
       {noCourse ? (
         <Content
