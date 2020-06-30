@@ -1,7 +1,7 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
-
-import React, { useState, useCallback } from 'react';
+import axios from 'axios';
+import React, { useState, useCallback, useEffect } from 'react';
 import { Layout, Menu, Typography, Row, Col, List, Space, Avatar } from 'antd';
 import {
   GoogleOutlined,
@@ -13,17 +13,6 @@ import {
 const { Content, Header, Footer, Sider } = Layout;
 const { Text, Title } = Typography;
 
-const listData = [];
-for (let i = 0; i < 23; i++) {
-  listData.push({
-    title: `ant design part ${i}`,
-    avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
-    description:
-      'Ant Design, a design language for background applications, is refined by Ant UED Team.',
-    content:
-      'We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.',
-  });
-}
 const IconText = ({ icon, text }) => (
   <Space>
     {React.createElement(icon)}
@@ -31,7 +20,7 @@ const IconText = ({ icon, text }) => (
   </Space>
 );
 
-function Courses() {
+function Courses({ courses }) {
   return (
     <List
       itemLayout="vertical"
@@ -42,15 +31,15 @@ function Courses() {
         },
         pageSize: 3,
       }}
-      dataSource={listData}
+      dataSource={courses}
       footer={
         <div>
           <b>ant design</b> footer part
         </div>
       }
-      renderItem={(item) => (
+      renderItem={(course) => (
         <List.Item
-          key={item.title}
+          key={course.title}
           actions={[
             <IconText
               icon={StarOutlined}
@@ -77,18 +66,37 @@ function Courses() {
           }
         >
           <List.Item.Meta
-            avatar={<Avatar src={item.avatar} />}
-            title={<a>{item.title}</a>}
-            description={item.description}
+            avatar={
+              <Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />
+            }
+            title={<a>{course.title}</a>}
+            description="Ant Design, a design language for background applications, is refined by Ant UED Team."
           />
-          {item.content}
+          We supply a series of design principles, practical patterns and high
+          quality design resources (Sketch and Axure), to help people create
+          their product prototypes beautifully and efficiently.
         </List.Item>
       )}
     />
   );
 }
 
+function convertFormat(courses) {
+  return courses.map((course) => ({
+    title: course.courseName,
+  }));
+}
+
 export default function AllCourses(props) {
+  const [courses, setCourses] = useState(null);
+  useEffect(() => {
+    axios
+      .get('/api/courses')
+      .then((response) => response.data)
+      .then(convertFormat)
+      .then((courses) => setCourses(courses));
+  }, []);
+
   return (
     <Layout>
       <Header css={{ backgroundColor: 'white' }}>
@@ -108,7 +116,7 @@ export default function AllCourses(props) {
         </Sider>
         <Layout>
           <Content css={{ backgroundColor: 'white', padding: '0 50px' }}>
-            <Courses />
+            {courses && <Courses courses={courses} />}
           </Content>
         </Layout>
       </Layout>

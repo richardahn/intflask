@@ -61,7 +61,11 @@ export default function IntflaskEditor({
       <Slate
         editor={editor}
         value={value}
-        onChange={(value) => onChange(value)}
+        onChange={(newValue) => {
+          if (value != newValue) {
+            onChange(newValue);
+          }
+        }}
       >
         <Editable
           renderElement={renderElement}

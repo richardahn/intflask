@@ -29,7 +29,7 @@ const SHORTCUTS = {
 const feedbackColumnWidth = 140;
 const MarkdownShortcutsExample = () => {
   // Feedback Column
-  const [feedbackOn, setFeedbackOn] = useState(true);
+  const [feedbackOn, setFeedbackOn] = useState(false);
   const [readOnly, setReadOnly] = useState(false);
 
   const [value, setValue] = useState(initialValue);
@@ -47,10 +47,6 @@ const MarkdownShortcutsExample = () => {
     [],
   );
 
-  const saveEditor = useCallback(
-    debounce((value) => console.log(value)),
-    [],
-  );
   return (
     <div css={{ marginRight: feedbackOn ? feedbackColumnWidth : 0 }}>
       <Button onClick={() => setFeedbackOn(!feedbackOn)}>
@@ -60,9 +56,13 @@ const MarkdownShortcutsExample = () => {
       <Slate
         editor={editor}
         value={value}
-        onChange={(value) => {
-          setValue(value);
-          saveEditor(value);
+        onChange={(val) => {
+          console.log('Detected change');
+          console.log(value);
+          console.log(val);
+          console.log(value == val);
+          console.log();
+          setValue(val);
         }}
       >
         <Editable
