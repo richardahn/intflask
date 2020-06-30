@@ -10,6 +10,8 @@ import {
   RESET,
   SET_SAVE_STATE,
   SET_NAME,
+  SET_DEPLOYED,
+  SET_COURSE_NAME,
 } from '../actions/editCourse';
 import saveStates, { getNextState } from '../enums/saveStates';
 
@@ -225,6 +227,22 @@ export default function editCourse(state = initialState, action) {
         };
       }
       return state;
+    case SET_DEPLOYED:
+      return {
+        ...state,
+        course: {
+          ...state.course,
+          deployed: action.deployed,
+        },
+      };
+    case SET_COURSE_NAME:
+      return {
+        ...state,
+        course: {
+          ...state.course,
+          courseName: action.name,
+        },
+      };
     default:
       return state;
   }

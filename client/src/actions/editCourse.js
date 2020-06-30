@@ -14,20 +14,32 @@ export const SET_CONTENT = 'SET_CONTENT';
 export const RESET = 'RESET';
 export const SET_SAVE_STATE = 'SET_SAVE_STATE';
 export const SET_NAME = 'SET_NAME';
+export const SET_DEPLOYED = 'SET_DEPLOYED';
+export const SET_COURSE_NAME = 'SET_COURSE_NAME';
 
 // -- Thunks --
-export function saveCourse() {
+export function saveCourse(onSuccess = null, onError = null) {
   return (dispatch, getState) => {
     const course = getState().editCourse.course;
+    console.log('dispatching');
+    console.log(course);
     dispatch(setSaveState(saveStates.SAVING));
     axios
       .put(`/api/admin/courses/${course.slug}`, stringifyCourseContent(course))
       .then(
-        () => dispatch(setSaveState(saveStates.SAVED)),
+        () => {
+          dispatch(setSaveState(saveStates.SAVED));
+          if (onSuccess) {
+            onSuccess();
+          }
+        },
         (error) => {
           console.error(error);
           message.error('Failed to save');
           dispatch(setSaveState(saveStates.MODIFIED));
+          if (onError) {
+            onError();
+          }
         },
       );
   };
@@ -94,6 +106,18 @@ export function setSaveState(state) {
 export function setName(name) {
   return {
     type: SET_NAME,
+    name,
+  };
+}
+export function setDeployed(deployed) {
+  return {
+    type: SET_DEPLOYED,
+    deployed,
+  };
+}
+export function setCourseName(name) {
+  return {
+    type: SET_COURSE_NAME,
     name,
   };
 }

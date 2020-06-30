@@ -24,6 +24,7 @@ const CourseSchema = new mongoose.Schema({
   courseName: { type: String, required: true },
   slug: { type: String, slug: 'courseName', unique: true },
   price: { type: Number },
+  deployed: { type: Boolean },
   data: new mongoose.Schema(
     {
       main: PageSchema,

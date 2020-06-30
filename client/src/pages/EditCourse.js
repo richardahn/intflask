@@ -3,7 +3,15 @@
 import { css, jsx } from '@emotion/core';
 import React, { useCallback, useState, useEffect, useMemo } from 'react';
 import axios from 'axios';
-import { PageHeader, message, Layout, Typography, Button, Tag } from 'antd';
+import {
+  PageHeader,
+  message,
+  Layout,
+  Typography,
+  Button,
+  Tag,
+  Space,
+} from 'antd';
 import CourseEditor from '../components/EditCourse/CourseEditor';
 import { parseCourseContent } from '../utils/course';
 import {
@@ -13,11 +21,18 @@ import {
   CheckCircleOutlined,
   EyeOutlined,
   EyeInvisibleOutlined,
+  EditOutlined,
 } from '@ant-design/icons';
 
 // -- Redux --
 import { connect } from 'react-redux';
-import { setCourse, reset } from '../actions/editCourse';
+import {
+  setCourse,
+  reset,
+  setDeployed,
+  saveCourse,
+  setCourseName,
+} from '../actions/editCourse';
 
 // -- Css --
 import {
@@ -32,10 +47,21 @@ const { Content } = Layout;
 const { Title } = Typography;
 
 // -- Helpers --
-function EditCourse({ match, history, setCourse, reset }) {
+function EditCourse({
+  courseName,
+  courseDeployed,
+  match,
+  history,
+  setCourse,
+  reset,
+  setDeployed,
+  saveCourse,
+  setCourseName,
+}) {
   const { slug } = match.params;
   const onBack = useCallback(() => history.push('/admin'), [history]);
   const [noCourse, setNoCourse] = useState(false);
+  const [deployButtonLoading, setDeployButtonLoading] = useState(false);
 
   useEffect(() => {
     axios.get(`/api/admin/courses/${slug}`).then(
@@ -54,18 +80,78 @@ function EditCourse({ match, history, setCourse, reset }) {
     };
   }, [slug]);
 
+  const deployButtonOnClick = (deploy) => {
+    setDeployed(deploy);
+    setDeployButtonLoading(true);
+    saveCourse(
+      () => setDeployButtonLoading(false),
+      () => setDeployButtonLoading(false),
+    );
+  };
+
   return (
     <React.Fragment>
       <PageHeader
         css={fixedHeaderCssAtHeight(mainHeaderHeight)}
         className="site-page-header"
         onBack={onBack}
-        title="How To Build a MERN Stack Website"
+        title={
+          <div css={{ marginTop: '0.3rem' }}>
+            <Title
+              level={4}
+              editable={{
+                onChange: (name) => {
+                  if (name !== courseName) {
+                    console.log('changed');
+                    setCourseName(name);
+                    saveCourse();
+                  }
+                },
+              }}
+              css={css`
+                position: initial;
+                textarea {
+                  color: rgba(0, 0, 0, 0.85);
+                  font-weight: 600;
+                  font-size: 20px;
+                  line-height: 1.4;
+                  position: relative;
+                  width: 80vw;
+                  max-height: 2.5rem !important;
+                  z-index: 99;
+                }
+              `}
+            >
+              {courseName}
+            </Title>
+          </div>
+        }
         subTitle="Editing"
         extra={[
-          <Button danger icon={<EyeInvisibleOutlined />}>
-            Hide Course
-          </Button>,
+          courseDeployed ? (
+            <Button
+              size="small"
+              danger
+              icon={<EyeInvisibleOutlined />}
+              css={{ fontSize: '0.7rem' }}
+              key="hideButton"
+              loading={deployButtonLoading}
+              onClick={() => deployButtonOnClick(false)}
+            >
+              Hide Course
+            </Button>
+          ) : (
+            <Button
+              size="small"
+              icon={<EyeOutlined />}
+              css={{ fontSize: '0.7rem' }}
+              key="deployButton"
+              loading={deployButtonLoading}
+              onClick={() => deployButtonOnClick(true)}
+            >
+              Deploy Course
+            </Button>
+          ),
         ]}
       />
       {noCourse ? (
@@ -88,9 +174,16 @@ function EditCourse({ match, history, setCourse, reset }) {
   );
 }
 
+const mapStateToProps = (state) => ({
+  courseDeployed: state.editCourse.course?.deployed,
+  courseName: state.editCourse.course?.courseName,
+});
 const mapDispatchToProps = {
   setCourse,
   reset,
+  setDeployed,
+  saveCourse,
+  setCourseName,
 };
 
-export default connect(null, mapDispatchToProps)(EditCourse);
+export default connect(mapStateToProps, mapDispatchToProps)(EditCourse);

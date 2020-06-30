@@ -19,6 +19,7 @@ router.post(
       userId: mongoose.Types.ObjectId(req.user.id),
       courseName: req.body.courseName,
       price: req.body.price,
+      deployed: false,
       data: getEmptyCourseData(),
     });
 

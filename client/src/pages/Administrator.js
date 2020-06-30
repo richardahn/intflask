@@ -10,6 +10,7 @@ import {
   LikeOutlined,
   StarOutlined,
   CheckCircleOutlined,
+  MinusCircleOutlined,
 } from '@ant-design/icons';
 import axios from 'axios';
 
@@ -26,6 +27,7 @@ function IconText({ icon, text }) {
 }
 
 function CreatedCoursesList({ courses }) {
+  console.log(courses);
   return (
     <List
       itemLayout="vertical"
@@ -75,9 +77,15 @@ function CreatedCoursesList({ courses }) {
                   <a css={{ marginRight: '1rem' }}>
                     <Text>{course.title}</Text>
                   </a>
-                  <Tag icon={<CheckCircleOutlined />} color="success">
-                    deployed
-                  </Tag>
+                  {course.deployed ? (
+                    <Tag icon={<CheckCircleOutlined />} color="success">
+                      deployed
+                    </Tag>
+                  ) : (
+                    <Tag icon={<MinusCircleOutlined />} color="default">
+                      hidden
+                    </Tag>
+                  )}
                 </div>
                 <Space>
                   <Button>View</Button>
@@ -103,6 +111,7 @@ function convertFormat(courses) {
     title: course.courseName,
     slug: course.slug,
     editUrl: `/admin/edit-course/${course.slug}`,
+    deployed: course.deployed,
   }));
 }
 
