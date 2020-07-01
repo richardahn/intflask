@@ -102,7 +102,6 @@ function EditCourse({
               editable={{
                 onChange: (name) => {
                   if (name !== courseName) {
-                    console.log('changed');
                     setCourseName(name);
                     saveCourse();
                   }

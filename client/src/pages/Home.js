@@ -1,62 +1,81 @@
 /** @jsx jsx */
-import { jsx } from '@emotion/core';
+import { css, jsx } from '@emotion/core';
 
 import React, { useState, useCallback } from 'react';
-import { Layout, Menu, Typography, Row, Col, Space } from 'antd';
+import { Layout, Menu, Typography, Row, Col, Space, Tabs, Button } from 'antd';
 import { Link as RouterLink } from 'react-router-dom';
 import { GoogleOutlined } from '@ant-design/icons';
 
 const { Content, Header, Footer, Sider } = Layout;
 const { Text, Title } = Typography;
+const { TabPane } = Tabs;
 
-function Courses() {
+function Guides() {
   return (
-    <div>
-      <Row>
-        <Col xs={24} lg={12}>
-          Col
-        </Col>
-        <Col xs={24} lg={12}>
-          Col
-        </Col>
-      </Row>
-    </div>
+    <Content>
+      <Title>Guides</Title>
+    </Content>
+  );
+}
+function AppTutorials() {
+  return (
+    <Layout css={{ backgroundColor: 'white' }}>
+      <Content
+        css={{
+          maxHeight: 'fit-content',
+          backgroundColor: 'white',
+          marginBottom: '3rem',
+        }}
+      >
+        <div>
+          <Space css={{ display: 'flex', alignItems: 'center' }}>
+            <Title css={{ marginBottom: '0 !important' }}>Purchased</Title>
+            <Button>View All Purchased</Button>
+          </Space>
+        </div>
+        You purchased these
+      </Content>
+      <Content css={{ backgroundColor: 'white' }}>
+        <div>
+          <Space css={{ display: 'flex', alignItems: 'center' }}>
+            <Title css={{ marginBottom: '0 !important' }}>Top Courses</Title>
+            <Button>View All Courses</Button>
+          </Space>
+        </div>
+        Top courses
+      </Content>
+    </Layout>
   );
 }
 
 export default function Home(props) {
   return (
-    <Layout>
-      <Header css={{ backgroundColor: 'white', height: 'initial' }}>
-        <Title level={4} css={{ margin: '0 !important' }}>
-          Your Courses
-        </Title>
-      </Header>
-      <Content css={{ backgroundColor: 'white', padding: '0 3rem' }}>
-        Your Courses
-      </Content>
-      <Header
-        css={{
-          backgroundColor: 'white',
-          display: 'flex',
-          flexDirection: 'row',
-          alignItems: 'baseline',
-          height: 'initial',
-        }}
+    <Content
+      css={{
+        padding: '0 3rem',
+        backgroundColor: 'white',
+        display: 'flex',
+      }}
+    >
+      <Tabs
+        defaultActiveKey="1"
+        css={css`
+          flex: 1;
+          .ant-tabs-content-holder {
+            display: flex;
+          }
+          .ant-tabs-tabpane {
+            display: flex;
+          }
+        `}
       >
-        <Title level={4} css={{ margin: '0 !important' }}>
-          Top Courses
-        </Title>
-        <RouterLink
-          to="/all-courses"
-          css={{ marginLeft: '0.4rem', fontSize: '10px', lineHeight: 0 }}
-        >
-          <Text type="secondary">View All</Text>
-        </RouterLink>
-      </Header>
-      <Content css={{ backgroundColor: 'white', padding: '0 50px' }}>
-        <Courses />
-      </Content>
-    </Layout>
+        <TabPane tab="Guides" key="1">
+          <Guides />
+        </TabPane>
+        <TabPane tab="App Tutorials" key="2">
+          <AppTutorials />
+        </TabPane>
+      </Tabs>
+    </Content>
   );
 }
