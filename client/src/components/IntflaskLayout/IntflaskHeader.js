@@ -55,12 +55,16 @@ function IntflaskHeader({ logoutUser, history, auth }) {
   const navbarItems = auth.isAuthenticated
     ? [
         {
-          name: 'All Courses',
-          to: '/all-courses',
+          name: 'Guides',
+          to: '/guides',
         },
         {
-          name: 'My Courses',
-          to: '/my-courses',
+          name: 'Tutorials',
+          to: '/tutorials',
+        },
+        {
+          name: 'Purchased',
+          to: '/purchased',
         },
         {
           name: 'Settings',
@@ -99,7 +103,7 @@ function IntflaskHeader({ logoutUser, history, auth }) {
       <Logo />
       <Input.Search
         size="large"
-        placeholder="Search for a course..."
+        placeholder="Search for a tutorial..."
         css={{ maxWidth: '400px' }}
       />
       <Dropdown

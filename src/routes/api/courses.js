@@ -13,7 +13,7 @@ const Course = require('../../models/Course');
 // -- Read --
 /** Sends back all the courses' metadata(excludes the course content) */
 router.get('/', (req, res) => {
-  Course.find({}, { data: 0 }, (err, courses) => {
+  Course.find({ deployed: true }, { data: 0 }, (err, courses) => {
     if (err) {
       console.error(err);
       res.status(500).send('Error getting courses');

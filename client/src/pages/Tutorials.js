@@ -2,6 +2,7 @@
 import { jsx } from '@emotion/core';
 import axios from 'axios';
 import React, { useState, useCallback, useEffect } from 'react';
+import { Link as RouterLink } from 'react-router-dom';
 import { Layout, Menu, Typography, Row, Col, List, Space, Avatar } from 'antd';
 import {
   GoogleOutlined,
@@ -9,6 +10,7 @@ import {
   LikeOutlined,
   MessageOutlined,
 } from '@ant-design/icons';
+import PageSpinner from '../components/PageSpinner';
 
 const { Content, Header, Footer, Sider } = Layout;
 const { Text, Title } = Typography;
@@ -69,7 +71,11 @@ function Courses({ courses }) {
             avatar={
               <Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />
             }
-            title={<a>{course.title}</a>}
+            title={
+              <RouterLink to={`/tutorial-previews/${course.slug}`}>
+                {course.title}
+              </RouterLink>
+            }
             description="Ant Design, a design language for background applications, is refined by Ant UED Team."
           />
           We supply a series of design principles, practical patterns and high
@@ -84,10 +90,11 @@ function Courses({ courses }) {
 function convertFormat(courses) {
   return courses.map((course) => ({
     title: course.courseName,
+    slug: course.slug,
   }));
 }
 
-export default function AllCourses(props) {
+export default function Tutorials(props) {
   const [courses, setCourses] = useState(null);
   useEffect(() => {
     axios
@@ -99,26 +106,13 @@ export default function AllCourses(props) {
 
   return (
     <Layout>
-      <Header css={{ backgroundColor: 'white' }}>
-        <Title level={4}>All Courses</Title>
-      </Header>
+      <Sider theme="light" breakpoint="lg" collapsedWidth="0">
+        <div css={{ padding: '1rem 2rem' }}>Hello Sidebar</div>
+      </Sider>
       <Layout>
-        <Sider theme="light" breakpoint="lg" collapsedWidth="0">
-          <Menu mode="inline">
-            <Menu.Item key="0" disabled>
-              Filter
-            </Menu.Item>
-            <Menu.Item key="1">
-              <GoogleOutlined />
-              <Text>Option 1</Text>
-            </Menu.Item>
-          </Menu>
-        </Sider>
-        <Layout>
-          <Content css={{ backgroundColor: 'white', padding: '0 50px' }}>
-            {courses && <Courses courses={courses} />}
-          </Content>
-        </Layout>
+        <Content css={{ backgroundColor: 'white', padding: '0 50px' }}>
+          {courses ? <Courses courses={courses} /> : <PageSpinner />}
+        </Content>
       </Layout>
     </Layout>
   );

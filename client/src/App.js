@@ -11,7 +11,7 @@ import IntflaskLayout from './components/IntflaskLayout';
 
 // -- Pages --
 import Administrator from './pages/Administrator';
-import AllCourses from './pages/AllCourses';
+import Tutorials from './pages/Tutorials';
 import CreateCourse from './pages/CreateCourse';
 import EditCourse from './pages/EditCourse';
 import Home from './pages/Home';
@@ -27,6 +27,7 @@ import {
   moveJwtFromCookiesToLocalStorage,
   authenticateJwtFromLocalStorage,
 } from './actions/auth';
+import TutorialPreview from './pages/TutorialPreview';
 
 // Setup store
 const store = createAppStore();
@@ -40,7 +41,12 @@ export default function App() {
         <IntflaskLayout>
           <Switch>
             <Route exact path="/" component={Home} />
-            <Route exact path="/all-courses" component={AllCourses} />
+            <Route exact path="/tutorials" component={Tutorials} />
+            <Route
+              exact
+              path="/tutorial-previews/:slug"
+              component={TutorialPreview}
+            />
             <NonAuthenticatedRoute exact path="/login" component={Login} />
             <NonAuthenticatedRoute exact path="/signup" component={Signup} />
             <PrivateRoute exact path="/settings" component={Settings} />

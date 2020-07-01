@@ -11,13 +11,9 @@ const { Text, Title } = Typography;
 const { TabPane } = Tabs;
 
 function Guides() {
-  return (
-    <Content>
-      <Title>Guides</Title>
-    </Content>
-  );
+  return <Content>guides</Content>;
 }
-function AppTutorials() {
+function Tutorials() {
   return (
     <Layout css={{ backgroundColor: 'white' }}>
       <Content
@@ -29,7 +25,9 @@ function AppTutorials() {
       >
         <div>
           <Space css={{ display: 'flex', alignItems: 'center' }}>
-            <Title css={{ marginBottom: '0 !important' }}>Purchased</Title>
+            <Title level={4} css={{ marginBottom: '0 !important' }}>
+              Purchased
+            </Title>
             <Button>View All Purchased</Button>
           </Space>
         </div>
@@ -38,11 +36,13 @@ function AppTutorials() {
       <Content css={{ backgroundColor: 'white' }}>
         <div>
           <Space css={{ display: 'flex', alignItems: 'center' }}>
-            <Title css={{ marginBottom: '0 !important' }}>Top Courses</Title>
+            <Title level={4} css={{ marginBottom: '0 !important' }}>
+              Top Tutorials
+            </Title>
             <Button>View All Courses</Button>
           </Space>
         </div>
-        Top courses
+        Top tutorials
       </Content>
     </Layout>
   );
@@ -72,8 +72,8 @@ export default function Home(props) {
         <TabPane tab="Guides" key="1">
           <Guides />
         </TabPane>
-        <TabPane tab="App Tutorials" key="2">
-          <AppTutorials />
+        <TabPane tab="Tutorials" key="2">
+          <Tutorials />
         </TabPane>
       </Tabs>
     </Content>
