@@ -2,7 +2,7 @@ import React, { Component, useEffect } from 'react';
 import { Route, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 
-import { notification } from 'antd';
+import { message } from 'antd';
 
 function PrivateRoute({
   component: Component,
@@ -14,7 +14,7 @@ function PrivateRoute({
 }) {
   useEffect(() => {
     if (!auth.isAuthenticated) {
-      notification.open({ message: notLoggedInMessage });
+      message.error(notLoggedInMessage);
     }
   }, [auth]);
   return (

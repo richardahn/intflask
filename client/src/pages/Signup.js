@@ -6,6 +6,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { signupUser } from '../actions/auth';
 import SignupImage from '../assets/signup.jpg';
+import SignupImageTiny from '../assets/signup-tiny.jpg';
 
 import {
   Card,
@@ -18,21 +19,18 @@ import {
   Input,
   Button,
   Checkbox,
-  notification,
+  message,
 } from 'antd';
 import Sider from 'antd/lib/layout/Sider';
-import { GoogleLoginButton } from '../components/basic-components/GoogleLoginButton';
+import { GoogleLoginButton } from '../components/intflask-antd';
+import ProgressiveImage from '../components/ProgressiveImage';
 const { Content, Header } = Layout;
 const { Title, Text, Link } = Typography;
 
 function SignupForm({ onSignup, errors }) {
   const [form] = Form.useForm();
   const onFinish = useCallback((values) => {
-    console.log('Client side validation succeeded: ', values);
     onSignup(values);
-  });
-  const onFinishFailed = useCallback((errorInfo) => {
-    console.log('Client side validation failed: ', errorInfo);
   });
   useEffect(() => {
     const errs = [];
@@ -68,7 +66,6 @@ function SignupForm({ onSignup, errors }) {
       layout="vertical"
       name="basic"
       onFinish={onFinish}
-      onFinishFailed={onFinishFailed}
       validateMessages={{
         types: {
           email: 'Not a valid ${type}',
@@ -127,13 +124,13 @@ function SignupForm({ onSignup, errors }) {
 
       <div css={{ marginBottom: '0.4rem' }}>
         <Text>
-          By clicking Signup, you agree to our <Link>Terms</Link>,{' '}
+          By clicking Sign up, you agree to our <Link>Terms</Link>,{' '}
           <Link>Data Policy</Link> and <Link>Cookie Policy</Link>.
         </Text>
       </div>
       <Form.Item css={{ marginBottom: 0 }}>
         <Button type="primary" htmlType="submit">
-          Signup
+          Sign up
         </Button>
       </Form.Item>
     </Form>
@@ -145,7 +142,7 @@ function Signup({ signupUser, errors, history }) {
     (values) => {
       signupUser(values, () => {
         history.push('/login');
-        notification.open({ message: 'Successfully created an account' });
+        message.success('Successfully created an account');
       });
     },
     [signupUser, history],
@@ -180,10 +177,11 @@ function Signup({ signupUser, errors, history }) {
             </Col>
           </Col>
           <Col xs={0} sm={12}>
-            <img
+            <ProgressiveImage
               src={SignupImage}
-              alt={'Sign Up Image'}
-              css={{ maxWidth: '100%' }}
+              placeholderSrc={SignupImageTiny}
+              alt="Signup Image"
+              css={{ maxWidth: '100%', width: '10000px' }}
             />
           </Col>
         </Row>

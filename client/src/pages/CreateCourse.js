@@ -3,6 +3,7 @@ import { css, jsx } from '@emotion/core';
 
 import React, { useCallback } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
+import axios from 'axios';
 import {
   Card,
   Layout,
@@ -15,7 +16,7 @@ import {
   Button,
   Checkbox,
   Space,
-  notification,
+  message,
   PageHeader,
   InputNumber,
 } from 'antd';
@@ -25,21 +26,25 @@ const { Content, Header } = Layout;
 const { Title, Text } = Typography;
 
 export default function CreateCourse({ history }) {
-  const onBack = useCallback(() => history.goBack(), [history]);
+  const goBack = useCallback(() => history.push('/admin'), [history]);
   const onFinish = useCallback((values) => {
-    console.log('Success: ', values);
-  }, []);
-  const onFinishFailed = useCallback((errorInfo) => {
-    console.log('Failure: ', errorInfo);
+    axios.post('/api/admin/courses', values).then(
+      (response) => {
+        message.success('Successfully created course');
+        history.push(`/admin/edit-course/${response.data.slug}`);
+      },
+      (error) => {
+        message.error('Failed to create the course');
+      },
+    );
   }, []);
   return (
     <Layout>
       <PageHeader
         css={{ backgroundColor: 'white' }}
         className="site-page-header"
-        onBack={onBack}
+        onBack={goBack}
         title="Create Course"
-        subTitle="Subtitle"
       >
         <Text type="secondary">
           This course will not be immediately available to the public. You will
@@ -51,11 +56,14 @@ export default function CreateCourse({ history }) {
           <Col>
             <Form
               onFinish={onFinish}
-              onFinishFailed={onFinishFailed}
               initialValues={{ coursePrice: 5 }}
               layout="vertical"
             >
-              <Form.Item label="Course Name" name="courseName">
+              <Form.Item
+                label="Course Name"
+                name="courseName"
+                rules={[{ required: true, message: 'Course name is required' }]}
+              >
                 <Input />
               </Form.Item>
               <Form.Item label="Technology Stack" name="technologyStack">
@@ -75,12 +83,12 @@ export default function CreateCourse({ history }) {
               </Form.Item>
               <Form.Item css={{ marginBottom: 0 }}>
                 <Space>
-                  <Button type="secondary">Cancel</Button>
-                  <RouterLink to="/admin/edit-course/777">
-                    <Button type="primary" htmlType="submit">
-                      Start Editing
-                    </Button>
-                  </RouterLink>
+                  <Button type="secondary" onClick={goBack}>
+                    Cancel
+                  </Button>
+                  <Button type="primary" htmlType="submit">
+                    Start Editing
+                  </Button>
                 </Space>
               </Form.Item>
             </Form>

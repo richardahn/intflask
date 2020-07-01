@@ -9,14 +9,14 @@ const app = express();
 addMiddleware(app);
 addRoutes(app);
 
-// -- Configure connection to MongoDB --
+// -- Connect mongoose --
 mongoose
   .connect(connectionString, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
   .then(() => console.log('MongoDB successfully connected'))
-  .catch((err) => console.log(err));
+  .catch((err) => console.error(err));
 
 // -- Host server --
 const port = process.env.PORT || 5000;

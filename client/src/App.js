@@ -11,12 +11,16 @@ import IntflaskLayout from './components/IntflaskLayout';
 
 // -- Pages --
 import Administrator from './pages/Administrator';
+import AllCourses from './pages/AllCourses';
 import CreateCourse from './pages/CreateCourse';
 import EditCourse from './pages/EditCourse';
-import Landing from './pages/Landing';
+import Home from './pages/Home';
 import Login from './pages/Login';
+import Settings from './pages/Settings';
 import Signup from './pages/Signup';
 import TeacherSignup from './pages/TeacherSignup';
+
+import EditorPlayground from './pages/EditorPlayground';
 
 // -- Actions --
 import {
@@ -35,9 +39,11 @@ export default function App() {
       <Router>
         <IntflaskLayout>
           <Switch>
-            <Route exact path="/" component={Landing} />
+            <Route exact path="/" component={Home} />
+            <Route exact path="/all-courses" component={AllCourses} />
             <NonAuthenticatedRoute exact path="/login" component={Login} />
             <NonAuthenticatedRoute exact path="/signup" component={Signup} />
+            <PrivateRoute exact path="/settings" component={Settings} />
             <PrivateRoute
               exact
               path="/teacher-signup"
@@ -46,13 +52,19 @@ export default function App() {
             <PrivateRoute exact path="/admin" component={Administrator} />
             <PrivateRoute
               exact
-              path="/admin/edit-course/:courseId"
+              path="/admin/edit-course/:slug"
               component={EditCourse}
             />
             <PrivateRoute
               exact
               path="/admin/create-course"
               component={CreateCourse}
+            />
+
+            <Route
+              exact
+              path="/editor-playground"
+              component={EditorPlayground}
             />
           </Switch>
         </IntflaskLayout>

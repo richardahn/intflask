@@ -8,16 +8,18 @@ import { connect } from 'react-redux';
 import { logoutUser } from '../../actions/auth';
 
 // -- Design --
-import { Layout, Menu, Typography, Button } from 'antd';
+import { Layout, Menu, Typography, Button, Input, Space, Dropdown } from 'antd';
+import { MoreOutlined, MenuOutlined } from '@ant-design/icons';
 const { Header } = Layout;
-
-function Logo() {
+const { Text } = Typography;
+function Logo(props) {
   return (
     <RouterLink
       to="/"
       css={css`
         font-size: 1rem;
         height: 100%;
+        margin-right: 1rem;
         color: black;
         &:hover {
           color: black;
@@ -26,6 +28,7 @@ function Logo() {
           color: black;
         }
       `}
+      {...props}
     >
       intflask
     </RouterLink>
@@ -33,31 +36,35 @@ function Logo() {
 }
 
 function FixedHeader({ children, ...props }) {
-  return <Header {...props}>{children}</Header>;
+  return (
+    <Header css={{ position: 'fixed', zIndex: 1, width: '100%' }} {...props}>
+      {children}
+    </Header>
+  );
 }
 
-function IntflaskHeader(props) {
+function IntflaskHeader({ logoutUser, history, auth }) {
   const onLogoutClick = useCallback(
     (event) => {
       event.preventDefault();
-      props.logoutUser(props.history);
+      logoutUser(history);
     },
-    [props.logoutUser, props.history],
+    [logoutUser, history],
   );
 
-  const navbarItems = props.auth.isAuthenticated
+  const navbarItems = auth.isAuthenticated
     ? [
         {
-          name: 'Home',
-          to: '/',
+          name: 'All Courses',
+          to: '/all-courses',
         },
         {
           name: 'My Courses',
           to: '/my-courses',
         },
         {
-          name: 'Notebook',
-          to: '/notebook',
+          name: 'Settings',
+          to: '/settings',
         },
         {
           name: 'Admin',
@@ -70,10 +77,6 @@ function IntflaskHeader(props) {
         },
       ]
     : [
-        {
-          name: 'Home',
-          to: '/',
-        },
         {
           name: 'Login',
           to: '/login',
@@ -94,15 +97,34 @@ function IntflaskHeader(props) {
       `}
     >
       <Logo />
-      <Menu theme="light" mode="horizontal" defaultSelectedKeys={['0']}>
-        {navbarItems.map((item, index) => (
-          <Menu.Item key={index}>
-            <RouterLink to={item.to} onClick={item.onClick}>
-              {item.name}
-            </RouterLink>
-          </Menu.Item>
-        ))}
-      </Menu>
+      <Input.Search
+        size="large"
+        placeholder="Search for a course..."
+        css={{ maxWidth: '400px' }}
+      />
+      <Dropdown
+        overlay={
+          <Menu theme="light">
+            {navbarItems.map((item, index) => (
+              <Menu.Item key={index}>
+                <RouterLink to={item.to} onClick={item.onClick}>
+                  {item.name}
+                </RouterLink>
+              </Menu.Item>
+            ))}
+          </Menu>
+        }
+        trigger={['click']}
+      >
+        <Button
+          className="ant-dropdown-link"
+          onClick={(e) => e.preventDefault()}
+          type="text"
+          size="large"
+        >
+          <MenuOutlined />
+        </Button>
+      </Dropdown>
     </FixedHeader>
   );
 }

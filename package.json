@@ -6,18 +6,18 @@
   "author": "Richard Ahn <richahn2@gmail.com>",
   "license": "MIT",
   "devDependencies": {
-    "eslint": "^6.8.0",
+    "eslint": "^6.6.0",
     "eslint-config-prettier": "^6.10.1",
     "eslint-plugin-prettier": "^3.1.2",
     "eslint-plugin-react": "^7.19.0",
-    "eslint-plugin-react-hooks": "^3.0.0",
+    "eslint-plugin-react-hooks": "^4.0.4",
     "nodemon": "^2.0.2",
     "prettier": "^2.0.2"
   },
   "scripts": {
     "client-install": "npm install --prefix client",
     "start": "node src/server.js",
-    "server": "nodemon src/server.js",
+    "server": "nodemon --inspect=9222 src/server.js",
     "client": "npm start --prefix client",
     "dev": "concurrently \"yarn server\" \"yarn client\"",
     "prettier": "prettier --write \"**/*.js\""
@@ -31,6 +31,7 @@
     "is-empty": "^1.2.0",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.9.6",
+    "mongoose-slug-generator": "^1.0.4",
     "passport": "^0.4.1",
     "passport-google-oauth2": "^0.2.0",
     "passport-jwt": "^4.0.0",

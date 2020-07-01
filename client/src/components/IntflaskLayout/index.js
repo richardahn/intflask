@@ -22,7 +22,7 @@ export default function IntflaskLayout({ children, ...props }) {
         {...props}
       >
         <IntflaskHeader>Header</IntflaskHeader>
-        {children}
+        <Layout css={{ marginTop: '64px' }}>{children}</Layout>
         <IntflaskFooter>Footer</IntflaskFooter>
       </Layout>
     </React.Fragment>

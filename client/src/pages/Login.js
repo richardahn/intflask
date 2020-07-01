@@ -4,7 +4,7 @@ import React, { useCallback, useEffect } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { loginUser } from '../actions/auth';
-import { GoogleLoginButton } from '../components/basic-components/GoogleLoginButton';
+import { GoogleLoginButton } from '../components/intflask-antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import {
   Card,
@@ -36,11 +36,7 @@ const tailLayout = {
 function LoginForm({ onLogin, serversideValidationErrors }) {
   const [form] = Form.useForm();
   const onFinish = useCallback((values) => {
-    console.log('Client side validation succeeded: ', values);
     onLogin(values); // Server side validation
-  });
-  const onFinishFailed = useCallback((errorInfo) => {
-    console.log('Client side validation failed: ', errorInfo);
   });
   useEffect(() => {
     if (serversideValidationErrors) {
@@ -80,7 +76,6 @@ function LoginForm({ onLogin, serversideValidationErrors }) {
       name="basic"
       initialValues={{ remember: true }}
       onFinish={onFinish}
-      onFinishFailed={onFinishFailed}
       validateMessages={{
         types: {
           email: 'Not a valid ${type}',
