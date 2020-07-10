@@ -9,6 +9,7 @@ import CourseEditorStatusBar from './CourseEditorStatusBar';
 // -- Redux --
 import { connect } from 'react-redux';
 import { setContent, saveCourse, setName } from '../../actions/editCourse';
+import { getPage } from '../../selectors/editTutorial';
 
 // -- Css --
 import {
@@ -41,56 +42,22 @@ function EditableTitle({ children, ...props }) {
   );
 }
 
+function isMain(page) {
+  return !('name' in page);
+}
+function getName(page) {
+  return isMain(page) ? 'Main' : page.name;
+}
+
 function CourseEditor({
   currentTopicIndex,
   currentPageIndex,
   course,
+  page,
   setContent,
   saveCourse,
   setName,
 }) {
-  const changeName = useCallback((name) => {
-    setName(name);
-    saveCourse();
-  }, []);
-  let editorValue = null;
-  let courseName = null;
-  if (course != null) {
-    if (currentPageIndex != null) {
-      editorValue =
-        course.data.children[currentTopicIndex].children[currentPageIndex]
-          .content;
-      courseName = (
-        <EditableTitle level={4} editable={{ onChange: changeName }}>
-          {
-            course.data.children[currentTopicIndex].children[currentPageIndex]
-              .name
-          }
-        </EditableTitle>
-      );
-    } else if (currentTopicIndex != null) {
-      editorValue = course.data.children[currentTopicIndex].content;
-      courseName = (
-        <EditableTitle
-          level={4}
-          editable={{ onChange: changeName }}
-          css={css`
-            textarea {
-              color: rgba(0, 0, 0, 0.85);
-              font-weight: 600;
-              font-size: 20px;
-              line-height: 1.4;
-            }
-          `}
-        >
-          {course.data.children[currentTopicIndex].name}
-        </EditableTitle>
-      );
-    } else {
-      editorValue = course.data.main.content;
-      courseName = <Title level={4}>Main</Title>;
-    }
-  }
   const debouncedSaveCourse = useCallback(debounce(saveCourse), []);
   const onChange = useCallback(
     (value) => {
@@ -113,12 +80,30 @@ function CourseEditor({
           paddedContentCss,
         ]}
       >
-        {editorValue != null ? (
+        {page != null && page.content != null ? (
           <React.Fragment>
-            <Row>{courseName}</Row>
+            <Row>
+              <EditableTitle
+                level={4}
+                editable={
+                  isMain(page)
+                    ? null
+                    : {
+                        onChange: (name) => {
+                          if (page != null && page.name !== name) {
+                            setName(name);
+                            saveCourse();
+                          }
+                        },
+                      }
+                }
+              >
+                {getName(page)}
+              </EditableTitle>
+            </Row>
             <Row css={{ flex: '1 1 auto' }}>
               <IntflaskEditor
-                value={editorValue}
+                value={page.content}
                 onChange={onChange}
                 css={{ flex: 1 }}
               />
@@ -145,6 +130,7 @@ const mapStateToProps = (state) => ({
   currentTopicIndex: state.editCourse.currentTopicIndex,
   currentPageIndex: state.editCourse.currentPageIndex,
   course: state.editCourse.course,
+  page: getPage(state),
 });
 const mapDispatchToProps = { setContent, saveCourse, setName };
 

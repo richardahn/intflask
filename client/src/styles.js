@@ -70,6 +70,6 @@ export const Blockquote = styled.blockquote`
 
 /* Layout Values */
 export const mainHeaderHeight = 64;
-export const pageHeaderHeight = 72;
+export const pageHeaderHeight = 83;
 export const statusBarHeight = 24;
 export const courseSidebarWidth = 200;

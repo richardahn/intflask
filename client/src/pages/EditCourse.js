@@ -12,6 +12,7 @@ import {
   Tag,
   Space,
 } from 'antd';
+import TutorialDetails from '../components/EditCourse/TutorialDetails';
 import CourseEditor from '../components/EditCourse/CourseEditor';
 import { parseCourseContent } from '../utils/course';
 import {
@@ -22,6 +23,8 @@ import {
   EyeOutlined,
   EyeInvisibleOutlined,
   EditOutlined,
+  SettingOutlined,
+  CloseOutlined,
 } from '@ant-design/icons';
 
 // -- Redux --
@@ -61,7 +64,6 @@ function EditCourse({
   const { slug } = match.params;
   const onBack = useCallback(() => history.push('/admin'), [history]);
   const [noCourse, setNoCourse] = useState(false);
-  const [deployButtonLoading, setDeployButtonLoading] = useState(false);
 
   useEffect(() => {
     axios.get(`/api/admin/courses/${slug}`).then(
@@ -79,15 +81,6 @@ function EditCourse({
       reset();
     };
   }, [slug]);
-
-  const deployButtonOnClick = (deploy) => {
-    setDeployed(deploy);
-    setDeployButtonLoading(true);
-    saveCourse(
-      () => setDeployButtonLoading(false),
-      () => setDeployButtonLoading(false),
-    );
-  };
 
   return (
     <React.Fragment>
@@ -126,32 +119,6 @@ function EditCourse({
           </div>
         }
         subTitle="Editing"
-        extra={[
-          courseDeployed ? (
-            <Button
-              size="small"
-              danger
-              icon={<EyeInvisibleOutlined />}
-              css={{ fontSize: '0.7rem' }}
-              key="hideButton"
-              loading={deployButtonLoading}
-              onClick={() => deployButtonOnClick(false)}
-            >
-              Hide Course
-            </Button>
-          ) : (
-            <Button
-              size="small"
-              icon={<EyeOutlined />}
-              css={{ fontSize: '0.7rem' }}
-              key="deployButton"
-              loading={deployButtonLoading}
-              onClick={() => deployButtonOnClick(true)}
-            >
-              Deploy Course
-            </Button>
-          ),
-        ]}
       />
       {noCourse ? (
         <Content
