@@ -13,18 +13,16 @@ const { Content } = Layout;
 /** Renders the general page layout and general styles/themes */
 export default function IntflaskLayout({ children, ...props }) {
   return (
-    <React.Fragment>
-      <Layout
-        css={css`
-          display: flex;
-          min-height: 100vh;
-        `}
-        {...props}
-      >
-        <IntflaskHeader>Header</IntflaskHeader>
-        <Layout css={{ marginTop: '64px' }}>{children}</Layout>
-        <IntflaskFooter>Footer</IntflaskFooter>
-      </Layout>
-    </React.Fragment>
+    <Layout
+      css={css`
+        display: flex;
+        min-height: 100vh;
+      `}
+      {...props}
+    >
+      <IntflaskHeader>Header</IntflaskHeader>
+      <Layout css={{ marginTop: '64px' }}>{children}</Layout>
+      <IntflaskFooter>Footer</IntflaskFooter>
+    </Layout>
   );
 }

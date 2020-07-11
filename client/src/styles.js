@@ -86,7 +86,7 @@ export function AppFixedHeader({ top, children, ...props }) {
         position: fixed;
         z-index: 1;
         width: 100%;
-        ${top ? `top: ${top}` : ''}
+        ${top ? `top: ${top}px;` : ''}
       `}
       {...props}
     >
@@ -97,6 +97,6 @@ export function AppFixedHeader({ top, children, ...props }) {
 
 /* Layout Values */
 export const mainHeaderHeight = 64;
-export const pageHeaderHeight = 83;
+export const pageHeaderHeight = 75;
 export const statusBarHeight = 24;
 export const courseSidebarWidth = 200;

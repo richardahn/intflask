@@ -12,6 +12,7 @@ import {
   Avatar,
   Tag,
   Breadcrumb,
+  Tooltip,
 } from 'antd';
 import PageSpinner from '../components/PageSpinner';
 import {
@@ -21,8 +22,11 @@ import {
   CheckCircleOutlined,
   MinusCircleOutlined,
   HomeOutlined,
+  PlusOutlined,
 } from '@ant-design/icons';
 import axios from 'axios';
+import { AppLayout, PaddedContent, AppHeader } from '../styles';
+import FloatingActionButton from '../components/FloatingActionButton';
 
 const { Content, Header } = Layout;
 const { Title, Text, Link } = Typography;
@@ -126,35 +130,32 @@ export default function Administrator() {
   }, []);
 
   return (
-    <Layout>
-      <Header css={{ backgroundColor: 'white', height: 'initial' }}>
+    <AppLayout>
+      <AppHeader css={{ height: 'initial' }}>
         <Breadcrumb>
           <Breadcrumb.Item>
             <HomeOutlined />
-            <span>Administrator</span>
+            <span>Your Courses</span>
           </Breadcrumb.Item>
         </Breadcrumb>
-      </Header>
-      <Content
-        css={{
-          backgroundColor: 'white',
-          padding: '0 3rem',
-        }}
-      >
-        <div>
-          <Space align="center">
-            <Title level={4} css={{ marginBottom: '0 !important' }}>
-              Your Created Courses
-            </Title>
-            <RouterLink to="/admin/create-course">
-              <Button type="primary">Create a Course</Button>
+      </AppHeader>
+      <PaddedContent>
+        <FloatingActionButton>
+          <Tooltip title="Add Tutorial" placement="bottom">
+            <RouterLink to="/admin/create-tutorial">
+              <Button
+                type="primary"
+                shape="circle"
+                icon={<PlusOutlined />}
+                css={{ width: 40, height: 40 }}
+              />
             </RouterLink>
-          </Space>
-        </div>
+          </Tooltip>
+        </FloatingActionButton>
 
         {/* List */}
         {courses ? <CreatedTutorials courses={courses} /> : <PageSpinner />}
-      </Content>
-    </Layout>
+      </PaddedContent>
+    </AppLayout>
   );
 }

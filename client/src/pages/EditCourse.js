@@ -11,7 +11,9 @@ import {
   Button,
   Tag,
   Space,
+  Breadcrumb,
 } from 'antd';
+import { Link as RouterLink } from 'react-router-dom';
 import TutorialDetails from '../components/EditCourse/TutorialDetails';
 import CourseEditor from '../components/EditCourse/CourseEditor';
 import { parseCourseContent } from '../utils/course';
@@ -25,6 +27,7 @@ import {
   EditOutlined,
   SettingOutlined,
   CloseOutlined,
+  HomeOutlined,
 } from '@ant-design/icons';
 
 // -- Redux --
@@ -44,13 +47,19 @@ import {
   pageHeaderHeight,
   statusBarHeight,
   paddedContentCss,
+  AppLayout,
+  AppHeader,
+  AppFixedHeader,
 } from '../styles';
+import PageSpinner from '../components/PageSpinner';
+import ErrorContent from '../components/ErrorContent';
 
 const { Content } = Layout;
 const { Title } = Typography;
 
 // -- Helpers --
 function EditCourse({
+  course,
   courseName,
   courseDeployed,
   match,
@@ -63,19 +72,19 @@ function EditCourse({
 }) {
   const { slug } = match.params;
   const onBack = useCallback(() => history.push('/admin'), [history]);
-  const [noCourse, setNoCourse] = useState(false);
+  const [loadingPage, setLoadingPage] = useState(true);
 
   useEffect(() => {
-    axios.get(`/api/admin/courses/${slug}`).then(
-      (response) => {
+    axios
+      .get(`/api/admin/courses/${slug}`)
+      .then((response) => {
         setCourse(parseCourseContent(response.data));
-      },
-      (error) => {
+      })
+      .catch((error) => {
         console.error(error);
         message.error('Failed to get course');
-        setNoCourse(true);
-      },
-    );
+      })
+      .finally(() => setLoadingPage(false));
 
     return function cleanup() {
       reset();
@@ -83,64 +92,42 @@ function EditCourse({
   }, [slug]);
 
   return (
-    <React.Fragment>
-      <PageHeader
-        css={fixedHeaderCssAtHeight(mainHeaderHeight)}
-        className="site-page-header"
-        onBack={onBack}
-        title={
-          <div css={{ marginTop: '0.3rem' }}>
-            <Title
-              level={4}
-              editable={{
-                onChange: (name) => {
-                  if (name !== courseName) {
-                    setCourseName(name);
-                    saveCourse();
-                  }
-                },
-              }}
-              css={css`
-                position: initial;
-                textarea {
-                  color: rgba(0, 0, 0, 0.85);
-                  font-weight: 600;
-                  font-size: 20px;
-                  line-height: 1.4;
-                  position: relative;
-                  width: 80vw;
-                  max-height: 2.5rem !important;
-                  z-index: 99;
-                }
-              `}
-            >
+    <AppLayout>
+      {loadingPage ? (
+        <PageSpinner />
+      ) : course ? (
+        <React.Fragment>
+          <AppFixedHeader top={mainHeaderHeight} css={{ height: 'initial' }}>
+            <Breadcrumb css={{ marginBottom: '1rem' }}>
+              <Breadcrumb.Item>
+                <RouterLink to="/admin">
+                  <HomeOutlined /> Administrator
+                </RouterLink>
+              </Breadcrumb.Item>
+              <Breadcrumb.Item>
+                <RouterLink to={`/tutorial-dashboard/${slug}`}>
+                  Dashboard
+                </RouterLink>
+              </Breadcrumb.Item>
+              <Breadcrumb.Item>Edit</Breadcrumb.Item>
+            </Breadcrumb>
+            <Title level={4} css={{ marginBottom: 0 }}>
               {courseName}
             </Title>
-          </div>
-        }
-        subTitle="Editing"
-      />
-      {noCourse ? (
-        <Content
-          css={[
-            {
-              marginTop: `${pageHeaderHeight}px`,
-              display: 'flex',
-              justifyContent: 'center',
-            },
-            paddedContentCss,
-          ]}
-        >
-          <Title level={4}>You are not authorized to edit this course</Title>
-        </Content>
+          </AppFixedHeader>
+          <CourseEditor top={pageHeaderHeight + statusBarHeight} />
+        </React.Fragment>
       ) : (
-        <CourseEditor />
+        <ErrorContent>
+          You are not authorized to edit this tutorial
+        </ErrorContent>
       )}
-    </React.Fragment>
+    </AppLayout>
   );
 }
 
 const mapStateToProps = (state) => ({
+  course: state.editCourse.course,
   courseDeployed: state.editCourse.course?.deployed,
   courseName: state.editCourse.course?.courseName,
 });

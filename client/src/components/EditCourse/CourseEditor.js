@@ -16,6 +16,8 @@ import {
   paddedContentCss,
   pageHeaderHeight,
   statusBarHeight,
+  PaddedContent,
+  AppLayout,
 } from '../../styles';
 import IntflaskEditor from '../IntflaskEditor';
 import debounce from '../../utils/debounce';
@@ -57,6 +59,7 @@ function CourseEditor({
   setContent,
   saveCourse,
   setName,
+  top,
 }) {
   const debouncedSaveCourse = useCallback(debounce(saveCourse), []);
   const onChange = useCallback(
@@ -67,18 +70,15 @@ function CourseEditor({
     [currentTopicIndex, currentPageIndex],
   );
   return (
-    <Layout>
+    <AppLayout>
       <CourseEditorStatusBar />
       <CourseEditorSidebar />
-      <Content
-        css={[
-          {
-            marginTop: `${pageHeaderHeight + statusBarHeight}px`,
-            display: 'flex',
-            flexDirection: 'column',
-          },
-          paddedContentCss,
-        ]}
+      <PaddedContent
+        css={{
+          marginTop: `${top}px`,
+          display: 'flex',
+          flexDirection: 'column',
+        }}
       >
         {page != null && page.content != null ? (
           <React.Fragment>
@@ -121,8 +121,8 @@ function CourseEditor({
             <Spin size="large" />
           </div>
         )}
-      </Content>
-    </Layout>
+      </PaddedContent>
+    </AppLayout>
   );
 }
 

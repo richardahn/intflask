@@ -3,7 +3,6 @@
 import { css, jsx } from '@emotion/core';
 import React, { useState, useEffect } from 'react';
 import { Tag, Space } from 'antd';
-import { Breadcrumbs } from '../intflask-antd';
 import {
   HomeOutlined,
   SyncOutlined,
@@ -22,6 +21,7 @@ import {
   mainHeaderHeight,
   pageHeaderHeight,
   statusBarHeight,
+  AppFixedHeader,
 } from '../../styles';
 
 function saveStateToTag(saveState) {
@@ -95,21 +95,18 @@ function CourseEditorStatusBar({
   }, [currentTopicIndex, currentPageIndex, course, setMain]);
 
   return (
-    <div
-      css={[
-        {
-          height: `${statusBarHeight}px`,
-          display: 'flex',
-          justifyContent: 'flex-end',
-        },
-        fixedHeaderCssAtHeight(mainHeaderHeight + pageHeaderHeight),
-      ]}
+    <AppFixedHeader
+      top={mainHeaderHeight + pageHeaderHeight}
+      css={{
+        height: `${statusBarHeight}px`,
+        display: 'flex',
+        justifyContent: 'flex-end',
+      }}
     >
       <Space css={{ marginRight: '1.5rem' }}>
-        <Breadcrumbs items={breadcrumbItems} />
         <div css={{ minWidth: '100px' }}>{saveStateToTag(saveState)}</div>
       </Space>
-    </div>
+    </AppFixedHeader>
   );
 }
 
