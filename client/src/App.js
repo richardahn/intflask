@@ -19,6 +19,7 @@ import Login from './pages/Login';
 import Settings from './pages/Settings';
 import Signup from './pages/Signup';
 import TeacherSignup from './pages/TeacherSignup';
+import TutorialDashboard from './pages/TutorialDashboard';
 
 import EditorPlayground from './pages/EditorPlayground';
 
@@ -54,6 +55,11 @@ export default function App() {
               exact
               path="/teacher-signup"
               component={TeacherSignup}
+            />
+            <PrivateRoute
+              exact
+              path="/tutorial-dashboard/:slug"
+              component={TutorialDashboard}
             />
             <PrivateRoute exact path="/admin" component={Administrator} />
             <PrivateRoute

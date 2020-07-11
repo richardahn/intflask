@@ -3,7 +3,16 @@ import { css, jsx } from '@emotion/core';
 
 import React, { useEffect, useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
-import { Layout, Button, Typography, Space, List, Avatar, Tag } from 'antd';
+import {
+  Layout,
+  Button,
+  Typography,
+  Space,
+  List,
+  Avatar,
+  Tag,
+  Breadcrumb,
+} from 'antd';
 import PageSpinner from '../components/PageSpinner';
 import {
   MessageOutlined,
@@ -11,11 +20,12 @@ import {
   StarOutlined,
   CheckCircleOutlined,
   MinusCircleOutlined,
+  HomeOutlined,
 } from '@ant-design/icons';
 import axios from 'axios';
 
 const { Content, Header } = Layout;
-const { Title, Text } = Typography;
+const { Title, Text, Link } = Typography;
 
 function IconText({ icon, text }) {
   return (
@@ -26,7 +36,59 @@ function IconText({ icon, text }) {
   );
 }
 
-function CreatedCoursesList({ courses }) {
+function CreatedTutorial({ course }) {
+  return (
+    <List.Item
+      key={course.slug}
+      actions={[
+        <IconText icon={StarOutlined} text="156" key="list-vertical-star-o" />,
+        <IconText icon={LikeOutlined} text="156" key="list-vertical-like-o" />,
+      ]}
+    >
+      <List.Item.Meta
+        css={css`
+          .ant-list-item-meta-title {
+            margin-bottom: 0;
+          }
+        `}
+        title={
+          <div css={{ display: 'flex', justifyContent: 'space-between' }}>
+            <div>
+              <RouterLink
+                css={{ marginRight: '1rem' }}
+                to={`/tutorial-dashboard/${course.slug}`}
+              >
+                <Text>{course.title}</Text>
+              </RouterLink>
+            </div>
+            <div>
+              {course.deployed ? (
+                <Tag icon={<CheckCircleOutlined />} color="success">
+                  deployed
+                </Tag>
+              ) : (
+                <Tag icon={<MinusCircleOutlined />} color="default">
+                  hidden
+                </Tag>
+              )}
+            </div>
+          </div>
+        }
+        description={
+          <div>
+            <Tag>C#</Tag>
+            <Tag>React</Tag>
+          </div>
+        }
+      />
+      We supply a series of design principles, practical patterns and high
+      quality design resources (Sketch and Axure), to help people create their
+      product prototypes beautifully and efficiently.
+    </List.Item>
+  );
+}
+
+function CreatedTutorials({ courses }) {
   console.log(courses);
   return (
     <List
@@ -39,69 +101,7 @@ function CreatedCoursesList({ courses }) {
           <b>ant design</b> footer part
         </div>
       }
-      renderItem={(course) => (
-        <List.Item
-          key={course.slug}
-          actions={[
-            <IconText
-              icon={StarOutlined}
-              text="156"
-              key="list-vertical-star-o"
-            />,
-            <IconText
-              icon={LikeOutlined}
-              text="156"
-              key="list-vertical-like-o"
-            />,
-            <IconText
-              icon={MessageOutlined}
-              text="2"
-              key="list-vertical-message"
-            />,
-          ]}
-          extra={
-            <img
-              width={272}
-              alt="logo"
-              src="https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png"
-            />
-          }
-        >
-          <List.Item.Meta
-            avatar={
-              <Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />
-            }
-            title={
-              <div css={{ display: 'flex', justifyContent: 'space-between' }}>
-                <div>
-                  <a css={{ marginRight: '1rem' }}>
-                    <Text>{course.title}</Text>
-                  </a>
-                  {course.deployed ? (
-                    <Tag icon={<CheckCircleOutlined />} color="success">
-                      deployed
-                    </Tag>
-                  ) : (
-                    <Tag icon={<MinusCircleOutlined />} color="default">
-                      hidden
-                    </Tag>
-                  )}
-                </div>
-                <Space>
-                  <Button>View</Button>
-                  <RouterLink to={course.editUrl}>
-                    <Button>Edit</Button>
-                  </RouterLink>
-                </Space>
-              </div>
-            }
-            description="Ant Design, a design language for background applications, is refined by Ant UED Team."
-          />
-          We supply a series of design principles, practical patterns and high
-          quality design resources (Sketch and Axure), to help people create
-          their product prototypes beautifully and efficiently.
-        </List.Item>
-      )}
+      renderItem={(course) => <CreatedTutorial course={course} />}
     />
   );
 }
@@ -127,8 +127,13 @@ export default function Administrator() {
 
   return (
     <Layout>
-      <Header css={{ backgroundColor: 'white' }}>
-        <Title level={4}>Administrator Dashboard</Title>
+      <Header css={{ backgroundColor: 'white', height: 'initial' }}>
+        <Breadcrumb>
+          <Breadcrumb.Item>
+            <HomeOutlined />
+            <span>Administrator</span>
+          </Breadcrumb.Item>
+        </Breadcrumb>
       </Header>
       <Content
         css={{
@@ -148,7 +153,7 @@ export default function Administrator() {
         </div>
 
         {/* List */}
-        {courses ? <CreatedCoursesList courses={courses} /> : <PageSpinner />}
+        {courses ? <CreatedTutorials courses={courses} /> : <PageSpinner />}
       </Content>
     </Layout>
   );

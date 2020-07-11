@@ -2,12 +2,14 @@
 import { css, jsx } from '@emotion/core';
 import styled from '@emotion/styled';
 import React from 'react';
-import { Button, Tooltip, Space, Popover, Badge } from 'antd';
+import { Button, Tooltip, Space, Popover, Badge, Layout } from 'antd';
 import {
   QuestionOutlined,
   HeartOutlined,
   CommentOutlined,
 } from '@ant-design/icons';
+
+const { Content, Header } = Layout;
 
 /* CSS */
 // -- Scrollbar --
@@ -67,6 +69,31 @@ export const Blockquote = styled.blockquote`
   padding-left: 1.5rem;
   border-left: 5px solid #ee6e73;
 `;
+export const PaddedContent = styled(Content)`
+  padding: 0 3rem;
+`;
+export const AppLayout = styled(Layout)`
+  background-color: white;
+`;
+export const AppHeader = styled(Header)`
+  background-color: white;
+`;
+
+export function AppFixedHeader({ top, children, ...props }) {
+  return (
+    <AppHeader
+      css={css`
+        position: fixed;
+        z-index: 1;
+        width: 100%;
+        ${top ? `top: ${top}` : ''}
+      `}
+      {...props}
+    >
+      {children}
+    </AppHeader>
+  );
+}
 
 /* Layout Values */
 export const mainHeaderHeight = 64;

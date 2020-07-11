@@ -23,6 +23,8 @@ const CourseSchema = new mongoose.Schema({
   userId: { type: mongoose.Types.ObjectId },
   courseName: { type: String, required: true },
   slug: { type: String, slug: 'courseName', unique: true },
+  description: { type: String },
+  technologyStack: [String],
   price: { type: Number },
   deployed: { type: Boolean },
   data: new mongoose.Schema(
