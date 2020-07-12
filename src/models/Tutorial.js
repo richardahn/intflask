@@ -23,7 +23,7 @@ const StatisticsSchema = new mongoose.Schema({
   purchases: Number,
 });
 const TutorialSchema = new mongoose.Schema({
-  userId: { type: mongoose.Types.ObjectId, required: true },
+  userId: { type: mongoose.Types.ObjectId, required: true, ref: 'users' },
   slug: { type: String, slug: 'name', unique: true },
   name: { type: String, required: true },
   description: { type: String },

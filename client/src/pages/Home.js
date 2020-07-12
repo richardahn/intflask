@@ -23,35 +23,22 @@ import { GoogleOutlined, StarOutlined } from '@ant-design/icons';
 import { PaddedContent, AppLayout } from '../styles';
 import axios from 'axios';
 import TutorialList, { TutorialListItem } from '../components/TutorialList';
+import { useApiGet } from '../hooks/useApi';
 const { Content, Header, Footer, Sider } = Layout;
 const { Text, Title } = Typography;
 const { TabPane } = Tabs;
 
 export default function Home() {
-  const [loadingTopTutorials, setLoadingTopTutorials] = useState(true);
-  const [topTutorials, setTopTutorials] = useState(null);
-
-  const [loadingFreeTutorials, setLoadingFreeTutorials] = useState(true);
-  const [freeTutorials, setFreeTutorials] = useState(null);
-  useEffect(() => {
-    axios
-      .get('/api/tutorials/top')
-      .then((response) => setTopTutorials(response.data))
-      .catch((error) => {
-        console.error(error);
-        message.error('Failed to retrieve top tutorials');
-      })
-      .finally(() => setLoadingTopTutorials(false));
-
-    axios
-      .get('/api/tutorials/free')
-      .then((response) => setFreeTutorials(response.data))
-      .catch((error) => {
-        console.error(error);
-        message.error('Failed to retrieve free tutorials');
-      })
-      .finally(() => setLoadingFreeTutorials(false));
-  }, []);
+  const [loadingTopTutorials, topTutorials] = useApiGet(
+    '/api/tutorials',
+    { top: true },
+    () => message.error('Failed to retrieve top tutorials'),
+  );
+  const [loadingFreeTutorials, freeTutorials] = useApiGet(
+    '/api/tutorials',
+    { free: true },
+    () => message.error('Failed to load free tutorials'),
+  );
   return (
     <AppLayout>
       <PaddedContent>

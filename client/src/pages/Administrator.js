@@ -32,23 +32,17 @@ import FloatingActionButton from '../components/FloatingActionButton';
 import TutorialList, {
   AdminTutorialListItem,
 } from '../components/TutorialList';
+import { useApiGet } from '../hooks/useApi';
 
 const { Content, Header } = Layout;
 const { Title, Text, Link } = Typography;
 
 export default function Administrator() {
-  const [loadingTutorials, setLoadingTutorials] = useState(true);
-  const [tutorials, setTutorials] = useState(null);
-  useEffect(() => {
-    axios
-      .get('/api/admin/tutorials')
-      .then((response) => setTutorials(response.data))
-      .catch((error) => {
-        console.error(error);
-        message.error('Failed to load tutorials');
-      })
-      .finally(() => setLoadingTutorials(false));
-  }, []);
+  const [loadingTutorials, tutorials] = useApiGet(
+    '/api/admin/tutorials',
+    null,
+    () => message.error('Failed to load tutorials'),
+  );
 
   return (
     <AppLayout>

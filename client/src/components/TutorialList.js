@@ -27,6 +27,7 @@ import {
 import axios from 'axios';
 import { AppLayout, PaddedContent, AppHeader } from '../styles';
 import FloatingActionButton from '../components/FloatingActionButton';
+import Tags from './Tags';
 
 const { Content, Header } = Layout;
 const { Title, Text, Link } = Typography;
@@ -80,9 +81,7 @@ export function AdminTutorialListItem({ tutorial }) {
         }
         description={
           <div>
-            {tutorial.technologyStack.map((item) => (
-              <Tag key={item}>{item}</Tag>
-            ))}
+            <Tags tags={tutorial.technologyStack} />
           </div>
         }
       />
@@ -111,7 +110,7 @@ export function TutorialListItem({ tutorial }) {
         `}
         title={
           <div css={{ display: 'flex', justifyContent: 'space-between' }}>
-            <RouterLink to={`/`}>
+            <RouterLink to={`/tutorial-preview/${tutorial.slug}`}>
               <Text>{tutorial.name}</Text>
             </RouterLink>
             {tutorial.price !== 0 ? (
@@ -123,9 +122,7 @@ export function TutorialListItem({ tutorial }) {
         }
         description={
           <div>
-            {tutorial.technologyStack.map((item) => (
-              <Tag key={item}>{item}</Tag>
-            ))}
+            <Tags tags={tutorial.technologyStack} />
           </div>
         }
       />

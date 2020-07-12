@@ -24,23 +24,15 @@ import {
   MessageOutlined,
 } from '@ant-design/icons';
 import TutorialList, { TutorialListItem } from '../components/TutorialList';
+import { useApiGet } from '../hooks/useApi';
 
 const { Content, Header, Footer, Sider } = Layout;
 const { Text, Title } = Typography;
 
 export default function Tutorials(props) {
-  const [loadingTutorial, setLoadingTutorials] = useState(true);
-  const [tutorials, setTutorials] = useState(null);
-  useEffect(() => {
-    axios
-      .get('/api/tutorials')
-      .then((response) => setTutorials(response.data))
-      .catch((error) => {
-        console.error(error);
-        message.error('Failed to load tutorials');
-      })
-      .finally(() => setLoadingTutorials(false));
-  }, []);
+  const [loadingTutorial, tutorials] = useApiGet('/api/tutorials', null, () =>
+    message.error('Failed to load tutorials'),
+  );
 
   return (
     <Layout>

@@ -45,7 +45,7 @@ export default function App() {
             <Route exact path="/tutorials" component={Tutorials} />
             <Route
               exact
-              path="/tutorial-previews/:slug"
+              path="/tutorial-preview/:slug"
               component={TutorialPreview}
             />
             <NonAuthenticatedRoute exact path="/login" component={Login} />
