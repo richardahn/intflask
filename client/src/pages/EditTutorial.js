@@ -6,12 +6,8 @@ import axios from 'axios';
 import { message, Typography, Breadcrumb } from 'antd';
 import { Link as RouterLink } from 'react-router-dom';
 import TutorialEditor from '../components/EditTutorial/TutorialEditor';
-import { parseTutorialContent } from '../utils/tutorial';
+import { parseTutorialContent, saveTutorial } from '../utils/tutorial';
 import { HomeOutlined } from '@ant-design/icons';
-
-// -- Redux --
-import { connect } from 'react-redux';
-import { setTutorial, reset } from '../actions/editTutorial';
 
 // -- Css --
 import {
@@ -32,8 +28,12 @@ const { Title } = Typography;
 export default function EditTutorial({ match }) {
   const { slug } = match.params;
   const [loadingPage, setLoadingPage] = useState(true);
+  const [saveState, setSaveState] = useState(null);
   const [tutorial, setTutorial] = useState(null);
-
+  const onTutorialChange = useCallback((newTutorial) => {
+    saveTutorial(newTutorial, setSaveState);
+    setTutorial(newTutorial);
+  });
   useEffect(() => {
     axios
       .get(`/api/admin/tutorials/${slug}`)
@@ -72,7 +72,7 @@ export default function EditTutorial({ match }) {
           <TutorialEditor
             top={pageHeaderHeight + statusBarHeight}
             tutorial={tutorial}
-            onTutorialChange={setTutorial}
+            onTutorialChange={onTutorialChange}
           />
         </React.Fragment>
       ) : (

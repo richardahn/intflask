@@ -5,9 +5,12 @@ import React, { useState, useMemo, useEffect, useCallback } from 'react';
 import { Layout, Spin, Row, Typography, Button } from 'antd';
 import TutorialEditorSidebar from './TutorialEditorSidebar';
 import TutorialEditorStatusBar from './TutorialEditorStatusBar';
-
-// -- Redux --
-import { connect } from 'react-redux';
+import {
+  reduceTutorialContent,
+  getCurrentPageFromSelection,
+  isMain,
+  getName,
+} from '../../utils/tutorial';
 
 // -- Css --
 import {
@@ -43,81 +46,17 @@ function EditableTitle({ children, ...props }) {
   );
 }
 
-function isMain(page) {
-  return !('name' in page);
-}
-function getName(page) {
-  return isMain(page) ? 'Main' : page.name;
-}
-
 export default function TutorialEditor({ tutorial, top, onTutorialChange }) {
   const [currentSelectionPath, setCurrentSelectionPath] = useState([]);
-
-  let currentPage = null;
-  if (currentSelectionPath.length === 0) {
-    currentPage = tutorial.content.main;
-  } else if (currentSelectionPath.length === 1) {
-    currentPage = tutorial.content.children[currentSelectionPath[0]];
-  } else if (currentSelectionPath.length === 2) {
-    currentPage =
-      tutorial.content.children[currentSelectionPath[0]].children[
-        currentSelectionPath[1]
-      ];
-  }
-  console.log('current page', currentPage);
-  const onContentChange = (value) => {
-    onTutorialChange((tutorial) => {
-      if (currentSelectionPath.length === 0) {
-        return {
-          ...tutorial,
-          content: {
-            ...tutorial.content,
-            main: {
-              ...tutorial.content.main,
-              content: value,
-            },
-          },
-        };
-      } else if (currentSelectionPath.length === 1) {
-        return {
-          ...tutorial,
-          content: {
-            ...tutorial.content,
-            children: tutorial.content.children.map((page, i) =>
-              i === currentSelectionPath[0]
-                ? {
-                    ...page,
-                    content: value,
-                  }
-                : page,
-            ),
-          },
-        };
-      } else if (currentSelectionPath.length === 2) {
-        return {
-          ...tutorial,
-          content: {
-            ...tutorial.content,
-            children: tutorial.content.children.map((page, i) =>
-              i === currentSelectionPath[0]
-                ? {
-                    ...page,
-                    children: page.children.map((subpage, j) =>
-                      j === currentSelectionPath[1]
-                        ? {
-                            ...subpage,
-                            content: value,
-                          }
-                        : subpage,
-                    ),
-                  }
-                : page,
-            ),
-          },
-        };
-      }
-    });
-  };
+  let currentPage = getCurrentPageFromSelection(tutorial, currentSelectionPath);
+  const onContentChange = useCallback(
+    (value) => {
+      onTutorialChange(
+        reduceTutorialContent(tutorial, currentSelectionPath, value),
+      );
+    },
+    [tutorial, currentSelectionPath],
+  );
   return (
     <AppLayout>
       {tutorial && (

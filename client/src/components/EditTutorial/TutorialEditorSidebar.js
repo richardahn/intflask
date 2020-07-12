@@ -10,6 +10,11 @@ import {
   FolderOutlined,
   FileOutlined,
 } from '@ant-design/icons';
+import {
+  reducePageGroup,
+  reducePage,
+  reduceSubpage,
+} from '../../utils/tutorial';
 
 // -- Redux --
 import { connect } from 'react-redux';
@@ -33,57 +38,6 @@ const scrollbarCss = [
   baseScrollbarCss,
 ];
 const { Sider } = Layout;
-
-function generateNewEditorContent() {
-  return [
-    {
-      type: 'paragraph',
-      children: [{ text: '' }],
-    },
-  ];
-}
-function generateNewPageGroup() {
-  return {
-    name: 'New Topic',
-    content: generateNewEditorContent(),
-    children: [],
-  };
-}
-function generateNewPage() {
-  return { name: 'New Topic', content: generateNewEditorContent() };
-}
-function generateNewSubpage() {
-  return { name: 'New Page', content: generateNewEditorContent() };
-}
-
-function reducePageBase(tutorial, page) {
-  return {
-    ...tutorial,
-    content: {
-      ...tutorial.content,
-      children: [...tutorial.content.children, page],
-    },
-  };
-}
-function reducePageGroup(tutorial) {
-  return reducePageBase(tutorial, generateNewPageGroup());
-}
-function reducePage(tutorial) {
-  return reducePageBase(tutorial, generateNewPage());
-}
-function reduceSubpage(tutorial, current) {
-  return {
-    ...tutorial,
-    content: {
-      ...tutorial.content,
-      children: tutorial.content.children.map((page, i) =>
-        i === current
-          ? { ...page, children: [...page.children, generateNewSubpage()] }
-          : page,
-      ),
-    },
-  };
-}
 
 export default function TutorialEditorSidebar({
   tutorial,

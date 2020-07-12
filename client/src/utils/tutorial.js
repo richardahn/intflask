@@ -1,22 +1,26 @@
+import saveStates from '../enums/saveStates';
+import axios from 'axios';
+import { message } from 'antd';
+import debounce from './debounce';
+
 function processTutorialContent(tutorial, func) {
-  const { content } = tutorial;
   return {
     ...tutorial,
     content: {
-      children:
-        content.children &&
-        content.children.map((i) => ({
-          ...i,
-          content: func(i.content),
-          ...(!i.children &&
-            i.children.map((j) => ({
-              ...j,
-              content: func(j.content),
-            }))),
-        })),
+      ...tutorial.content,
+      children: tutorial.content.children.map((page) => ({
+        ...page,
+        content: func(page.content),
+        ...(page.children && {
+          children: page.children.map((subpage) => ({
+            ...subpage,
+            content: func(subpage.content),
+          })),
+        }),
+      })),
       main: {
-        ...content.main,
-        content: func(content.main.content),
+        ...tutorial.content.main,
+        content: func(tutorial.content.main.content),
       },
     },
   };
@@ -28,3 +32,147 @@ export function parseTutorialContent(tutorial) {
 export function stringifyTutorialContent(tutorial) {
   return processTutorialContent(tutorial, JSON.stringify);
 }
+
+function generateNewEditorContent() {
+  return [
+    {
+      type: 'paragraph',
+      children: [{ text: '' }],
+    },
+  ];
+}
+function generateNewPageGroup() {
+  return {
+    name: 'New Topic',
+    content: generateNewEditorContent(),
+    children: [],
+  };
+}
+function generateNewPage() {
+  return { name: 'New Topic', content: generateNewEditorContent() };
+}
+function generateNewSubpage() {
+  return { name: 'New Page', content: generateNewEditorContent() };
+}
+
+function reducePageBase(tutorial, page) {
+  return {
+    ...tutorial,
+    content: {
+      ...tutorial.content,
+      children: [...tutorial.content.children, page],
+    },
+  };
+}
+export function reducePageGroup(tutorial) {
+  return reducePageBase(tutorial, generateNewPageGroup());
+}
+export function reducePage(tutorial) {
+  return reducePageBase(tutorial, generateNewPage());
+}
+export function reduceSubpage(tutorial, current) {
+  return {
+    ...tutorial,
+    content: {
+      ...tutorial.content,
+      children: tutorial.content.children.map((page, i) =>
+        i === current
+          ? { ...page, children: [...page.children, generateNewSubpage()] }
+          : page,
+      ),
+    },
+  };
+}
+
+export function isMain(page) {
+  return !('name' in page);
+}
+export function getName(page) {
+  return isMain(page) ? 'Main' : page.name;
+}
+export function getCurrentPageFromSelection(tutorial, selectionPath) {
+  let currentPage = null;
+  if (selectionPath.length === 0) {
+    currentPage = tutorial.content.main;
+  } else if (selectionPath.length === 1) {
+    currentPage = tutorial.content.children[selectionPath[0]];
+  } else if (selectionPath.length === 2) {
+    currentPage =
+      tutorial.content.children[selectionPath[0]].children[selectionPath[1]];
+  }
+  return currentPage;
+}
+
+export function reduceTutorialContent(
+  tutorial,
+  currentSelectionPath,
+  newContent,
+) {
+  if (currentSelectionPath.length === 0) {
+    return {
+      ...tutorial,
+      content: {
+        ...tutorial.content,
+        main: {
+          ...tutorial.content.main,
+          content: newContent,
+        },
+      },
+    };
+  } else if (currentSelectionPath.length === 1) {
+    return {
+      ...tutorial,
+      content: {
+        ...tutorial.content,
+        children: tutorial.content.children.map((page, i) =>
+          i === currentSelectionPath[0]
+            ? {
+                ...page,
+                content: newContent,
+              }
+            : page,
+        ),
+      },
+    };
+  } else if (currentSelectionPath.length === 2) {
+    return {
+      ...tutorial,
+      content: {
+        ...tutorial.content,
+        children: tutorial.content.children.map((page, i) =>
+          i === currentSelectionPath[0]
+            ? {
+                ...page,
+                children: page.children.map((subpage, j) =>
+                  j === currentSelectionPath[1]
+                    ? {
+                        ...subpage,
+                        content: newContent,
+                      }
+                    : subpage,
+                ),
+              }
+            : page,
+        ),
+      },
+    };
+  }
+}
+export const saveTutorial = debounce((tutorial, setSaveState) => {
+  setSaveState(saveStates.SAVING);
+  axios
+    .put(
+      `/api/admin/tutorials/${tutorial.slug}`,
+      stringifyTutorialContent(tutorial),
+    )
+    .then(
+      () => {
+        setSaveState(saveStates.SAVED);
+      },
+      (error) => {
+        console.error(error);
+        message.error('Failed to save');
+        setSaveState(saveStates.MODIFIED);
+      },
+    );
+});
