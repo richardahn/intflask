@@ -13,7 +13,6 @@ import saveStates from '../../enums/saveStates';
 
 // -- Redux --
 import { connect } from 'react-redux';
-import { setTopicIndex, setMain } from '../../actions/editCourse';
 
 // -- Css --
 import {
@@ -49,51 +48,7 @@ function saveStateToTag(saveState) {
   }
 }
 
-function getBreadcrumbItems(
-  course,
-  currentTopicIndex,
-  currentPageIndex,
-  setMain,
-  setTopicIndex,
-) {
-  const items = [{ content: <HomeOutlined />, onClick: setMain }];
-  if (currentTopicIndex != null) {
-    items.unshift({
-      content: course.data.children[currentTopicIndex].name,
-      onClick: () => setTopicIndex(currentTopicIndex),
-    });
-  }
-  if (currentPageIndex != null) {
-    items.unshift({
-      content:
-        course.data.children[currentTopicIndex].children[currentPageIndex].name,
-    });
-  }
-  return items;
-}
-
-function CourseEditorStatusBar({
-  saveState,
-  currentTopicIndex,
-  currentPageIndex,
-  course,
-  setTopicIndex,
-  setMain,
-}) {
-  const [breadcrumbItems, setBreadcrumbItems] = useState(null);
-  useEffect(() => {
-    if (course != null) {
-      const items = getBreadcrumbItems(
-        course,
-        currentTopicIndex,
-        currentPageIndex,
-        setMain,
-        setTopicIndex,
-      );
-      setBreadcrumbItems(items);
-    }
-  }, [currentTopicIndex, currentPageIndex, course, setMain]);
-
+function TutorialEditorStatusBar({ saveState }) {
   return (
     <AppFixedHeader
       top={mainHeaderHeight + pageHeaderHeight}
@@ -111,17 +66,7 @@ function CourseEditorStatusBar({
 }
 
 const mapStateToProps = (state) => ({
-  saveState: state.editCourse.saveState,
-  currentTopicIndex: state.editCourse.currentTopicIndex,
-  currentPageIndex: state.editCourse.currentPageIndex,
-  course: state.editCourse.course,
+  saveState: state.editTutorial.saveState,
 });
-const mapDispatchToProps = {
-  setTopicIndex,
-  setMain,
-};
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(CourseEditorStatusBar);
+export default connect(mapStateToProps)(TutorialEditorStatusBar);

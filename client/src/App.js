@@ -13,7 +13,7 @@ import IntflaskLayout from './components/IntflaskLayout';
 import Administrator from './pages/Administrator';
 import Tutorials from './pages/Tutorials';
 import CreateTutorial from './pages/CreateTutorial';
-import EditCourse from './pages/EditCourse';
+import EditTutorial from './pages/EditTutorial';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import Settings from './pages/Settings';
@@ -58,14 +58,14 @@ export default function App() {
             />
             <PrivateRoute
               exact
-              path="/tutorial-dashboard/:slug"
+              path="/admin/tutorial-dashboard/:slug"
               component={TutorialDashboard}
             />
             <PrivateRoute exact path="/admin" component={Administrator} />
             <PrivateRoute
               exact
-              path="/admin/edit-course/:slug"
-              component={EditCourse}
+              path="/admin/edit-tutorial/:slug"
+              component={EditTutorial}
             />
             <PrivateRoute
               exact

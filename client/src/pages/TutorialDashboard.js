@@ -24,16 +24,16 @@ import {
 } from 'antd';
 import { PaddedContent, AppLayout, AppHeader } from '../styles';
 import { Link as RouterLink } from 'react-router-dom';
-import TutorialDetails from '../components/EditCourse/TutorialDetails';
-import CourseEditor from '../components/EditCourse/CourseEditor';
-import InputTags from '../components/InputTags';
-import { parseCourseContent } from '../utils/course';
-import { HomeOutlined } from '@ant-design/icons';
+import { parseTutorialContent } from '../utils/tutorial';
+import {
+  HomeOutlined,
+  CheckCircleOutlined,
+  MinusCircleOutlined,
+} from '@ant-design/icons';
 import TutorialDescriptionForm from '../components/TutorialDescriptionForm';
 
 // -- Redux --
 import { connect } from 'react-redux';
-import { setCourse, reset } from '../actions/editCourse';
 import PageSpinner from '../components/PageSpinner';
 import ErrorContent from '../components/ErrorContent';
 
@@ -42,51 +42,86 @@ const { Title } = Typography;
 const { TabPane } = Tabs;
 
 // -- Helpers --
-function TutorialDashboard({ course, match, setCourse, reset }) {
+function TutorialDashboard({ match, history }) {
   const { slug } = match.params;
   const [loadingPage, setLoadingPage] = useState(true);
   const [savingForm, setSavingForm] = useState(false);
+  const [savingDeploy, setSavingDeploy] = useState(false);
+  const [tutorial, setTutorial] = useState(null);
+  console.log(tutorial);
 
-  const submitTutorialDescription = useCallback((formValues) => {
-    setSavingForm(true);
-    axios
-      .put(`/api/admin/courses/${slug}`, formValues)
-      .then(() => message.success('Successfully saved'))
-      .catch((error) => {
-        console.error(error);
-        message.error('Failed to save description');
-      })
-      .finally(() => setSavingForm(false));
-  }, []);
+  const submitTutorialDescription = useCallback(
+    (formValues) => {
+      setSavingForm(true);
+      axios
+        .put(`/api/admin/tutorials/${slug}`, formValues)
+        .then((response) => {
+          message.success('Successfully saved');
+          history.push(`/admin/tutorial-dashboard/${response.data}`);
+        })
+        .catch((error) => {
+          console.error(error);
+          message.error('Failed to save description');
+        })
+        .finally(() => setSavingForm(false));
+    },
+    [slug],
+  );
 
-  const initialDescriptionFormState = {
-    name: course?.courseName,
-    price: 5,
-    description: 'Default text',
-    technologyStack: ['C#', 'React'],
-  };
+  const deployTutorial = useCallback(
+    (deployed) => {
+      setSavingDeploy(true);
+      axios
+        .put(`/api/admin/tutorials/${slug}`, { deployed })
+        .then((response) => {
+          message.success(
+            deployed ? 'Successfully deployed' : 'Successfully hidden',
+          );
+          setTutorial((state) => ({ ...state, deployed }));
+        })
+        .catch((error) => {
+          console.error(error);
+          message.error('Failed to deploy');
+        })
+        .finally(() => setSavingDeploy(false));
+    },
+    [slug],
+  );
 
   useEffect(() => {
     axios
-      .get(`/api/admin/courses/${slug}`)
-      .then((response) => setCourse(parseCourseContent(response.data)))
+      .get(`/api/admin/tutorials/${slug}`, {
+        params: {
+          content: false,
+        },
+      })
+      .then((response) => setTutorial(response.data))
       .catch((error) => {
         console.error(error);
-        message.error('Failed to get course');
+        message.error('Failed to get tutorial');
       })
       .finally(() => setLoadingPage(false));
 
     return function cleanup() {
-      reset();
+      setTutorial(null);
+      setLoadingPage(true);
+      setSavingForm(false);
     };
   }, [slug]);
+
+  const initialDescriptionFormState = {
+    name: tutorial?.name,
+    price: tutorial?.price,
+    description: tutorial?.description,
+    technologyStack: tutorial?.technologyStack,
+  };
   return (
     <AppLayout>
       <AppHeader css={{ height: 'initial' }}>
-        <Breadcrumb>
+        <Breadcrumb css={{ marginBottom: '1rem' }}>
           <Breadcrumb.Item>
             <RouterLink to="/admin">
-              <HomeOutlined /> Administrator
+              <HomeOutlined /> Created Tutorials
             </RouterLink>
           </Breadcrumb.Item>
           <Breadcrumb.Item>Dashboard</Breadcrumb.Item>
@@ -94,12 +129,12 @@ function TutorialDashboard({ course, match, setCourse, reset }) {
       </AppHeader>
       {loadingPage ? (
         <PageSpinner />
-      ) : course ? (
+      ) : tutorial ? (
         <PaddedContent>
           <Tabs
             defaultActiveKey="1"
             tabBarExtraContent={
-              <RouterLink to={`/admin/edit-course/${slug}`}>
+              <RouterLink to={`/admin/edit-tutorial/${slug}`}>
                 <Button>Edit Tutorial</Button>
               </RouterLink>
             }
@@ -114,13 +149,49 @@ function TutorialDashboard({ course, match, setCourse, reset }) {
                 </Col>
               </Row>
             </TabPane>
-            <TabPane tab="Description" key="2">
-              <Card>
+            <TabPane tab="Settings" key="2">
+              <Card title="General" css={{ marginBottom: '1rem' }}>
                 <TutorialDescriptionForm
                   initialState={initialDescriptionFormState}
                   onSubmit={submitTutorialDescription}
                   saving={savingForm}
                 />
+              </Card>
+              <Card title="Deployment">
+                <div css={{ display: 'flex', justifyContent: 'space-between' }}>
+                  {tutorial?.deployed ? (
+                    <React.Fragment>
+                      <span>
+                        Status:{' '}
+                        <Tag icon={<CheckCircleOutlined />} color="success">
+                          deployed
+                        </Tag>
+                      </span>
+                      <Button
+                        loading={savingDeploy}
+                        onClick={() => deployTutorial(false)}
+                      >
+                        Hide
+                      </Button>
+                    </React.Fragment>
+                  ) : (
+                    <React.Fragment>
+                      <span>
+                        Status:{' '}
+                        <Tag icon={<MinusCircleOutlined />} color="default">
+                          hidden
+                        </Tag>
+                      </span>
+                      <Button
+                        loading={savingDeploy}
+                        type="primary"
+                        onClick={() => deployTutorial(true)}
+                      >
+                        Deploy
+                      </Button>
+                    </React.Fragment>
+                  )}
+                </div>
               </Card>
             </TabPane>
           </Tabs>
@@ -133,11 +204,7 @@ function TutorialDashboard({ course, match, setCourse, reset }) {
 }
 
 const mapStateToProps = (state) => ({
-  course: state.editCourse.course,
+  tutorial: state.editTutorial.tutorial,
 });
-const mapDispatchToProps = {
-  setCourse,
-  reset,
-};
 
-export default connect(mapStateToProps, mapDispatchToProps)(TutorialDashboard);
+export default connect(mapStateToProps)(TutorialDashboard);

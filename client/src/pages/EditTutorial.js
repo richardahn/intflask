@@ -3,42 +3,15 @@
 import { css, jsx } from '@emotion/core';
 import React, { useCallback, useState, useEffect, useMemo } from 'react';
 import axios from 'axios';
-import {
-  PageHeader,
-  message,
-  Layout,
-  Typography,
-  Button,
-  Tag,
-  Space,
-  Breadcrumb,
-} from 'antd';
+import { message, Typography, Breadcrumb } from 'antd';
 import { Link as RouterLink } from 'react-router-dom';
-import TutorialDetails from '../components/EditCourse/TutorialDetails';
-import CourseEditor from '../components/EditCourse/CourseEditor';
-import { parseCourseContent } from '../utils/course';
-import {
-  MessageOutlined,
-  LikeOutlined,
-  StarOutlined,
-  CheckCircleOutlined,
-  EyeOutlined,
-  EyeInvisibleOutlined,
-  EditOutlined,
-  SettingOutlined,
-  CloseOutlined,
-  HomeOutlined,
-} from '@ant-design/icons';
+import TutorialEditor from '../components/EditTutorial/TutorialEditor';
+import { parseTutorialContent } from '../utils/tutorial';
+import { HomeOutlined } from '@ant-design/icons';
 
 // -- Redux --
 import { connect } from 'react-redux';
-import {
-  setCourse,
-  reset,
-  setDeployed,
-  saveCourse,
-  setCourseName,
-} from '../actions/editCourse';
+import { setTutorial, reset } from '../actions/editTutorial';
 
 // -- Css --
 import {
@@ -54,32 +27,16 @@ import {
 import PageSpinner from '../components/PageSpinner';
 import ErrorContent from '../components/ErrorContent';
 
-const { Content } = Layout;
 const { Title } = Typography;
 
-// -- Helpers --
-function EditCourse({
-  course,
-  courseName,
-  courseDeployed,
-  match,
-  history,
-  setCourse,
-  reset,
-  setDeployed,
-  saveCourse,
-  setCourseName,
-}) {
+function EditTutorial({ tutorial, setTutorial, reset, match }) {
   const { slug } = match.params;
-  const onBack = useCallback(() => history.push('/admin'), [history]);
   const [loadingPage, setLoadingPage] = useState(true);
 
   useEffect(() => {
     axios
-      .get(`/api/admin/courses/${slug}`)
-      .then((response) => {
-        setCourse(parseCourseContent(response.data));
-      })
+      .get(`/api/admin/tutorials/${slug}`)
+      .then((response) => setTutorial(parseTutorialContent(response.data)))
       .catch((error) => {
         console.error(error);
         message.error('Failed to get course');
@@ -95,27 +52,27 @@ function EditCourse({
     <AppLayout>
       {loadingPage ? (
         <PageSpinner />
-      ) : course ? (
+      ) : tutorial ? (
         <React.Fragment>
           <AppFixedHeader top={mainHeaderHeight} css={{ height: 'initial' }}>
             <Breadcrumb css={{ marginBottom: '1rem' }}>
               <Breadcrumb.Item>
                 <RouterLink to="/admin">
-                  <HomeOutlined /> Administrator
+                  <HomeOutlined /> Created Tutorials
                 </RouterLink>
               </Breadcrumb.Item>
               <Breadcrumb.Item>
-                <RouterLink to={`/tutorial-dashboard/${slug}`}>
+                <RouterLink to={`/admin/tutorial-dashboard/${slug}`}>
                   Dashboard
                 </RouterLink>
               </Breadcrumb.Item>
               <Breadcrumb.Item>Edit</Breadcrumb.Item>
             </Breadcrumb>
             <Title level={4} css={{ marginBottom: 0 }}>
-              {courseName}
+              {tutorial.name}
             </Title>
           </AppFixedHeader>
-          <CourseEditor top={pageHeaderHeight + statusBarHeight} />
+          <TutorialEditor top={pageHeaderHeight + statusBarHeight} />
         </React.Fragment>
       ) : (
         <ErrorContent>
@@ -127,16 +84,11 @@ function EditCourse({
 }
 
 const mapStateToProps = (state) => ({
-  course: state.editCourse.course,
-  courseDeployed: state.editCourse.course?.deployed,
-  courseName: state.editCourse.course?.courseName,
+  tutorial: state.editTutorial.tutorial,
 });
 const mapDispatchToProps = {
-  setCourse,
+  setTutorial,
   reset,
-  setDeployed,
-  saveCourse,
-  setCourseName,
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(EditCourse);
+export default connect(mapStateToProps, mapDispatchToProps)(EditTutorial);

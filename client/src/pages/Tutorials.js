@@ -15,14 +15,14 @@ import PageSpinner from '../components/PageSpinner';
 const { Content, Header, Footer, Sider } = Layout;
 const { Text, Title } = Typography;
 
-const IconText = ({ icon, text }) => (
+const IconText = ({ icon: Icon, text }) => (
   <Space>
-    {React.createElement(icon)}
+    <Icon />
     {text}
   </Space>
 );
 
-function Courses({ courses }) {
+function TutorialsList({ tutorials }) {
   return (
     <List
       itemLayout="vertical"
@@ -33,15 +33,15 @@ function Courses({ courses }) {
         },
         pageSize: 3,
       }}
-      dataSource={courses}
+      dataSource={tutorials}
       footer={
         <div>
           <b>ant design</b> footer part
         </div>
       }
-      renderItem={(course) => (
+      renderItem={(tutorial) => (
         <List.Item
-          key={course.title}
+          key={tutorial.name}
           actions={[
             <IconText
               icon={StarOutlined}
@@ -72,8 +72,8 @@ function Courses({ courses }) {
               <Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />
             }
             title={
-              <RouterLink to={`/tutorial-previews/${course.slug}`}>
-                {course.title}
+              <RouterLink to={`/tutorial-previews/${tutorial.slug}`}>
+                {tutorial.name}
               </RouterLink>
             }
             description="Ant Design, a design language for background applications, is refined by Ant UED Team."
@@ -87,21 +87,21 @@ function Courses({ courses }) {
   );
 }
 
-function convertFormat(courses) {
-  return courses.map((course) => ({
-    title: course.courseName,
-    slug: course.slug,
+function convertFormat(tutorials) {
+  return tutorials.map((tutorial) => ({
+    name: tutorial.name,
+    slug: tutorial.slug,
   }));
 }
 
 export default function Tutorials(props) {
-  const [courses, setCourses] = useState(null);
+  const [tutorials, setTutorials] = useState(null);
   useEffect(() => {
     axios
-      .get('/api/courses')
+      .get('/api/tutorials')
       .then((response) => response.data)
       .then(convertFormat)
-      .then((courses) => setCourses(courses));
+      .then((tutorials) => setTutorials(tutorials));
   }, []);
 
   return (
@@ -111,7 +111,11 @@ export default function Tutorials(props) {
       </Sider>
       <Layout>
         <Content css={{ backgroundColor: 'white', padding: '0 50px' }}>
-          {courses ? <Courses courses={courses} /> : <PageSpinner />}
+          {tutorials ? (
+            <TutorialsList tutorials={tutorials} />
+          ) : (
+            <PageSpinner />
+          )}
         </Content>
       </Layout>
     </Layout>

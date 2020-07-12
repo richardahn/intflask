@@ -1,4 +1,4 @@
-function getEmptyCourseData() {
+function getEmptyTutorialContent() {
   return {
     main: {
       content: JSON.stringify([
@@ -11,11 +11,7 @@ function getEmptyCourseData() {
     topics: [],
   };
 }
-function stringifyCourseData(courseData) {
-  return courseData;
-}
 
 module.exports = {
-  getEmptyCourseData,
-  stringifyCourseData,
+  getEmptyTutorialContent,
 };

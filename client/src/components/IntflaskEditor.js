@@ -36,6 +36,8 @@ export default function IntflaskEditor({
   feedbackTop = FEEDBACK_TOP,
   ...props
 }) {
+  console.log('WITHIN THE EDITOR');
+  debugger;
   // Feedback Column
   const renderElement = useCallback(
     (props) =>
@@ -63,7 +65,10 @@ export default function IntflaskEditor({
         value={value}
         onChange={(newValue) => {
           if (value != newValue) {
+            console.log('CHANGING');
             onChange(newValue);
+          } else {
+            console.log('DIDNT CHANGE');
           }
         }}
       >

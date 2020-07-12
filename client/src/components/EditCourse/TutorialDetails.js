@@ -28,12 +28,12 @@ import {
 // -- Redux --
 import { connect } from 'react-redux';
 import {
-  setCourse,
+  setTutorial,
   reset,
   setDeployed,
-  saveCourse,
+  saveTutorial,
   setCourseName,
-} from '../../actions/editCourse';
+} from '../../actions/editTutorial';
 
 // -- Css --
 import {
@@ -51,7 +51,7 @@ function TutorialDetails() {
   const deployButtonOnClick = (deploy) => {
     setDeployed(deploy);
     setDeployButtonLoading(true);
-    saveCourse(
+    saveTutorial(
       () => setDeployButtonLoading(false),
       () => setDeployButtonLoading(false),
     );
@@ -112,10 +112,10 @@ const mapStateToProps = (state) => ({
   courseName: state.editCourse.course?.courseName,
 });
 const mapDispatchToProps = {
-  setCourse,
+  setCourse: setTutorial,
   reset,
   setDeployed,
-  saveCourse,
+  saveCourse: saveTutorial,
   setCourseName,
 };
 

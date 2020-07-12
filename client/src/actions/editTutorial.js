@@ -1,31 +1,29 @@
 import saveStates from '../enums/saveStates';
 import axios from 'axios';
 import { message } from 'antd';
-import { stringifyCourseContent } from '../utils/course';
+import { stringifyTutorialContent } from '../utils/tutorial';
 
-export const SET_COURSE = 'SET_COURSE';
-export const ADD_TOPIC_GROUP = 'ADD_TOPIC_GROUP';
-export const ADD_TOPIC = 'ADD_TOPIC';
+export const SET_TUTORIAL = 'SET_TUTORIAL';
+export const ADD_PAGE_GROUP = 'ADD_PAGE_GROUP';
 export const ADD_PAGE = 'ADD_PAGE';
-export const SET_TOPIC_INDEX = 'SET_TOPIC_INDEX';
-export const SET_PAGE_INDEX = 'SET_PAGE_INDEX';
-export const SET_MAIN = 'SET_MAIN';
-export const SET_CONTENT = 'SET_CONTENT';
+export const ADD_SUBPAGE = 'ADD_SUBPAGE';
+export const SET_CURRENT_PATH = 'SET_CURRENT_PATH';
+export const SET_CURRENT_PAGE_CONTENT = 'SET_CURRENT_PAGE_CONTENT';
 export const RESET = 'RESET';
 export const SET_SAVE_STATE = 'SET_SAVE_STATE';
 export const SET_NAME = 'SET_NAME';
 export const SET_DEPLOYED = 'SET_DEPLOYED';
-export const SET_COURSE_NAME = 'SET_COURSE_NAME';
 
 // -- Thunks --
-export function saveCourse(onSuccess = null, onError = null) {
+export function saveTutorial(onSuccess = null, onError = null) {
   return (dispatch, getState) => {
-    const course = getState().editCourse.course;
-    console.log('dispatching');
-    console.log(course);
+    const tutorial = getState().editTutorial.tutorial;
     dispatch(setSaveState(saveStates.SAVING));
     axios
-      .put(`/api/admin/courses/${course.slug}`, stringifyCourseContent(course))
+      .put(
+        `/api/admin/tutorials/${tutorial.slug}`,
+        stringifyTutorialContent(tutorial),
+      )
       .then(
         () => {
           dispatch(setSaveState(saveStates.SAVED));
@@ -46,20 +44,15 @@ export function saveCourse(onSuccess = null, onError = null) {
 }
 
 // -- Actions --
-export function setCourse(course) {
+export function setTutorial(tutorial) {
   return {
-    type: SET_COURSE,
-    course,
+    type: SET_TUTORIAL,
+    tutorial,
   };
 }
-export function addTopicGroup() {
+export function addPageGroup() {
   return {
-    type: ADD_TOPIC_GROUP,
-  };
-}
-export function addTopic() {
-  return {
-    type: ADD_TOPIC,
+    type: ADD_PAGE_GROUP,
   };
 }
 export function addPage() {
@@ -67,29 +60,22 @@ export function addPage() {
     type: ADD_PAGE,
   };
 }
-export function setTopicIndex(index) {
+export function addSubpage(page) {
+  // Convenience
   return {
-    type: SET_TOPIC_INDEX,
-    index,
+    type: ADD_SUBPAGE,
   };
 }
-export function setPageIndex(index) {
+export function setCurrentPath(path) {
   return {
-    type: SET_PAGE_INDEX,
-    index,
+    type: SET_CURRENT_PATH,
+    path,
   };
 }
-export function setMain() {
+export function setCurrentPageContent(content) {
   return {
-    type: SET_MAIN,
-  };
-}
-export function setContent(content, topicIndex, pageIndex) {
-  return {
-    type: SET_CONTENT,
+    type: SET_CURRENT_PAGE_CONTENT,
     content,
-    topicIndex,
-    pageIndex,
   };
 }
 export function reset() {
@@ -113,11 +99,5 @@ export function setDeployed(deployed) {
   return {
     type: SET_DEPLOYED,
     deployed,
-  };
-}
-export function setCourseName(name) {
-  return {
-    type: SET_COURSE_NAME,
-    name,
   };
 }

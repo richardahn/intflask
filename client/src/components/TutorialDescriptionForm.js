@@ -28,7 +28,7 @@ export default function TutorialDescriptionForm({
       <Form.Item label="Technology Stack">
         <InputTags tags={technologyStack} onChange={setTechnologyStack} />
       </Form.Item>
-      <Form.Item label="Pricing" name="price">
+      <Form.Item label="Price" name="price">
         <InputNumber
           formatter={(value) =>
             `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')

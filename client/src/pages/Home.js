@@ -39,7 +39,7 @@ function Tutorials() {
             <Title level={4} css={{ marginBottom: '0 !important' }}>
               Top Tutorials
             </Title>
-            <Button>View All Courses</Button>
+            <Button>View All Tutorials</Button>
           </Space>
         </div>
         Top tutorials

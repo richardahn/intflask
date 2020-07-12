@@ -1,23 +1,24 @@
 import { createSelector } from 'reselect';
 
 // -- Input-Selectors --
-const getCurrentTopicIndex = (state) => state.editCourse.currentTopicIndex;
-const getCurrentPageIndex = (state) => state.editCourse.currentPageIndex;
-const getCourse = (state) => state.editCourse.course;
+const getCurrentPath = (state) => state.editTutorial.currentPath;
+const getTutorial = (state) => state.editTutorial.tutorial;
 
 // -- Selectors --
-export const getPage = createSelector(
-  [getCourse, getCurrentTopicIndex, getCurrentPageIndex],
-  (course, currentTopicIndex, currentPageIndex) => {
-    if (course != null) {
-      if (currentPageIndex != null) {
-        return course.data.children[currentTopicIndex].children[
-          currentPageIndex
+export const getCurrentPage = createSelector(
+  [getTutorial, getCurrentPath],
+  (tutorial, currentPath) => {
+    console.log('Selecting');
+    if (tutorial != null && currentPath != null) {
+      if (currentPath.length === 2) {
+        return tutorial.content.children[currentPath[0]].children[
+          currentPath[1]
         ];
-      } else if (currentTopicIndex != null) {
-        return course.data.children[currentTopicIndex];
-      } else {
-        return course.data.main;
+      } else if (currentPath.length === 1) {
+        return tutorial.content.children[currentPath[0]];
+      } else if (currentPath.length === 0) {
+        console.log('returning main');
+        return tutorial.content.main;
       }
     }
     return null;

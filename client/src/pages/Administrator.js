@@ -9,14 +9,12 @@ import {
   Typography,
   Space,
   List,
-  Avatar,
   Tag,
   Breadcrumb,
   Tooltip,
 } from 'antd';
 import PageSpinner from '../components/PageSpinner';
 import {
-  MessageOutlined,
   LikeOutlined,
   StarOutlined,
   CheckCircleOutlined,
@@ -40,10 +38,10 @@ function IconText({ icon, text }) {
   );
 }
 
-function CreatedTutorial({ course }) {
+function CreatedTutorial({ tutorial }) {
   return (
     <List.Item
-      key={course.slug}
+      key={tutorial.slug}
       actions={[
         <IconText icon={StarOutlined} text="156" key="list-vertical-star-o" />,
         <IconText icon={LikeOutlined} text="156" key="list-vertical-like-o" />,
@@ -60,13 +58,13 @@ function CreatedTutorial({ course }) {
             <div>
               <RouterLink
                 css={{ marginRight: '1rem' }}
-                to={`/tutorial-dashboard/${course.slug}`}
+                to={`/admin/tutorial-dashboard/${tutorial.slug}`}
               >
-                <Text>{course.title}</Text>
+                <Text>{tutorial.name}</Text>
               </RouterLink>
             </div>
             <div>
-              {course.deployed ? (
+              {tutorial.deployed ? (
                 <Tag icon={<CheckCircleOutlined />} color="success">
                   deployed
                 </Tag>
@@ -92,41 +90,41 @@ function CreatedTutorial({ course }) {
   );
 }
 
-function CreatedTutorials({ courses }) {
-  console.log(courses);
+function CreatedTutorials({ tutorials }) {
+  console.log(tutorials);
   return (
     <List
       itemLayout="vertical"
       size="large"
       pagination={{ onChange: (page) => console.log(page), pageSize: 3 }}
-      dataSource={courses}
+      dataSource={tutorials}
       footer={
         <div>
           <b>ant design</b> footer part
         </div>
       }
-      renderItem={(course) => <CreatedTutorial course={course} />}
+      renderItem={(tutorial) => <CreatedTutorial tutorial={tutorial} />}
     />
   );
 }
 
-function convertFormat(courses) {
-  return courses.map((course) => ({
-    title: course.courseName,
-    slug: course.slug,
-    editUrl: `/admin/edit-course/${course.slug}`,
-    deployed: course.deployed,
+function convertFormat(tutorials) {
+  return tutorials.map((tutorial) => ({
+    name: tutorial.name,
+    slug: tutorial.slug,
+    editUrl: `/admin/edit-tutorial/${tutorial.slug}`,
+    deployed: tutorial.deployed,
   }));
 }
 
 export default function Administrator() {
-  const [courses, setCourses] = useState(null);
+  const [tutorials, setTutorials] = useState(null);
   useEffect(() => {
     axios
-      .get('/api/admin/courses')
+      .get('/api/admin/tutorials')
       .then((response) => response.data)
       .then(convertFormat)
-      .then((courses) => setCourses(courses));
+      .then((tutorials) => setTutorials(tutorials));
   }, []);
 
   return (
@@ -135,7 +133,7 @@ export default function Administrator() {
         <Breadcrumb>
           <Breadcrumb.Item>
             <HomeOutlined />
-            <span>Your Courses</span>
+            <span>Created Tutorials</span>
           </Breadcrumb.Item>
         </Breadcrumb>
       </AppHeader>
@@ -154,7 +152,11 @@ export default function Administrator() {
         </FloatingActionButton>
 
         {/* List */}
-        {courses ? <CreatedTutorials courses={courses} /> : <PageSpinner />}
+        {tutorials ? (
+          <CreatedTutorials tutorials={tutorials} />
+        ) : (
+          <PageSpinner />
+        )}
       </PaddedContent>
     </AppLayout>
   );

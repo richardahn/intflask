@@ -6,19 +6,17 @@ const passport = require('passport');
 const jwt = require('jsonwebtoken');
 const config = require('../../config');
 
-const getEmptyCourseData = require('../../utils/course').getEmptyCourseData;
-
-const Course = require('../../models/Course');
+const Tutorial = require('../../models/Tutorial');
 
 // -- Read --
-/** Sends back all the courses' metadata(excludes the course content) */
+/** Sends back all the tutorials' metadata(excludes the tutorial content) */
 router.get('/', (req, res) => {
-  Course.find({ deployed: true }, { data: 0 }, (err, courses) => {
+  Tutorial.find({ deployed: true }, { data: 0 }, (err, tutorials) => {
     if (err) {
       console.error(err);
-      res.status(500).send('Error getting courses');
+      res.status(500).send('Error getting tutorials');
     } else {
-      res.json(courses);
+      res.json(tutorials);
     }
   });
 });

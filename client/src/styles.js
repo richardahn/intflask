@@ -99,4 +99,4 @@ export function AppFixedHeader({ top, children, ...props }) {
 export const mainHeaderHeight = 64;
 export const pageHeaderHeight = 75;
 export const statusBarHeight = 24;
-export const courseSidebarWidth = 200;
+export const tutorialSidebarWidth = 200;
