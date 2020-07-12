@@ -40,6 +40,7 @@ function IconText({ icon, text }) {
   );
 }
 export function AdminTutorialListItem({ tutorial }) {
+  console.log(tutorial);
   return (
     <List.Item
       key={tutorial.slug}
@@ -79,14 +80,13 @@ export function AdminTutorialListItem({ tutorial }) {
         }
         description={
           <div>
-            <Tag>C#</Tag>
-            <Tag>React</Tag>
+            {tutorial.technologyStack.map((item) => (
+              <Tag key={item}>{item}</Tag>
+            ))}
           </div>
         }
       />
-      We supply a series of design principles, practical patterns and high
-      quality design resources (Sketch and Axure), to help people create their
-      product prototypes beautifully and efficiently.
+      {tutorial.description}
     </List.Item>
   );
 }
@@ -104,6 +104,11 @@ export function TutorialListItem({ tutorial }) {
       ]}
     >
       <List.Item.Meta
+        css={css`
+          .ant-list-item-meta-title {
+            margin-bottom: 0;
+          }
+        `}
         title={
           <div css={{ display: 'flex', justifyContent: 'space-between' }}>
             <RouterLink to={`/`}>
@@ -119,7 +124,7 @@ export function TutorialListItem({ tutorial }) {
         description={
           <div>
             {tutorial.technologyStack.map((item) => (
-              <Tag>{item}</Tag>
+              <Tag key={item}>{item}</Tag>
             ))}
           </div>
         }

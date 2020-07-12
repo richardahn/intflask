@@ -24,7 +24,10 @@ router.get('/', (req, res) => {
 router.get('/top', async (req, res) => {
   try {
     const count = req.query.count ? parseInt(req.query.count) : 3;
-    const tutorials = await Tutorial.find({}, { content: false })
+    const tutorials = await Tutorial.find(
+      { deployed: true },
+      { content: false },
+    )
       .sort({ 'statistics.purchases': -1 })
       .limit(count)
       .exec();
@@ -38,7 +41,10 @@ router.get('/top', async (req, res) => {
 router.get('/free', async (req, res) => {
   try {
     const count = req.query.count ? parseInt(req.query.count) : 3;
-    const tutorials = await Tutorial.find({ price: 0 }, { content: false })
+    const tutorials = await Tutorial.find(
+      { deployed: true, price: 0 },
+      { content: false },
+    )
       .sort({ 'statistics.purchases': -1 })
       .limit(count)
       .exec();

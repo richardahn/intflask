@@ -63,12 +63,12 @@ function IntflaskHeader({ logoutUser, history, auth }) {
           to: '/purchased',
         },
         {
-          name: 'Settings',
-          to: '/settings',
+          name: 'Create',
+          to: '/admin',
         },
         {
-          name: 'Admin',
-          to: '/admin',
+          name: 'Settings',
+          to: '/settings',
         },
         {
           name: 'Logout',

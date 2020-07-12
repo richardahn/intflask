@@ -12,6 +12,10 @@ import {
   Tag,
   Breadcrumb,
   Tooltip,
+  message,
+  Empty,
+  Skeleton,
+  Divider,
 } from 'antd';
 import PageSpinner from '../components/PageSpinner';
 import {
@@ -32,23 +36,18 @@ import TutorialList, {
 const { Content, Header } = Layout;
 const { Title, Text, Link } = Typography;
 
-function convertFormat(tutorials) {
-  return tutorials.map((tutorial) => ({
-    name: tutorial.name,
-    slug: tutorial.slug,
-    editUrl: `/admin/edit-tutorial/${tutorial.slug}`,
-    deployed: tutorial.deployed,
-  }));
-}
-
 export default function Administrator() {
+  const [loadingTutorials, setLoadingTutorials] = useState(true);
   const [tutorials, setTutorials] = useState(null);
   useEffect(() => {
     axios
       .get('/api/admin/tutorials')
-      .then((response) => response.data)
-      .then(convertFormat)
-      .then((tutorials) => setTutorials(tutorials));
+      .then((response) => setTutorials(response.data))
+      .catch((error) => {
+        console.error(error);
+        message.error('Failed to load tutorials');
+      })
+      .finally(() => setLoadingTutorials(false));
   }, []);
 
   return (
@@ -74,15 +73,16 @@ export default function Administrator() {
             </RouterLink>
           </Tooltip>
         </FloatingActionButton>
-
-        {/* List */}
-        {tutorials ? (
+        <Divider orientation="left">Created Tutorials</Divider>
+        {loadingTutorials ? (
+          <Skeleton />
+        ) : tutorials && tutorials.length > 0 ? (
           <TutorialList
             tutorials={tutorials}
             itemRenderer={AdminTutorialListItem}
           />
         ) : (
-          <PageSpinner />
+          <Empty description="No Tutorials" />
         )}
       </PaddedContent>
     </AppLayout>
