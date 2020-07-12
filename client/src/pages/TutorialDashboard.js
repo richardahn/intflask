@@ -24,7 +24,6 @@ import {
 } from 'antd';
 import { PaddedContent, AppLayout, AppHeader } from '../styles';
 import { Link as RouterLink } from 'react-router-dom';
-import { parseTutorialContent } from '../utils/tutorial';
 import {
   HomeOutlined,
   CheckCircleOutlined,
@@ -32,8 +31,6 @@ import {
 } from '@ant-design/icons';
 import TutorialDescriptionForm from '../components/TutorialDescriptionForm';
 
-// -- Redux --
-import { connect } from 'react-redux';
 import PageSpinner from '../components/PageSpinner';
 import ErrorContent from '../components/ErrorContent';
 
@@ -42,7 +39,7 @@ const { Title } = Typography;
 const { TabPane } = Tabs;
 
 // -- Helpers --
-function TutorialDashboard({ match, history }) {
+export default function TutorialDashboard({ match, history }) {
   const { slug } = match.params;
   const [loadingPage, setLoadingPage] = useState(true);
   const [savingForm, setSavingForm] = useState(false);
@@ -202,9 +199,3 @@ function TutorialDashboard({ match, history }) {
     </AppLayout>
   );
 }
-
-const mapStateToProps = (state) => ({
-  tutorial: state.editTutorial.tutorial,
-});
-
-export default connect(mapStateToProps)(TutorialDashboard);
