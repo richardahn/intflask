@@ -30,7 +30,6 @@ export default function EditTutorial({ match }) {
   const { slug } = match.params;
   const [loadingPage, setLoadingPage] = useState(true);
   const [saveState, setSaveState] = useState(saveStates.SAVED);
-  console.log('save state', saveState);
   const [tutorial, setTutorial] = useState(null);
   const onTutorialChange = useCallback((newTutorial) => {
     setSaveState((prevState) => getNextState(prevState, saveStates.MODIFIED));

@@ -10,6 +10,7 @@ import {
   getCurrentPageFromSelection,
   isMain,
   getName,
+  reduceTutorialCurrentPageName,
 } from '../../utils/tutorial';
 
 // -- Css --
@@ -62,6 +63,13 @@ export default function TutorialEditor({
     },
     [tutorial, currentSelectionPath],
   );
+  const onPageNameChange = useCallback(
+    (name) =>
+      onTutorialChange(
+        reduceTutorialCurrentPageName(tutorial, currentSelectionPath, name),
+      ),
+    [tutorial, currentSelectionPath],
+  );
   return (
     <AppLayout>
       {tutorial && (
@@ -93,8 +101,7 @@ export default function TutorialEditor({
                             currentPage != null &&
                             currentPage.name !== name
                           ) {
-                            // setName(name);
-                            // debouncedSaveTutorial();
+                            onPageNameChange(name);
                           }
                         },
                       }

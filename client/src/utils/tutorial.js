@@ -43,16 +43,16 @@ function generateNewEditorContent() {
 }
 function generateNewPageGroup() {
   return {
-    name: 'New Topic',
+    name: 'New Page Group',
     content: generateNewEditorContent(),
     children: [],
   };
 }
 function generateNewPage() {
-  return { name: 'New Topic', content: generateNewEditorContent() };
+  return { name: 'New Page', content: generateNewEditorContent() };
 }
 function generateNewSubpage() {
-  return { name: 'New Page', content: generateNewEditorContent() };
+  return { name: 'New Subpage', content: generateNewEditorContent() };
 }
 
 function reducePageBase(tutorial, page) {
@@ -101,6 +101,51 @@ export function getCurrentPageFromSelection(tutorial, selectionPath) {
       tutorial.content.children[selectionPath[0]].children[selectionPath[1]];
   }
   return currentPage;
+}
+
+export function reduceTutorialCurrentPageName(
+  tutorial,
+  currentSelectionPath,
+  name,
+) {
+  if (currentSelectionPath.length === 1) {
+    return {
+      ...tutorial,
+      content: {
+        ...tutorial.content,
+        children: tutorial.content.children.map((page, i) =>
+          i === currentSelectionPath[0]
+            ? {
+                ...page,
+                name,
+              }
+            : page,
+        ),
+      },
+    };
+  } else if (currentSelectionPath.length === 2) {
+    return {
+      ...tutorial,
+      content: {
+        ...tutorial.content,
+        children: tutorial.content.children.map((page, i) =>
+          i === currentSelectionPath[0]
+            ? {
+                ...page,
+                children: page.children.map((subpage, j) =>
+                  j === currentSelectionPath[1]
+                    ? {
+                        ...subpage,
+                        name,
+                      }
+                    : subpage,
+                ),
+              }
+            : page,
+        ),
+      },
+    };
+  }
 }
 
 export function reduceTutorialContent(
