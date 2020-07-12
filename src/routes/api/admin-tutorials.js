@@ -85,7 +85,6 @@ router.put(
   passport.authenticate('jwt', { session: false }),
   async (req, res) => {
     try {
-      console.log('req body', req.body);
       const tutorial = await Tutorial.findOneAndUpdate(
         { userId: req.user.id, slug: req.params.slug },
         req.body,

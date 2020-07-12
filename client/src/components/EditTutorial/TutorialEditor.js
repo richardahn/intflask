@@ -46,7 +46,12 @@ function EditableTitle({ children, ...props }) {
   );
 }
 
-export default function TutorialEditor({ tutorial, top, onTutorialChange }) {
+export default function TutorialEditor({
+  tutorial,
+  top,
+  onTutorialChange,
+  saveState,
+}) {
   const [currentSelectionPath, setCurrentSelectionPath] = useState([]);
   let currentPage = getCurrentPageFromSelection(tutorial, currentSelectionPath);
   const onContentChange = useCallback(
@@ -61,7 +66,7 @@ export default function TutorialEditor({ tutorial, top, onTutorialChange }) {
     <AppLayout>
       {tutorial && (
         <React.Fragment>
-          {/* <TutorialEditorStatusBar /> */}
+          <TutorialEditorStatusBar saveState={saveState} />
           <TutorialEditorSidebar
             tutorial={tutorial}
             currentSelectionPath={currentSelectionPath}

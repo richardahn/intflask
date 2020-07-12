@@ -23,7 +23,7 @@ import {
   AppFixedHeader,
 } from '../../styles';
 
-export default function saveStateToTag(saveState) {
+function saveStateToTag(saveState) {
   switch (saveState) {
     case saveStates.MODIFIED:
       return <Tag color="warning">modified</Tag>;
@@ -48,7 +48,7 @@ export default function saveStateToTag(saveState) {
   }
 }
 
-function TutorialEditorStatusBar({ saveState }) {
+export default function TutorialEditorStatusBar({ saveState }) {
   return (
     <AppFixedHeader
       top={mainHeaderHeight + pageHeaderHeight}

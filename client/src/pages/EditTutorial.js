@@ -22,18 +22,23 @@ import {
 } from '../styles';
 import PageSpinner from '../components/PageSpinner';
 import ErrorContent from '../components/ErrorContent';
+import saveStates, { getNextState } from '../enums/saveStates';
 
 const { Title } = Typography;
 
 export default function EditTutorial({ match }) {
   const { slug } = match.params;
   const [loadingPage, setLoadingPage] = useState(true);
-  const [saveState, setSaveState] = useState(null);
+  const [saveState, setSaveState] = useState(saveStates.SAVED);
+  console.log('save state', saveState);
   const [tutorial, setTutorial] = useState(null);
   const onTutorialChange = useCallback((newTutorial) => {
-    saveTutorial(newTutorial, setSaveState);
+    setSaveState((prevState) => getNextState(prevState, saveStates.MODIFIED));
+    saveTutorial(newTutorial, (state) =>
+      setSaveState((prevState) => getNextState(prevState, state)),
+    );
     setTutorial(newTutorial);
-  });
+  }, []);
   useEffect(() => {
     axios
       .get(`/api/admin/tutorials/${slug}`)
@@ -73,6 +78,7 @@ export default function EditTutorial({ match }) {
             top={pageHeaderHeight + statusBarHeight}
             tutorial={tutorial}
             onTutorialChange={onTutorialChange}
+            saveState={saveState}
           />
         </React.Fragment>
       ) : (
