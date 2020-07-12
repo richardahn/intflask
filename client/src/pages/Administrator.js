@@ -25,88 +25,12 @@ import {
 import axios from 'axios';
 import { AppLayout, PaddedContent, AppHeader } from '../styles';
 import FloatingActionButton from '../components/FloatingActionButton';
+import TutorialList, {
+  AdminTutorialListItem,
+} from '../components/TutorialList';
 
 const { Content, Header } = Layout;
 const { Title, Text, Link } = Typography;
-
-function IconText({ icon, text }) {
-  return (
-    <Space>
-      {React.createElement(icon)}
-      {text}
-    </Space>
-  );
-}
-
-function CreatedTutorial({ tutorial }) {
-  return (
-    <List.Item
-      key={tutorial.slug}
-      actions={[
-        <IconText icon={StarOutlined} text="156" key="list-vertical-star-o" />,
-        <IconText icon={LikeOutlined} text="156" key="list-vertical-like-o" />,
-      ]}
-    >
-      <List.Item.Meta
-        css={css`
-          .ant-list-item-meta-title {
-            margin-bottom: 0;
-          }
-        `}
-        title={
-          <div css={{ display: 'flex', justifyContent: 'space-between' }}>
-            <div>
-              <RouterLink
-                css={{ marginRight: '1rem' }}
-                to={`/admin/tutorial-dashboard/${tutorial.slug}`}
-              >
-                <Text>{tutorial.name}</Text>
-              </RouterLink>
-            </div>
-            <div>
-              {tutorial.deployed ? (
-                <Tag icon={<CheckCircleOutlined />} color="success">
-                  deployed
-                </Tag>
-              ) : (
-                <Tag icon={<MinusCircleOutlined />} color="default">
-                  hidden
-                </Tag>
-              )}
-            </div>
-          </div>
-        }
-        description={
-          <div>
-            <Tag>C#</Tag>
-            <Tag>React</Tag>
-          </div>
-        }
-      />
-      We supply a series of design principles, practical patterns and high
-      quality design resources (Sketch and Axure), to help people create their
-      product prototypes beautifully and efficiently.
-    </List.Item>
-  );
-}
-
-function CreatedTutorials({ tutorials }) {
-  console.log(tutorials);
-  return (
-    <List
-      itemLayout="vertical"
-      size="large"
-      pagination={{ onChange: (page) => console.log(page), pageSize: 3 }}
-      dataSource={tutorials}
-      footer={
-        <div>
-          <b>ant design</b> footer part
-        </div>
-      }
-      renderItem={(tutorial) => <CreatedTutorial tutorial={tutorial} />}
-    />
-  );
-}
 
 function convertFormat(tutorials) {
   return tutorials.map((tutorial) => ({
@@ -153,7 +77,10 @@ export default function Administrator() {
 
         {/* List */}
         {tutorials ? (
-          <CreatedTutorials tutorials={tutorials} />
+          <TutorialList
+            tutorials={tutorials}
+            itemRenderer={AdminTutorialListItem}
+          />
         ) : (
           <PageSpinner />
         )}

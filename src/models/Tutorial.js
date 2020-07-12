@@ -19,6 +19,9 @@ const PageGroupSchema = new mongoose.Schema(
   { _id: false },
 );
 
+const StatisticsSchema = new mongoose.Schema({
+  purchases: Number,
+});
 const TutorialSchema = new mongoose.Schema({
   userId: { type: mongoose.Types.ObjectId, required: true },
   slug: { type: String, slug: 'name', unique: true },
@@ -34,6 +37,7 @@ const TutorialSchema = new mongoose.Schema({
     },
     { _id: false },
   ),
+  statistics: StatisticsSchema,
 });
 
 module.exports = mongoose.model('tutorials', TutorialSchema);

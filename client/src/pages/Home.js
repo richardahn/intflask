@@ -1,81 +1,107 @@
 /** @jsx jsx */
 import { css, jsx } from '@emotion/core';
 
-import React, { useState, useCallback } from 'react';
-import { Layout, Menu, Typography, Row, Col, Space, Tabs, Button } from 'antd';
+import React, { useState, useCallback, useEffect } from 'react';
+import {
+  Layout,
+  Menu,
+  Typography,
+  Row,
+  Col,
+  Space,
+  Tabs,
+  Button,
+  Card,
+  Divider,
+  message,
+  Skeleton,
+  Empty,
+  List,
+} from 'antd';
 import { Link as RouterLink } from 'react-router-dom';
-import { GoogleOutlined } from '@ant-design/icons';
-
+import { GoogleOutlined, StarOutlined } from '@ant-design/icons';
+import { PaddedContent, AppLayout } from '../styles';
+import axios from 'axios';
+import TutorialList, { TutorialListItem } from '../components/TutorialList';
 const { Content, Header, Footer, Sider } = Layout;
 const { Text, Title } = Typography;
 const { TabPane } = Tabs;
 
-function Guides() {
-  return <Content>guides</Content>;
-}
-function Tutorials() {
-  return (
-    <Layout css={{ backgroundColor: 'white' }}>
-      <Content
-        css={{
-          maxHeight: 'fit-content',
-          backgroundColor: 'white',
-          marginBottom: '3rem',
-        }}
-      >
-        <div>
-          <Space css={{ display: 'flex', alignItems: 'center' }}>
-            <Title level={4} css={{ marginBottom: '0 !important' }}>
-              Purchased
-            </Title>
-            <Button>View All Purchased</Button>
-          </Space>
-        </div>
-        You purchased these
-      </Content>
-      <Content css={{ backgroundColor: 'white' }}>
-        <div>
-          <Space css={{ display: 'flex', alignItems: 'center' }}>
-            <Title level={4} css={{ marginBottom: '0 !important' }}>
-              Top Tutorials
-            </Title>
-            <Button>View All Tutorials</Button>
-          </Space>
-        </div>
-        Top tutorials
-      </Content>
-    </Layout>
-  );
-}
+export default function Home() {
+  const [loadingTopTutorials, setLoadingTopTutorials] = useState(true);
+  const [topTutorials, setTopTutorials] = useState(null);
 
-export default function Home(props) {
+  const [loadingFreeTutorials, setLoadingFreeTutorials] = useState(true);
+  const [freeTutorials, setFreeTutorials] = useState(null);
+  useEffect(() => {
+    axios
+      .get('/api/tutorials/top')
+      .then((response) => setTopTutorials(response.data))
+      .catch((error) => {
+        console.error(error);
+        message.error('Failed to retrieve top tutorials');
+      })
+      .finally(() => setLoadingTopTutorials(false));
+
+    axios
+      .get('/api/tutorials/free')
+      .then((response) => setFreeTutorials(response.data))
+      .catch((error) => {
+        console.error(error);
+        message.error('Failed to retrieve free tutorials');
+      })
+      .finally(() => setLoadingFreeTutorials(false));
+  }, []);
   return (
-    <Content
-      css={{
-        padding: '0 3rem',
-        backgroundColor: 'white',
-        display: 'flex',
-      }}
-    >
-      <Tabs
-        defaultActiveKey="1"
-        css={css`
-          flex: 1;
-          .ant-tabs-content-holder {
-            display: flex;
-          }
-          .ant-tabs-tabpane {
-            display: flex;
-          }
-        `}
-      >
-        <TabPane tab="Guides" key="1">
-          <Guides />
-        </TabPane>
-        <TabPane tab="Tutorials" key="2">
-          <Tutorials />
-        </TabPane>
-      </Tabs>
-    </Content>
+    <AppLayout>
+      <PaddedContent>
+        <Divider orientation="left">
+          <Space>
+            Tutorials{' '}
+            <RouterLink to="/tutorials">
+              <Button size="small">View All</Button>
+            </RouterLink>
+          </Space>
+        </Divider>
+        <Row gutter={[24, 24]}>
+          <Col xs={24} lg={12}>
+            <Card title="Top Tutorials">
+              {loadingTopTutorials ? (
+                <Skeleton />
+              ) : topTutorials ? (
+                topTutorials.length > 0 ? (
+                  <TutorialList
+                    tutorials={topTutorials}
+                    itemRenderer={TutorialListItem}
+                  />
+                ) : (
+                  <Empty description="No Top Tutorials" />
+                )
+              ) : (
+                <Empty description="Unable to fetch top tutorials" />
+              )}
+            </Card>
+          </Col>
+          <Col xs={24} lg={12}>
+            <Card title="Free Tutorials">
+              {loadingFreeTutorials ? (
+                <Skeleton />
+              ) : freeTutorials ? (
+                freeTutorials.length > 0 ? (
+                  <TutorialList
+                    tutorials={freeTutorials}
+                    itemRenderer={TutorialListItem}
+                  />
+                ) : (
+                  <Empty description="No Free Tutorials" />
+                )
+              ) : (
+                <Empty description="Unable to fetch free tutorials" />
+              )}
+            </Card>
+          </Col>
+        </Row>
+      </PaddedContent>
+    </AppLayout>
   );
 }

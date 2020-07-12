@@ -55,10 +55,6 @@ function IntflaskHeader({ logoutUser, history, auth }) {
   const navbarItems = auth.isAuthenticated
     ? [
         {
-          name: 'Guides',
-          to: '/guides',
-        },
-        {
           name: 'Tutorials',
           to: '/tutorials',
         },

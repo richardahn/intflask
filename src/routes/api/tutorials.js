@@ -21,4 +21,32 @@ router.get('/', (req, res) => {
   });
 });
 
+router.get('/top', async (req, res) => {
+  try {
+    const count = req.query.count ? parseInt(req.query.count) : 3;
+    const tutorials = await Tutorial.find({}, { content: false })
+      .sort({ 'statistics.purchases': -1 })
+      .limit(count)
+      .exec();
+    res.json(tutorials);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Failed to get top tutorials');
+  }
+});
+
+router.get('/free', async (req, res) => {
+  try {
+    const count = req.query.count ? parseInt(req.query.count) : 3;
+    const tutorials = await Tutorial.find({ price: 0 }, { content: false })
+      .sort({ 'statistics.purchases': -1 })
+      .limit(count)
+      .exec();
+    res.json(tutorials);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Failed to get free tutorials');
+  }
+});
+
 module.exports = router;
