@@ -23,7 +23,7 @@ import {
   AppFixedHeader,
 } from '../../styles';
 
-function saveStateToTag(saveState) {
+export default function saveStateToTag(saveState) {
   switch (saveState) {
     case saveStates.MODIFIED:
       return <Tag color="warning">modified</Tag>;
@@ -64,9 +64,3 @@ function TutorialEditorStatusBar({ saveState }) {
     </AppFixedHeader>
   );
 }
-
-const mapStateToProps = (state) => ({
-  saveState: state.editTutorial.saveState,
-});
-
-export default connect(mapStateToProps)(TutorialEditorStatusBar);

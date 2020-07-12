@@ -14,6 +14,8 @@ export const SET_SAVE_STATE = 'SET_SAVE_STATE';
 export const SET_NAME = 'SET_NAME';
 export const SET_DEPLOYED = 'SET_DEPLOYED';
 
+export const SET_CONTENT = 'SET_CONTENT';
+
 // -- Thunks --
 export function saveTutorial(onSuccess = null, onError = null) {
   return (dispatch, getState) => {
@@ -99,5 +101,20 @@ export function setDeployed(deployed) {
   return {
     type: SET_DEPLOYED,
     deployed,
+  };
+}
+
+export function setTest(content) {
+  return {
+    type: 'test',
+    content,
+  };
+}
+
+export function setContent(content, path) {
+  return {
+    type: SET_CONTENT,
+    content,
+    path,
   };
 }

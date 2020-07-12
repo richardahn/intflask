@@ -9,6 +9,7 @@ import {
   SET_SAVE_STATE,
   SET_NAME,
   SET_DEPLOYED,
+  SET_CONTENT,
 } from '../actions/editTutorial';
 import saveStates, { getNextState } from '../enums/saveStates';
 
@@ -16,6 +17,19 @@ const initialState = {
   saveState: null,
   currentPath: null,
   tutorial: null,
+  test: {
+    content: {
+      main: {
+        content: [
+          {
+            type: 'paragraph',
+            children: [{ text: 'test' }],
+          },
+        ],
+      },
+      children: [],
+    },
+  },
 };
 
 function generateNewEditorContent() {
@@ -74,9 +88,23 @@ export default function editTutorial(state = initialState, action) {
   switch (action.type) {
     case SET_TUTORIAL:
       return {
+        ...state,
         saveState: getNextState(state.saveState, saveStates.SAVED),
         currentPath: [],
-        tutorial: action.tutorial,
+        // tutorial: action.tutorial,
+        tutorial: {
+          content: {
+            main: {
+              content: [
+                {
+                  type: 'paragraph',
+                  children: [{ text: 'test' }],
+                },
+              ],
+            },
+            children: [],
+          },
+        },
       };
     case ADD_PAGE_GROUP:
       return addPage(state, generateNewPageGroup());
@@ -134,7 +162,6 @@ export default function editTutorial(state = initialState, action) {
           },
         };
       } else if (state.currentPath.length === 0) {
-        console.log('REDUCED');
         let ret = {
           ...state,
           saveState: nextSaveState,
@@ -149,12 +176,26 @@ export default function editTutorial(state = initialState, action) {
             },
           },
         };
-        console.log(ret);
+        console.log('-- reduced ', ret);
         return ret;
       } else {
         console.log('SUPER BAD');
         return state;
       }
+    case SET_CONTENT:
+      return {
+        ...state,
+        tutorial: {
+          ...state.tutorial,
+          content: {
+            ...state.tutorial.content,
+            main: {
+              ...state.tutorial.content.main,
+              content: action.content,
+            },
+          },
+        },
+      };
     case RESET:
       return {
         saveState: null,
@@ -218,6 +259,20 @@ export default function editTutorial(state = initialState, action) {
         tutorial: {
           ...state.tutorial,
           deployed: action.deployed,
+        },
+      };
+    case 'test':
+      return {
+        ...state,
+        test: {
+          ...state.test,
+          content: {
+            ...state.test.content,
+            main: {
+              ...state.test.content.main,
+              content: action.content,
+            },
+          },
         },
       };
     default:

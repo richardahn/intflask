@@ -29,9 +29,10 @@ import ErrorContent from '../components/ErrorContent';
 
 const { Title } = Typography;
 
-function EditTutorial({ tutorial, setTutorial, reset, match }) {
+export default function EditTutorial({ match }) {
   const { slug } = match.params;
   const [loadingPage, setLoadingPage] = useState(true);
+  const [tutorial, setTutorial] = useState(null);
 
   useEffect(() => {
     axios
@@ -42,10 +43,6 @@ function EditTutorial({ tutorial, setTutorial, reset, match }) {
         message.error('Failed to get course');
       })
       .finally(() => setLoadingPage(false));
-
-    return function cleanup() {
-      reset();
-    };
   }, [slug]);
 
   return (
@@ -72,7 +69,11 @@ function EditTutorial({ tutorial, setTutorial, reset, match }) {
               {tutorial.name}
             </Title>
           </AppFixedHeader>
-          <TutorialEditor top={pageHeaderHeight + statusBarHeight} />
+          <TutorialEditor
+            top={pageHeaderHeight + statusBarHeight}
+            tutorial={tutorial}
+            onTutorialChange={setTutorial}
+          />
         </React.Fragment>
       ) : (
         <ErrorContent>
@@ -82,13 +83,3 @@ function EditTutorial({ tutorial, setTutorial, reset, match }) {
     </AppLayout>
   );
 }
-
-const mapStateToProps = (state) => ({
-  tutorial: state.editTutorial.tutorial,
-});
-const mapDispatchToProps = {
-  setTutorial,
-  reset,
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(EditTutorial);

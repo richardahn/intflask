@@ -13,12 +13,6 @@ import {
 
 // -- Redux --
 import { connect } from 'react-redux';
-import {
-  addPageGroup,
-  addPage,
-  addSubpage,
-  setCurrentPath,
-} from '../../actions/editTutorial';
 
 // -- Css --
 import {
@@ -40,13 +34,63 @@ const scrollbarCss = [
 ];
 const { Sider } = Layout;
 
-function TutorialEditorSidebar({
-  currentPath,
+function generateNewEditorContent() {
+  return [
+    {
+      type: 'paragraph',
+      children: [{ text: '' }],
+    },
+  ];
+}
+function generateNewPageGroup() {
+  return {
+    name: 'New Topic',
+    content: generateNewEditorContent(),
+    children: [],
+  };
+}
+function generateNewPage() {
+  return { name: 'New Topic', content: generateNewEditorContent() };
+}
+function generateNewSubpage() {
+  return { name: 'New Page', content: generateNewEditorContent() };
+}
+
+function reducePageBase(tutorial, page) {
+  return {
+    ...tutorial,
+    content: {
+      ...tutorial.content,
+      children: [...tutorial.content.children, page],
+    },
+  };
+}
+function reducePageGroup(tutorial) {
+  return reducePageBase(tutorial, generateNewPageGroup());
+}
+function reducePage(tutorial) {
+  return reducePageBase(tutorial, generateNewPage());
+}
+function reduceSubpage(tutorial, current) {
+  return {
+    ...tutorial,
+    content: {
+      ...tutorial.content,
+      children: tutorial.content.children.map((page, i) =>
+        i === current
+          ? { ...page, children: [...page.children, generateNewSubpage()] }
+          : page,
+      ),
+    },
+  };
+}
+
+export default function TutorialEditorSidebar({
   tutorial,
-  addPageGroup,
-  addPage,
-  addSubpage,
-  setCurrentPath,
+  currentSelectionPath,
+  onTutorialChange,
+  onCurrentSelectionChange,
+  currentPage,
 }) {
   const [collapsedOuter, setCollapsedOuter] = useState(false);
   const onCollapseOuter = useCallback(
@@ -59,9 +103,28 @@ function TutorialEditorSidebar({
     [],
   );
 
+  const addPageGroup = useCallback(() => {
+    onTutorialChange(reducePageGroup(tutorial));
+  }, [tutorial]);
+  const addPage = useCallback(() => {
+    onTutorialChange(reducePage(tutorial));
+  }, [tutorial]);
+  const addSubpage = useCallback(
+    (currentI) => {
+      onTutorialChange(reduceSubpage(tutorial, currentI));
+    },
+    [tutorial],
+  );
+
+  const showInnerSidebar =
+    (currentSelectionPath.length === 1 && currentPage.children) ||
+    currentSelectionPath.length === 2;
+
+  console.log('tut', tutorial);
+  console.log('selection', currentSelectionPath);
   return (
     tutorial != null &&
-    currentPath != null && (
+    currentSelectionPath != null && (
       <div
         css={{
           height: `calc(100vh - ${
@@ -81,7 +144,7 @@ function TutorialEditorSidebar({
           width={tutorialSidebarWidth}
           key="outerSidebarFiller"
         ></Sider>
-        {currentPath.length === 2 && (
+        {showInnerSidebar && (
           <Sider
             theme="light"
             collapsible
@@ -120,24 +183,26 @@ function TutorialEditorSidebar({
               theme="light"
               mode="inline"
               selectedKeys={[
-                currentPath.length === 0 ? '-1' : String(currentPath[0]),
+                currentSelectionPath.length === 0
+                  ? '-1'
+                  : String(currentSelectionPath[0]),
               ]}
             >
               <Menu.Item
                 key="-1"
                 css={{ fontWeight: 'bold' }}
                 icon={<HomeOutlined />}
-                onClick={() => setCurrentPath([])}
+                onClick={() => onCurrentSelectionChange([])}
               >
                 Main
               </Menu.Item>
               <Menu.Divider />
               {tutorial.content.children.length > 0 ? (
-                tutorial.data.children.map((outer, i) => (
+                tutorial.content.children.map((outer, i) => (
                   <Menu.Item
                     key={i}
                     css={{ fontWeight: 'bold' }}
-                    onClick={() => setCurrentPath([i])}
+                    onClick={() => onCurrentSelectionChange([i])}
                     icon={
                       outer.children != null ? (
                         <FolderOutlined />
@@ -162,7 +227,7 @@ function TutorialEditorSidebar({
             </Menu>
           </Sider>
           {/* Inner Sidebar */}
-          {currentPath.length === 2 && (
+          {showInnerSidebar && (
             <Sider
               theme="light"
               collapsible
@@ -175,24 +240,30 @@ function TutorialEditorSidebar({
               <Menu
                 theme="light"
                 mode="inline"
-                selectedKeys={[String(currentPath[1])]}
+                selectedKeys={[String(currentSelectionPath[1])]}
               >
-                {tutorial.data.children[currentPath[0]].children.length > 0 ? (
-                  tutorial.data.children[currentPath[0]].children.map(
-                    (inner, j) => (
-                      <Menu.Item
-                        key={j}
-                        onClick={() => setCurrentPath([currentPath[0], j])}
-                      >
-                        {inner.name}
-                      </Menu.Item>
-                    ),
-                  )
+                {tutorial.content.children[currentSelectionPath[0]].children
+                  .length > 0 ? (
+                  tutorial.content.children[
+                    currentSelectionPath[0]
+                  ].children.map((inner, j) => (
+                    <Menu.Item
+                      key={j}
+                      onClick={() =>
+                        onCurrentSelectionChange([currentSelectionPath[0], j])
+                      }
+                    >
+                      {inner.name}
+                    </Menu.Item>
+                  ))
                 ) : (
                   <EmptyMenuItem />
                 )}
                 <Menu.Divider />
-                <Menu.Item icon={<PlusOutlined />} onClick={addSubpage}>
+                <Menu.Item
+                  icon={<PlusOutlined />}
+                  onClick={() => addSubpage(currentSelectionPath[0])}
+                >
                   Add Page
                 </Menu.Item>
               </Menu>
@@ -203,18 +274,3 @@ function TutorialEditorSidebar({
     )
   );
 }
-
-const mapStateToProps = (state) => ({
-  currentPath: state.editTutorial.currentPath,
-  tutorial: state.editTutorial.tutorial,
-});
-const mapDispatchToProps = {
-  addPageGroup,
-  addPage,
-  addSubpage,
-  setCurrentPath,
-};
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(TutorialEditorSidebar);

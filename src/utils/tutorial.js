@@ -8,7 +8,7 @@ function getEmptyTutorialContent() {
         },
       ]),
     },
-    topics: [],
+    children: [],
   };
 }
 

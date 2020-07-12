@@ -8,11 +8,6 @@ import TutorialEditorStatusBar from './TutorialEditorStatusBar';
 
 // -- Redux --
 import { connect } from 'react-redux';
-import {
-  saveTutorial,
-  setName,
-  setCurrentPageContent,
-} from '../../actions/editTutorial';
 
 // -- Css --
 import {
@@ -25,7 +20,6 @@ import {
 import IntflaskEditor from '../IntflaskEditor';
 import debounce from '../../utils/debounce';
 import PageSpinner from '../PageSpinner';
-import { getCurrentPage } from '../../selectors/editTutorial';
 const { Content } = Layout;
 const { Title, Text } = Typography;
 
@@ -56,74 +50,125 @@ function getName(page) {
   return isMain(page) ? 'Main' : page.name;
 }
 
-function TutorialEditor({
-  currentPath,
-  tutorial,
-  saveTutorial,
-  setName,
-  setCurrentPageContent,
-  top,
-}) {
-  const currentPage = tutorial.content.main;
-  const currentContent = tutorial.content.main.content;
-  const debouncedSaveTutorial = useCallback(debounce(saveTutorial), []);
-  const onContentChange = useCallback((value) => {
-    console.log('CHANGED');
-    setCurrentPageContent(value);
-    // debouncedSaveTutorial(); // This function saves the redux store to the database with debounce
-  }, []);
-  console.log('At TutorialEditor');
-  console.log(currentContent);
+export default function TutorialEditor({ tutorial, top, onTutorialChange }) {
+  const [currentSelectionPath, setCurrentSelectionPath] = useState([]);
+
+  let currentPage = null;
+  if (currentSelectionPath.length === 0) {
+    currentPage = tutorial.content.main;
+  } else if (currentSelectionPath.length === 1) {
+    currentPage = tutorial.content.children[currentSelectionPath[0]];
+  } else if (currentSelectionPath.length === 2) {
+    currentPage =
+      tutorial.content.children[currentSelectionPath[0]].children[
+        currentSelectionPath[1]
+      ];
+  }
+  console.log('current page', currentPage);
+  const onContentChange = (value) => {
+    onTutorialChange((tutorial) => {
+      if (currentSelectionPath.length === 0) {
+        return {
+          ...tutorial,
+          content: {
+            ...tutorial.content,
+            main: {
+              ...tutorial.content.main,
+              content: value,
+            },
+          },
+        };
+      } else if (currentSelectionPath.length === 1) {
+        return {
+          ...tutorial,
+          content: {
+            ...tutorial.content,
+            children: tutorial.content.children.map((page, i) =>
+              i === currentSelectionPath[0]
+                ? {
+                    ...page,
+                    content: value,
+                  }
+                : page,
+            ),
+          },
+        };
+      } else if (currentSelectionPath.length === 2) {
+        return {
+          ...tutorial,
+          content: {
+            ...tutorial.content,
+            children: tutorial.content.children.map((page, i) =>
+              i === currentSelectionPath[0]
+                ? {
+                    ...page,
+                    children: page.children.map((subpage, j) =>
+                      j === currentSelectionPath[1]
+                        ? {
+                            ...subpage,
+                            content: value,
+                          }
+                        : subpage,
+                    ),
+                  }
+                : page,
+            ),
+          },
+        };
+      }
+    });
+  };
   return (
     <AppLayout>
-      <TutorialEditorStatusBar />
-      <TutorialEditorSidebar />
-      {currentPage != null ? (
-        <PaddedContent
-          css={{
-            marginTop: `${top}px`,
-            display: 'flex',
-            flexDirection: 'column',
-          }}
-        >
-          <Row>
-            <EditableTitle
-              level={4}
-              editable={
-                isMain(currentPage)
-                  ? null
-                  : {
-                      onChange: (name) => {
-                        if (currentPage != null && currentPage.name !== name) {
-                          setName(name);
-                          debouncedSaveTutorial();
-                        }
-                      },
-                    }
-              }
-            >
-              {getName(currentPage)}
-            </EditableTitle>
-          </Row>
-          <Row css={{ flex: '1 1 auto' }}>
-            <IntflaskEditor
-              value={currentContent}
-              onChange={onContentChange}
-              css={{ flex: 1 }}
-            />
-          </Row>
-        </PaddedContent>
-      ) : (
-        <PageSpinner />
+      {tutorial && (
+        <React.Fragment>
+          {/* <TutorialEditorStatusBar /> */}
+          <TutorialEditorSidebar
+            tutorial={tutorial}
+            currentSelectionPath={currentSelectionPath}
+            onTutorialChange={onTutorialChange}
+            onCurrentSelectionChange={setCurrentSelectionPath}
+            currentPage={currentPage}
+          />
+          <PaddedContent
+            css={{
+              marginTop: `${top}px`,
+              display: 'flex',
+              flexDirection: 'column',
+            }}
+          >
+            <Row>
+              <EditableTitle
+                level={4}
+                editable={
+                  isMain(currentPage)
+                    ? null
+                    : {
+                        onChange: (name) => {
+                          if (
+                            currentPage != null &&
+                            currentPage.name !== name
+                          ) {
+                            // setName(name);
+                            // debouncedSaveTutorial();
+                          }
+                        },
+                      }
+                }
+              >
+                {getName(currentPage)}
+              </EditableTitle>
+            </Row>
+            <Row css={{ flex: '1 1 auto' }}>
+              <IntflaskEditor
+                value={currentPage.content}
+                onChange={(value) => onContentChange(value)}
+                css={{ flex: 1 }}
+              />
+            </Row>
+          </PaddedContent>
+        </React.Fragment>
       )}
     </AppLayout>
   );
 }
-
-const mapStateToProps = (state) => ({
-  currentPath: state.editTutorial.currentPath,
-  tutorial: state.editTutorial.tutorial,
-});
-const mapDispatchToProps = { saveTutorial, setName, setCurrentPageContent };
-
-export default connect(mapStateToProps, mapDispatchToProps)(TutorialEditor);
