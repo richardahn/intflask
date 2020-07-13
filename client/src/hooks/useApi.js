@@ -2,14 +2,22 @@ import axios from 'axios';
 import { useState, useEffect } from 'react';
 
 /** Convenience hook to fetch data from api. Returns loading boolean and data(null if unable to fetch) */
-export function useApiGet(endpoint, params, onError) {
+export function useApiGet(
+  endpoint,
+  { params = {}, onSuccess = null, onError = null } = {},
+) {
   const [loadingData, setLoadingData] = useState(true);
   const [data, setData] = useState(null);
 
   useEffect(() => {
     axios
       .get(endpoint, { params })
-      .then((response) => setData(response.data))
+      .then((response) => {
+        setData(response.data);
+        if (onSuccess) {
+          onSuccess();
+        }
+      })
       .catch((error) => {
         console.error(error);
         if (onError) {

@@ -30,9 +30,9 @@ const { Content, Header, Footer, Sider } = Layout;
 const { Text, Title } = Typography;
 
 export default function Tutorials(props) {
-  const [loadingTutorial, tutorials] = useApiGet('/api/tutorials', null, () =>
-    message.error('Failed to load tutorials'),
-  );
+  const [loadingTutorial, tutorials] = useApiGet('/api/tutorials', {
+    onError: () => message.error('Failed to load tutorials'),
+  });
 
   return (
     <Layout>

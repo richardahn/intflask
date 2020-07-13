@@ -29,16 +29,14 @@ const { Text, Title } = Typography;
 const { TabPane } = Tabs;
 
 export default function Home() {
-  const [loadingTopTutorials, topTutorials] = useApiGet(
-    '/api/tutorials',
-    { top: true },
-    () => message.error('Failed to retrieve top tutorials'),
-  );
-  const [loadingFreeTutorials, freeTutorials] = useApiGet(
-    '/api/tutorials',
-    { free: true },
-    () => message.error('Failed to load free tutorials'),
-  );
+  const [loadingTopTutorials, topTutorials] = useApiGet('/api/tutorials', {
+    params: { top: true },
+    onError: () => message.error('Failed to retrieve top tutorials'),
+  });
+  const [loadingFreeTutorials, freeTutorials] = useApiGet('/api/tutorials', {
+    params: { free: true },
+    onError: () => message.error('Failed to load free tutorials'),
+  });
   return (
     <AppLayout>
       <PaddedContent>

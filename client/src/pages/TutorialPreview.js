@@ -27,11 +27,9 @@ const { Text } = Typography;
 
 export default function TutorialPreview({ match }) {
   const { slug } = match.params;
-  const [loadingTutorial, tutorial] = useApiGet(
-    `/api/tutorials/${slug}`,
-    null,
-    () => message.error('Failed to fetch tutorial'),
-  );
+  const [loadingTutorial, tutorial] = useApiGet(`/api/tutorials/${slug}`, {
+    onError: () => message.error('Failed to fetch tutorial'),
+  });
   const purchaseTutorial = useCallback(() => {
     axios
       .post(`/api/purchase/${slug}`)

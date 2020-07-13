@@ -38,11 +38,9 @@ const { Content, Header } = Layout;
 const { Title, Text, Link } = Typography;
 
 export default function Administrator() {
-  const [loadingTutorials, tutorials] = useApiGet(
-    '/api/admin/tutorials',
-    null,
-    () => message.error('Failed to load tutorials'),
-  );
+  const [loadingTutorials, tutorials] = useApiGet('/api/admin/tutorials', {
+    onError: () => message.error('Failed to load tutorials'),
+  });
 
   return (
     <AppLayout>

@@ -26,11 +26,9 @@ const { Content, Header, Footer, Sider } = Layout;
 const { Text, Title } = Typography;
 
 export default function Purchases(props) {
-  const [loadingPurchases, purchases] = useApiGet(
-    '/api/purchased-tutorials',
-    null,
-    () => message.error('Failed to load purchased tutorials'),
-  );
+  const [loadingPurchases, purchases] = useApiGet('/api/purchased-tutorials', {
+    onError: () => message.error('Failed to load purchased tutorials'),
+  });
   return (
     <AppLayout>
       <PaddedContent>
