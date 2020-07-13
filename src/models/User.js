@@ -1,7 +1,5 @@
 const mongoose = require('mongoose');
 
-// I think user auth schema should only have stuff related to auth
-// todo: add first/last name, optional alias
 const UserSchema = new mongoose.Schema({
   firstName: {
     type: String,
@@ -31,7 +29,7 @@ const UserSchema = new mongoose.Schema({
     type: Date,
     required: true,
   },
+  purchasedTutorials: [{ type: mongoose.Types.ObjectId, ref: 'tutorials' }],
 });
 
 module.exports = mongoose.model('users', UserSchema);
-// module.exports = User = mongoose.model( // what is this

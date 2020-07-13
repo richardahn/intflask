@@ -59,8 +59,8 @@ function IntflaskHeader({ logoutUser, history, auth }) {
           to: '/tutorials',
         },
         {
-          name: 'Purchased',
-          to: '/purchased',
+          name: 'Purchases',
+          to: '/purchases',
         },
         {
           name: 'Create',
@@ -77,6 +77,10 @@ function IntflaskHeader({ logoutUser, history, auth }) {
         },
       ]
     : [
+        {
+          name: 'Tutorials',
+          to: '/tutorials',
+        },
         {
           name: 'Login',
           to: '/login',

@@ -90,6 +90,40 @@ export function AdminTutorialListItem({ tutorial }) {
   );
 }
 
+export function PurchasedTutorialListItem({ tutorial }) {
+  return (
+    <List.Item
+      key={tutorial.slug}
+      actions={[
+        <IconText
+          icon={StarOutlined}
+          text={tutorial.statistics?.purchases}
+          key="list-vertical-star-o"
+        />,
+      ]}
+    >
+      <List.Item.Meta
+        css={css`
+          .ant-list-item-meta-title {
+            margin-bottom: 0;
+          }
+        `}
+        title={
+          <RouterLink to={`/tutorial-preview/${tutorial.slug}`}>
+            <Text>{tutorial.name}</Text>
+          </RouterLink>
+        }
+        description={
+          <div>
+            <Tags tags={tutorial.technologyStack} />
+          </div>
+        }
+      />
+      {tutorial.description}
+    </List.Item>
+  );
+}
+
 export function TutorialListItem({ tutorial }) {
   return (
     <List.Item

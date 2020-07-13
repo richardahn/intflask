@@ -21,6 +21,7 @@ import {
   Input,
   Checkbox,
   InputNumber,
+  Alert,
 } from 'antd';
 import { PaddedContent, AppLayout, AppHeader } from '../styles';
 import { Link as RouterLink } from 'react-router-dom';
@@ -128,6 +129,13 @@ export default function TutorialDashboard({ match, history }) {
         <PageSpinner />
       ) : tutorial ? (
         <PaddedContent>
+          {!tutorial.deployed && (
+            <Alert
+              message="This course is not yet viewable to the public. In order to deploy, go to Settings > Deployment"
+              type="warning"
+              closable
+            />
+          )}
           <Tabs
             defaultActiveKey="1"
             tabBarExtraContent={

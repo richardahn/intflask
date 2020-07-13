@@ -38,6 +38,7 @@ const TutorialSchema = new mongoose.Schema({
     { _id: false },
   ),
   statistics: StatisticsSchema,
+  approximateCompletionTime: { type: Number },
 });
 
 module.exports = mongoose.model('tutorials', TutorialSchema);

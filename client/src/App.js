@@ -20,6 +20,8 @@ import Settings from './pages/Settings';
 import Signup from './pages/Signup';
 import TeacherSignup from './pages/TeacherSignup';
 import TutorialDashboard from './pages/TutorialDashboard';
+import TutorialPreview from './pages/TutorialPreview';
+import Purchases from './pages/Purchases';
 
 import EditorPlayground from './pages/EditorPlayground';
 
@@ -28,7 +30,6 @@ import {
   moveJwtFromCookiesToLocalStorage,
   authenticateJwtFromLocalStorage,
 } from './actions/auth';
-import TutorialPreview from './pages/TutorialPreview';
 
 // Setup store
 const store = createAppStore();
@@ -51,6 +52,7 @@ export default function App() {
             <NonAuthenticatedRoute exact path="/login" component={Login} />
             <NonAuthenticatedRoute exact path="/signup" component={Signup} />
             <PrivateRoute exact path="/settings" component={Settings} />
+            <PrivateRoute exact path="/purchases" component={Purchases} />
             <PrivateRoute
               exact
               path="/teacher-signup"

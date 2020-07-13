@@ -5,6 +5,8 @@ const bcrypt = require('bcryptjs');
 const passport = require('passport');
 const jwt = require('jsonwebtoken');
 const config = require('../../config');
+const convertTutorialContentToOutline = require('../../utils/tutorial')
+  .convertTutorialContentToOutline;
 
 const Tutorial = require('../../models/Tutorial');
 
@@ -55,13 +57,17 @@ router.get('/', async (req, res) => {
 
 router.get('/:slug', async (req, res) => {
   try {
-    const tutorial = await Tutorial.findOne(
-      { deployed: true, slug: req.params.slug },
-      { content: false },
-    )
+    const tutorial = await Tutorial.findOne({
+      deployed: true,
+      slug: req.params.slug,
+    })
       .populate('userId', { firstName: true, lastName: true })
+      .lean() // Mongoose objects can't be modified, use lean() to get a regular js object
       .exec();
-    res.json(tutorial);
+
+    const { content, ...outlinedTutorial } = tutorial;
+    outlinedTutorial.outline = convertTutorialContentToOutline(content);
+    res.json(outlinedTutorial);
   } catch (error) {
     console.error(error);
     res.status(500).send('Could not find tutorial');

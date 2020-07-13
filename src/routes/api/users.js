@@ -28,6 +28,7 @@ router.post('/signup', (req, res) => {
         email: req.body.email,
         password: req.body.password,
         creationDate: Date.now(),
+        purchasedTutorials: [],
       });
       bcrypt.genSalt((err, salt) => {
         bcrypt.hash(newUser.password, salt, (err, hash) => {

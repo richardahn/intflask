@@ -56,13 +56,18 @@ export default function Administrator() {
       </AppHeader>
       <PaddedContent>
         <FloatingActionButton>
-          <Tooltip title="Add Tutorial" placement="bottom">
+          <Tooltip title="Add Tutorial" placement="left">
             <RouterLink to="/admin/create-tutorial">
               <Button
                 type="primary"
                 shape="circle"
                 icon={<PlusOutlined />}
-                css={{ width: 40, height: 40 }}
+                css={{
+                  width: 40,
+                  height: 40,
+                  boxShadow:
+                    '0 3px 6px -4px rgba(0,0,0,.12), 0 6px 16px 0 rgba(0,0,0,.08), 0 9px 28px 8px rgba(0,0,0,.05)',
+                }}
               />
             </RouterLink>
           </Tooltip>

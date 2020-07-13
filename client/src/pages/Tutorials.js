@@ -44,13 +44,17 @@ export default function Tutorials(props) {
           <Divider orientation="left">All Tutorials</Divider>
           {loadingTutorial ? (
             <Skeleton />
-          ) : tutorials && tutorials.length > 0 ? (
-            <TutorialList
-              tutorials={tutorials}
-              itemRenderer={TutorialListItem}
-            />
+          ) : tutorials ? (
+            tutorials.length > 0 ? (
+              <TutorialList
+                tutorials={tutorials}
+                itemRenderer={TutorialListItem}
+              />
+            ) : (
+              <Empty description="No Tutorials" />
+            )
           ) : (
-            <Empty description="No Tutorials" />
+            <Empty description="Could not fetch tutorials" />
           )}
         </Content>
       </Layout>
