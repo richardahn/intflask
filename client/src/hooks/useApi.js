@@ -4,10 +4,10 @@ import { useState, useEffect } from 'react';
 /** Convenience hook to fetch data from api. Returns loading boolean and data(null if unable to fetch) */
 export function useApiGet(
   endpoint,
-  { params = {}, onSuccess = null, onError = null } = {},
+  { params = {}, onSuccess = null, onError = null, defaultData = null } = {},
 ) {
   const [loadingData, setLoadingData] = useState(true);
-  const [data, setData] = useState(null);
+  const [data, setData] = useState(defaultData);
 
   useEffect(() => {
     axios

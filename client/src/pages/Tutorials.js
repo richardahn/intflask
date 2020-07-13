@@ -16,6 +16,9 @@ import {
   Skeleton,
   Empty,
   Divider,
+  Dropdown,
+  Select,
+  Checkbox,
 } from 'antd';
 import {
   GoogleOutlined,
@@ -25,24 +28,38 @@ import {
 } from '@ant-design/icons';
 import TutorialList, { TutorialListItem } from '../components/TutorialList';
 import { useApiGet } from '../hooks/useApi';
+import Filter from '../components/Filter';
 
 const { Content, Header, Footer, Sider } = Layout;
 const { Text, Title } = Typography;
+const { Option } = Select;
 
 export default function Tutorials(props) {
-  const [loadingTutorial, tutorials] = useApiGet('/api/tutorials', {
-    onError: () => message.error('Failed to load tutorials'),
-  });
+  const [filters, setFilters] = useState({});
+  const [loadingTutorials, setLoadingTutorials] = useState(true);
+  const [tutorials, setTutorials] = useState(null);
+
+  useEffect(() => {
+    setLoadingTutorials(true);
+    axios
+      .get('/api/tutorials', { params: filters })
+      .then((response) => setTutorials(response.data))
+      .catch((error) => {
+        console.error(error);
+        message.error('Failed to load tutorials');
+      })
+      .finally(() => setLoadingTutorials(false));
+  }, [filters]);
 
   return (
     <Layout>
       <Sider theme="light" breakpoint="lg" collapsedWidth="0">
-        <div css={{ padding: '1rem 2rem' }}>Hello Sidebar</div>
+        <Filter filters={filters} onChange={setFilters} />
       </Sider>
       <Layout>
         <Content css={{ backgroundColor: 'white', padding: '0 50px' }}>
           <Divider orientation="left">All Tutorials</Divider>
-          {loadingTutorial ? (
+          {loadingTutorials ? (
             <Skeleton />
           ) : tutorials ? (
             tutorials.length > 0 ? (
