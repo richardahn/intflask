@@ -44,14 +44,35 @@ router.get('/', async (req, res) => {
       res.status(500).send('Failed to get free tutorials');
     }
   } else {
-    Tutorial.find({ deployed: true }, { content: false }, (err, tutorials) => {
-      if (err) {
-        console.error(err);
-        res.status(500).send('Error getting tutorials');
-      } else {
-        res.json(tutorials);
-      }
-    });
+    const filter = { deployed: true };
+    const projection = { content: false };
+    const sort = {};
+    if (req.query.selectedTechnologies) {
+      filter.technologyStack = { $in: req.query.selectedTechnologies };
+    }
+    if (req.query.selectedFree === 'true') {
+      filter.price = 0;
+    }
+    switch (req.query.sortedBy) {
+      case 'popularity':
+        sort['statistics.purchases'] = -1;
+        break;
+      case 'price':
+        sort.price = -1;
+        break;
+      case 'name':
+        sort.name = -1;
+        break;
+    }
+    try {
+      const tutorials = await Tutorial.find(filter, projection)
+        .sort(sort)
+        .exec();
+      res.json(tutorials);
+    } catch (error) {
+      console.error(error);
+      res.status(500).send('Failed to get tutorials');
+    }
   }
 });
 
