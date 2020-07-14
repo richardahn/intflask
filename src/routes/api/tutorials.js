@@ -47,6 +47,7 @@ router.get('/', async (req, res) => {
     const filter = { deployed: true };
     const projection = { content: false };
     const sort = {};
+    const or = [];
     if (req.query.selectedTechnologies) {
       filter.technologyStack = { $in: req.query.selectedTechnologies };
     }
@@ -54,7 +55,16 @@ router.get('/', async (req, res) => {
       filter.price = 0;
     }
     if (req.query.query) {
-      filter.name = new RegExp(`${req.query.query}`, 'i');
+      or.push(
+        ...[
+          {
+            name: new RegExp(`${req.query.query}`, 'i'),
+          },
+          {
+            description: new RegExp(`${req.query.query}`, 'i'),
+          },
+        ],
+      );
     }
     const sortDirection = req.query.descending === 'false' ? 1 : -1;
     switch (req.query.sortedBy) {
@@ -69,9 +79,12 @@ router.get('/', async (req, res) => {
         break;
     }
     try {
-      const tutorials = await Tutorial.find(filter, projection)
-        .sort(sort)
-        .exec();
+      let query = Tutorial.find(filter, projection);
+      if (or.length != 0) {
+        query = query.or(or);
+      }
+      query = query.sort(sort);
+      const tutorials = await query.exec();
       res.json(tutorials);
     } catch (error) {
       console.error(error);

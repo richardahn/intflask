@@ -89,7 +89,7 @@ export default function Filter({ filters, onChange, onReset }) {
       >
         <Label>Filter</Label>
         <Button size="small" onClick={onReset}>
-          <Text type="secondary">Clear All</Text>
+          <Text type="secondary">Clear</Text>
         </Button>
       </Padding>
       <Divider css={{ margin: '0.5rem 0' }} />
