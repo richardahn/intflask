@@ -89,7 +89,17 @@ export default function Filter({ filters, onChange }) {
         }}
       >
         <Label>Filter</Label>
-        <Button size="small" onClick={() => onChange({})}>
+        <Button
+          size="small"
+          onClick={() =>
+            onChange({
+              selectedTechnologies: [],
+              selectedFree: false,
+              sortedBy: 'popularity',
+              descending: 'true',
+            })
+          }
+        >
           <Text type="secondary">Clear All</Text>
         </Button>
       </Padding>
