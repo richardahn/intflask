@@ -13,7 +13,6 @@ router.get('/', async (req, res) => {
     const allTechnologies = await Tutorial.find()
       .distinct('technologyStack')
       .exec();
-    console.log(allTechnologies);
     res.json(allTechnologies);
   } catch (error) {
     console.error(error);
