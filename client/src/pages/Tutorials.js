@@ -29,13 +29,19 @@ import {
 import TutorialList, { TutorialListItem } from '../components/TutorialList';
 import { useApiGet } from '../hooks/useApi';
 import Filter from '../components/Filter';
+import { mainHeaderHeight } from '../styles';
 
 const { Content, Header, Footer, Sider } = Layout;
 const { Text, Title } = Typography;
 const { Option } = Select;
 
 export default function Tutorials(props) {
-  const [filters, setFilters] = useState({});
+  const [filters, setFilters] = useState({
+    selectedTechnologies: [],
+    selectedFree: false,
+    sortedBy: 'popularity',
+    descending: 'true',
+  });
   const [loadingTutorials, setLoadingTutorials] = useState(true);
   const [tutorials, setTutorials] = useState(null);
 
@@ -51,9 +57,29 @@ export default function Tutorials(props) {
       .finally(() => setLoadingTutorials(false));
   }, [filters]);
 
+  const [collapsed, setCollapsed] = useState(false);
   return (
     <Layout>
-      <Sider theme="light" breakpoint="lg" collapsedWidth="0">
+      <Sider
+        theme="light"
+        breakpoint="lg"
+        trigger={null}
+        collapsedWidth="0"
+        collapsed={collapsed}
+      ></Sider>
+      <Sider
+        theme="light"
+        breakpoint="lg"
+        collapsedWidth="0"
+        onCollapse={(collapsed) => setCollapsed(collapsed)}
+        css={{
+          height: `calc(100vh - ${mainHeaderHeight}px)`,
+          position: 'fixed',
+          left: 0,
+          top: mainHeaderHeight,
+          zIndex: 1,
+        }}
+      >
         <Filter filters={filters} onChange={setFilters} />
       </Sider>
       <Layout>

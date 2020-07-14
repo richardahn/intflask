@@ -53,15 +53,16 @@ router.get('/', async (req, res) => {
     if (req.query.selectedFree === 'true') {
       filter.price = 0;
     }
+    const sortDirection = req.query.descending === 'false' ? 1 : -1;
     switch (req.query.sortedBy) {
       case 'popularity':
-        sort['statistics.purchases'] = -1;
+        sort['statistics.purchases'] = sortDirection;
         break;
       case 'price':
-        sort.price = -1;
+        sort.price = sortDirection;
         break;
       case 'name':
-        sort.name = -1;
+        sort.name = sortDirection;
         break;
     }
     try {

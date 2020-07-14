@@ -34,7 +34,7 @@ const { Content, Header, Footer, Sider } = Layout;
 const { Text, Title } = Typography;
 const { Option } = Select;
 
-function Item({ children, ...props }) {
+function Padding({ children, ...props }) {
   return (
     <div css={{ padding: '0 2rem' }} {...props}>
       {children}
@@ -63,6 +63,7 @@ export default function Filter({ filters, onChange }) {
     selectedTechnologies = [],
     selectedFree = false,
     sortedBy = 'popularity',
+    descending = 'true',
   } = filters;
   const onSelectedTechnologiesChange = useCallback((value) => {
     onChange((filters) => ({ ...filters, selectedTechnologies: value }));
@@ -74,10 +75,13 @@ export default function Filter({ filters, onChange }) {
   const onSortedByChange = useCallback((value) => {
     onChange((filters) => ({ ...filters, sortedBy: value }));
   }, []);
-  console.log('filters', filters);
+  const descendingChange = useCallback((value) => {
+    onChange((filters) => ({ ...filters, descending: value }));
+  }, []);
+  console.log(filters);
   return (
     <React.Fragment>
-      <Item
+      <Padding
         css={{
           display: 'flex',
           justifyContent: 'space-between',
@@ -88,33 +92,61 @@ export default function Filter({ filters, onChange }) {
         <Button size="small" onClick={() => onChange({})}>
           <Text type="secondary">Clear All</Text>
         </Button>
-      </Item>
+      </Padding>
       <Divider css={{ margin: '0.5rem 0' }} />
-      <Item>
-        <Label>Sort by</Label>
-        <Select value={sortedBy} onChange={onSortedByChange}>
-          <Option value="popularity">Popularity</Option>
-          <Option value="price">Price</Option>
-          <Option value="name">Name</Option>
-        </Select>
-      </Item>
-      <Item>
-        <Label>Technology</Label>
-        <Select
-          mode="multiple"
-          css={{ width: '100%' }}
-          onChange={onSelectedTechnologiesChange}
-          value={selectedTechnologies}
-        >
-          {allTechnologies.map((i) => (
-            <Option key={i}>{i}</Option>
-          ))}
-        </Select>
-      </Item>
-      <Item>
-        <Label inline>Free</Label>
-        <Checkbox onChange={onSelectedFreeChange} value={selectedFree} />
-      </Item>
+      <Padding>
+        <Row gutter={[0, 12]}>
+          <Col span={24}>
+            <Label>Sort by</Label>
+            <Row gutter={[0, 4]}>
+              <Col span={24}>
+                <Select
+                  value={sortedBy}
+                  onChange={onSortedByChange}
+                  css={{ width: '100%' }}
+                >
+                  <Option value="popularity">Popularity</Option>
+                  <Option value="price">Price</Option>
+                  <Option value="name">Name</Option>
+                </Select>
+              </Col>
+              <Col span={24}>
+                <Select
+                  value={descending}
+                  onChange={descendingChange}
+                  css={{ width: '100%' }}
+                >
+                  <Option value="true">Descending</Option>
+                  <Option value="false">Ascending</Option>
+                </Select>
+              </Col>
+            </Row>
+          </Col>
+          <Col span={24}>
+            <Label>Technology</Label>
+            <Select
+              mode="multiple"
+              css={{ width: '100%' }}
+              onChange={onSelectedTechnologiesChange}
+              value={selectedTechnologies}
+              placeholder="Enter tags..."
+            >
+              {allTechnologies.map((i) => (
+                <Option key={i}>{i}</Option>
+              ))}
+            </Select>
+          </Col>
+          <Col span={24}>
+            <Space>
+              <Label inline>Free</Label>
+              <Checkbox
+                onChange={onSelectedFreeChange}
+                checked={selectedFree}
+              />
+            </Space>
+          </Col>
+        </Row>
+      </Padding>
     </React.Fragment>
   );
 }

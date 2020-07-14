@@ -1,13 +1,14 @@
 /** @jsx jsx */
 import { css, jsx } from '@emotion/core';
 import styled from '@emotion/styled';
-import React from 'react';
+import React, { useState } from 'react';
 import { Button, Tooltip, Space, Popover, Badge, Layout } from 'antd';
 import {
   QuestionOutlined,
   HeartOutlined,
   CommentOutlined,
 } from '@ant-design/icons';
+import Sider from 'antd/lib/layout/Sider';
 
 const { Content, Header } = Layout;
 
@@ -94,6 +95,36 @@ export function AppFixedHeader({ top, children, ...props }) {
     </AppHeader>
   );
 }
+
+// export function FixedSider({ top = 0, children, ...props }) {
+//   const [collapsed, setCollapsed] = useState(false);
+//   return (
+//     <React.Fragment>
+//       <Sider
+//         theme="light"
+//         breakpoint="lg"
+//         trigger={null}
+//         collapsedWidth="0"
+//         collapsed={collapsed}
+//       ></Sider>
+//       <Sider
+//         theme="light"
+//         breakpoint="lg"
+//         collapsedWidth="0"
+//         onCollapse={(collapsed) => setCollapsed(collapsed)}
+//         css={{
+//           height: `calc(100vh - ${top}px)`,
+//           position: 'fixed',
+//           left: 0,
+//           top,
+//           zIndex: 1,
+//         }}
+//       >
+//         {children}
+//       </Sider>
+//     </React.Fragment>
+//   );
+// }
 
 /* Layout Values */
 export const mainHeaderHeight = 64;
