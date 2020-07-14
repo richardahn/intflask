@@ -53,6 +53,9 @@ router.get('/', async (req, res) => {
     if (req.query.selectedFree === 'true') {
       filter.price = 0;
     }
+    if (req.query.query) {
+      filter.name = new RegExp(`${req.query.query}`, 'i');
+    }
     const sortDirection = req.query.descending === 'false' ? 1 : -1;
     switch (req.query.sortedBy) {
       case 'popularity':

@@ -72,7 +72,7 @@ export default function Administrator() {
         </FloatingActionButton>
         <Divider orientation="left">Created Tutorials</Divider>
         {loadingTutorials ? (
-          <Skeleton />
+          <Skeleton active />
         ) : tutorials && tutorials.length > 0 ? (
           <TutorialList
             tutorials={tutorials}

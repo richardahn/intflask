@@ -52,7 +52,7 @@ export default function Home() {
           <Col xs={24} lg={12}>
             <Card title="Top Tutorials">
               {loadingTopTutorials ? (
-                <Skeleton />
+                <Skeleton active />
               ) : topTutorials ? (
                 topTutorials.length > 0 ? (
                   <TutorialList
@@ -70,7 +70,7 @@ export default function Home() {
           <Col xs={24} lg={12}>
             <Card title="Free Tutorials">
               {loadingFreeTutorials ? (
-                <Skeleton />
+                <Skeleton active />
               ) : freeTutorials ? (
                 freeTutorials.length > 0 ? (
                   <TutorialList

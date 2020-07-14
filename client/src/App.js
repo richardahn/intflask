@@ -43,7 +43,7 @@ export default function App() {
         <IntflaskLayout>
           <Switch>
             <Route exact path="/" component={Home} />
-            <Route exact path="/tutorials" component={Tutorials} />
+            <Route exact path="/tutorials/:query?" component={Tutorials} />
             <Route
               exact
               path="/tutorial-preview/:slug"

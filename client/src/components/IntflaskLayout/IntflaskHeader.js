@@ -105,6 +105,7 @@ function IntflaskHeader({ logoutUser, history, auth }) {
         size="large"
         placeholder="Search for a tutorial..."
         css={{ maxWidth: '400px' }}
+        onSearch={(value) => history.push(`/tutorials/${value}`)}
       />
       <Dropdown
         overlay={

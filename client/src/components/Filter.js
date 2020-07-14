@@ -53,7 +53,7 @@ function Label({ children, inline, ...props }) {
   );
 }
 
-export default function Filter({ filters, onChange }) {
+export default function Filter({ filters, onChange, onReset }) {
   // Get search value from string query in url
   const [, allTechnologies] = useApiGet('/api/technologies', {
     onError: () => message.error('Failed to load technology filters'),
@@ -78,7 +78,6 @@ export default function Filter({ filters, onChange }) {
   const descendingChange = useCallback((value) => {
     onChange((filters) => ({ ...filters, descending: value }));
   }, []);
-  console.log(filters);
   return (
     <React.Fragment>
       <Padding
@@ -89,17 +88,7 @@ export default function Filter({ filters, onChange }) {
         }}
       >
         <Label>Filter</Label>
-        <Button
-          size="small"
-          onClick={() =>
-            onChange({
-              selectedTechnologies: [],
-              selectedFree: false,
-              sortedBy: 'popularity',
-              descending: 'true',
-            })
-          }
-        >
+        <Button size="small" onClick={onReset}>
           <Text type="secondary">Clear All</Text>
         </Button>
       </Padding>

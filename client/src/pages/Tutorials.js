@@ -35,16 +35,19 @@ const { Content, Header, Footer, Sider } = Layout;
 const { Text, Title } = Typography;
 const { Option } = Select;
 
-export default function Tutorials(props) {
-  const [filters, setFilters] = useState({
+export default function Tutorials({ match }) {
+  const { query } = match.params;
+  const initialFilterState = {
     selectedTechnologies: [],
     selectedFree: false,
     sortedBy: 'popularity',
     descending: 'true',
-  });
+    query,
+  };
+  const [filters, setFilters] = useState(initialFilterState);
   const [loadingTutorials, setLoadingTutorials] = useState(true);
   const [tutorials, setTutorials] = useState(null);
-
+  console.log('filters', filters);
   useEffect(() => {
     setLoadingTutorials(true);
     axios
@@ -56,6 +59,7 @@ export default function Tutorials(props) {
       })
       .finally(() => setLoadingTutorials(false));
   }, [filters]);
+  useEffect(() => setFilters({ ...initialFilterState }), [query]);
 
   const [collapsed, setCollapsed] = useState(false);
   return (
@@ -80,13 +84,22 @@ export default function Tutorials(props) {
           zIndex: 1,
         }}
       >
-        <Filter filters={filters} onChange={setFilters} />
+        <Filter
+          filters={filters}
+          onChange={setFilters}
+          onReset={() => setFilters({ ...initialFilterState })}
+        />
       </Sider>
       <Layout>
         <Content css={{ backgroundColor: 'white', padding: '0 50px' }}>
-          <Divider orientation="left">All Tutorials</Divider>
+          <Divider orientation="left">
+            Tutorials{' '}
+            {query && (
+              <Text type="secondary">(Search results for: {query})</Text>
+            )}
+          </Divider>
           {loadingTutorials ? (
-            <Skeleton />
+            <Skeleton active />
           ) : tutorials ? (
             tutorials.length > 0 ? (
               <TutorialList

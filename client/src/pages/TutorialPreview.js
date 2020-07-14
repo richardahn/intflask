@@ -45,7 +45,7 @@ export default function TutorialPreview({ match }) {
     <AppLayout>
       {loadingTutorial ? (
         <PaddedContent>
-          <Skeleton />
+          <Skeleton active />
         </PaddedContent>
       ) : tutorial ? (
         <PaddedContent>

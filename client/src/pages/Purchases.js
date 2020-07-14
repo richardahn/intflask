@@ -33,7 +33,7 @@ export default function Purchases(props) {
     <AppLayout>
       <PaddedContent>
         {loadingPurchases ? (
-          <Skeleton />
+          <Skeleton active />
         ) : purchases ? (
           purchases.length > 0 ? (
             <React.Fragment>
