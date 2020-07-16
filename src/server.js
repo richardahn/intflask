@@ -3,6 +3,10 @@ const mongoose = require('mongoose');
 const addRoutes = require('./routes/index');
 const addMiddleware = require('./middleware');
 const connectionString = require('./config').mongoUri;
+const path = require('path');
+
+// -- Globals --
+global.appRoot = path.join(__dirname, '..');
 
 // -- Configure App --
 const app = express();

@@ -5,6 +5,7 @@ const users = require('./api/users');
 const google = require('./auth/google');
 const purchase = require('./api/purchase');
 const technologies = require('./api/technologies');
+const images = require('./content/images');
 
 module.exports = (app) => {
   app.use('/api/admin/tutorials', adminTutorials);
@@ -14,4 +15,5 @@ module.exports = (app) => {
   app.use('/api/purchased-tutorials', purchasedTutorials);
   app.use('/api/technologies', technologies);
   app.use('/auth', google);
+  app.use('/content/images', images);
 };

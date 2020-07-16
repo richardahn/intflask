@@ -44,7 +44,7 @@ export default function EditTutorial({ match }) {
       .then((response) => setTutorial(parseTutorialContent(response.data)))
       .catch((error) => {
         console.error(error);
-        message.error('Failed to get course');
+        message.error('Failed to get tutorial');
       })
       .finally(() => setLoadingPage(false));
   }, [slug]);

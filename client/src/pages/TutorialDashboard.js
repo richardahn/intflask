@@ -131,7 +131,7 @@ export default function TutorialDashboard({ match, history }) {
         <PaddedContent>
           {!tutorial.deployed && (
             <Alert
-              message="This course is not yet viewable to the public. In order to deploy, go to Settings > Deployment"
+              message="This tutorial is not yet viewable to the public. In order to deploy, go to Settings > Deployment"
               type="warning"
               closable
             />

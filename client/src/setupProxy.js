@@ -17,4 +17,11 @@ module.exports = function (app) {
       changeOrigin: true,
     }),
   );
+  app.use(
+    '/content',
+    createProxyMiddleware({
+      target: config.proxy,
+      changeOrigin: true,
+    }),
+  );
 };
