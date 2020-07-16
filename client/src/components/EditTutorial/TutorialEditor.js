@@ -110,11 +110,10 @@ export default function TutorialEditor({
                 {getName(currentPage)}
               </EditableTitle>
             </Row>
-            <Row css={{ flex: '1 1 auto' }}>
+            <Row css={{ flex: 1 }}>
               <IntflaskEditor
-                value={currentPage.content}
-                onChange={(value) => onContentChange(value)}
-                css={{ flex: 1 }}
+                value={''}
+                // onChange={(value) => onContentChange(value)}
               />
             </Row>
           </PaddedContent>

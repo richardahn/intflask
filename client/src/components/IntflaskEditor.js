@@ -6,8 +6,8 @@ import 'react-quill/dist/quill.snow.css';
 
 import React, { useState, useRef, useCallback } from 'react';
 
-import { Tooltip, Button, Divider, Modal, Upload, message, Input } from 'antd';
-import { PlusOutlined, InboxOutlined } from '@ant-design/icons';
+import { Divider, Modal, Upload, message, Input } from 'antd';
+import { InboxOutlined } from '@ant-design/icons';
 const { Dragger } = Upload;
 
 function AddImageModal({ visible, onModalVisibleChange, addImage }) {
@@ -34,14 +34,6 @@ function AddImageModal({ visible, onModalVisibleChange, addImage }) {
   };
   return (
     <div css={{ position: 'absolute', bottom: '1rem', right: '1rem' }}>
-      <Tooltip title="Add Image">
-        <Button
-          htmlType="button"
-          shape="circle"
-          icon={<PlusOutlined />}
-          onClick={() => onModalVisibleChange(true)}
-        />
-      </Tooltip>
       <Modal
         title="Add Image"
         visible={visible}
@@ -130,6 +122,19 @@ export default function IntflaskEditor({ value, onChange, ...props }) {
     <React.Fragment>
       <ReactQuill
         {...props}
+        css={css`
+          flex: 1;
+          display: flex;
+          flex-direction: column;
+          .ql-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+          }
+          .ql-editor {
+            flex: 1;
+          }
+        `}
         theme="snow"
         ref={editorRef}
         value={value}
@@ -138,14 +143,14 @@ export default function IntflaskEditor({ value, onChange, ...props }) {
           syntax: true,
           toolbar: {
             container: [
-              ['bold', 'italic', 'underline', 'strike'], // toggled buttons
+              ['bold', 'italic', 'underline', 'strike'],
               [{ align: [] }],
               [{ font: [] }, { color: [] }, { background: [] }],
               ['formula', 'link', 'image'],
               ['blockquote', 'code-block'],
-              [{ header: 1 }, { header: 2 }], // custom button values
+              [{ header: 1 }, { header: 2 }],
               [{ list: 'ordered' }, { list: 'bullet' }],
-              [{ script: 'sub' }, { script: 'super' }], // superscript/subscript
+              [{ script: 'sub' }, { script: 'super' }],
             ],
             handlers: {
               image: onImageButtonClick,
