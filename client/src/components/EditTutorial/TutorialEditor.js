@@ -57,69 +57,61 @@ export default function TutorialEditor({
   let currentPage = getCurrentPageFromSelection(tutorial, currentSelectionPath);
   const onContentChange = useCallback(
     (value) => {
-      onTutorialChange(
+      onTutorialChange((tutorial) =>
         reduceTutorialContent(tutorial, currentSelectionPath, value),
       );
     },
-    [tutorial, currentSelectionPath],
+    [currentSelectionPath],
   );
   const onPageNameChange = useCallback(
     (name) =>
-      onTutorialChange(
+      onTutorialChange((tutorial) =>
         reduceTutorialCurrentPageName(tutorial, currentSelectionPath, name),
       ),
-    [tutorial, currentSelectionPath],
+    [currentSelectionPath],
   );
-  console.log('Loaded TutorialEditor');
   return (
     <AppLayout>
-      {tutorial && (
-        <React.Fragment>
-          <TutorialEditorStatusBar saveState={saveState} />
-          <TutorialEditorSidebar
-            tutorial={tutorial}
-            currentSelectionPath={currentSelectionPath}
-            onTutorialChange={onTutorialChange}
-            onCurrentSelectionChange={setCurrentSelectionPath}
-            currentPage={currentPage}
-          />
-          <PaddedContent
-            css={{
-              marginTop: `${top}px`,
-              display: 'flex',
-              flexDirection: 'column',
-            }}
-          >
-            <Row>
-              <EditableTitle
-                level={4}
-                editable={
-                  isMain(currentPage)
-                    ? null
-                    : {
-                        onChange: (name) => {
-                          if (
-                            currentPage != null &&
-                            currentPage.name !== name
-                          ) {
-                            onPageNameChange(name);
-                          }
-                        },
+      <TutorialEditorStatusBar saveState={saveState} />
+      <TutorialEditorSidebar
+        tutorial={tutorial}
+        currentSelectionPath={currentSelectionPath}
+        onTutorialChange={onTutorialChange}
+        onCurrentSelectionChange={setCurrentSelectionPath}
+        currentPage={currentPage}
+      />
+      <PaddedContent
+        css={{
+          marginTop: `${top}px`,
+          display: 'flex',
+          flexDirection: 'column',
+        }}
+      >
+        <Row>
+          <EditableTitle
+            level={4}
+            editable={
+              isMain(currentPage)
+                ? null
+                : {
+                    onChange: (name) => {
+                      if (currentPage != null && currentPage.name !== name) {
+                        onPageNameChange(name);
                       }
-                }
-              >
-                {getName(currentPage)}
-              </EditableTitle>
-            </Row>
-            <Row css={{ flex: 1 }}>
-              <IntflaskEditor
-                value={currentPage.content}
-                onChange={onContentChange}
-              />
-            </Row>
-          </PaddedContent>
-        </React.Fragment>
-      )}
+                    },
+                  }
+            }
+          >
+            {getName(currentPage)}
+          </EditableTitle>
+        </Row>
+        <Row css={{ flex: 1 }}>
+          <IntflaskEditor
+            value={currentPage.content}
+            onChange={onContentChange}
+          />
+        </Row>
+      </PaddedContent>
     </AppLayout>
   );
 }

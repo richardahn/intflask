@@ -31,13 +31,19 @@ export default function EditTutorial({ match }) {
   const [loadingPage, setLoadingPage] = useState(true);
   const [saveState, setSaveState] = useState(saveStates.SAVED);
   const [tutorial, setTutorial] = useState(null);
-  const onTutorialChange = useCallback((newTutorial) => {
+  const onTutorialChange = useCallback((setTutorialFromPrev) => {
     setSaveState((prevState) => getNextState(prevState, saveStates.MODIFIED));
-    saveTutorial(newTutorial, (state) =>
-      setSaveState((prevState) => getNextState(prevState, state)),
-    );
-    setTutorial(newTutorial);
+    setTutorial(setTutorialFromPrev);
   }, []);
+
+  useEffect(
+    () =>
+      saveTutorial(tutorial, (state) =>
+        setSaveState((prevState) => getNextState(prevState, state)),
+      ),
+    [tutorial],
+  );
+
   useEffect(() => {
     axios
       .get(`/api/admin/tutorials/${slug}`)

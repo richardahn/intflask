@@ -4,7 +4,7 @@ import imageCompression from 'browser-image-compression';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 
-import React, { useState, useRef, useCallback } from 'react';
+import React, { useState, useRef, useCallback, useEffect } from 'react';
 
 import { Divider, Modal, Upload, message, Input } from 'antd';
 import { InboxOutlined } from '@ant-design/icons';
@@ -39,7 +39,7 @@ function AddImageModal({ visible, onModalVisibleChange, addImage }) {
         visible={visible}
         onOk={() => {
           if (imageFileName) {
-            addImage(`content/images/${imageFileName}`);
+            addImage(`/content/images/${imageFileName}`);
             message.success(`Successfully added image`);
             closeModal();
           } else if (imageUrl) {
@@ -104,7 +104,7 @@ function AddImageModal({ visible, onModalVisibleChange, addImage }) {
   );
 }
 
-export default function IntflaskEditor({ value, onChange, ...props }) {
+function IntflaskEditor({ value, onChange }) {
   const [modalVisible, setModalVisible] = useState(false);
   const editorRef = useRef(null);
   const addImageHandler = useCallback(
@@ -117,10 +117,10 @@ export default function IntflaskEditor({ value, onChange, ...props }) {
     [editorRef],
   );
   const onImageButtonClick = useCallback(() => setModalVisible(true), []);
+  console.log('loaded editor', value);
   return (
     <React.Fragment>
       <ReactQuill
-        {...props}
         css={css`
           flex: 1;
           display: flex;
@@ -165,3 +165,11 @@ export default function IntflaskEditor({ value, onChange, ...props }) {
     </React.Fragment>
   );
 }
+
+export default React.memo(
+  IntflaskEditor,
+  (
+    { value: prevValue, onChange: prevOnChange },
+    { value: nextValue, onChange: nextOnChange },
+  ) => prevValue == nextValue && prevOnChange == nextOnChange,
+);
