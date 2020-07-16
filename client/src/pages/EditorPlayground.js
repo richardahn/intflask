@@ -3,6 +3,7 @@ import { css, jsx } from '@emotion/core';
 import { AppLayout, PaddedContent } from '../styles';
 import 'draft-js/dist/Draft.css';
 import axios from 'axios';
+import imageCompression from 'browser-image-compression';
 
 import React, { Component, useState } from 'react';
 import { convertFromRaw, EditorState, RichUtils } from 'draft-js';
@@ -113,6 +114,7 @@ const initialState = {
 function ImageToolbar({ addImage }) {
   const [modalVisible, setModalVisible] = useState(false);
   const [imageUrl, setImageUrl] = useState(null);
+  const [uploadedFiles, setUploadedFiles] = useState([]);
   const [imageFileName, setImageFileName] = useState(null);
   const addImageUrl = (imageUrl) => {
     const validUrl = /^(?:(?:(?:https?|ftp):)?\/\/)(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})))(?::\d{2,5})?(?:[/?#]\S*)?$/i.test(
@@ -120,7 +122,7 @@ function ImageToolbar({ addImage }) {
     );
     if (validUrl) {
       addImage(imageUrl);
-      message.success(`added image ${imageUrl}`);
+      message.success('Successfully added image url');
       closeModal();
     } else {
       message.error('Invalid url provided');
@@ -130,6 +132,7 @@ function ImageToolbar({ addImage }) {
     setModalVisible(false);
     setImageUrl(null);
     setImageFileName(null);
+    setUploadedFiles([]);
   };
   return (
     <div css={{ position: 'absolute', bottom: '1rem', right: '1rem' }}>
@@ -147,7 +150,7 @@ function ImageToolbar({ addImage }) {
         onOk={() => {
           if (imageFileName) {
             addImage(`content/images/${imageFileName}`);
-            message.success(`added image ${imageFileName}`);
+            message.success(`Successfully added image`);
             closeModal();
           } else if (imageUrl) {
             addImageUrl(imageUrl);
@@ -168,7 +171,17 @@ function ImageToolbar({ addImage }) {
           headers={{
             Authorization: localStorage.jwtToken,
           }}
+          disabled={uploadedFiles.length === 1}
+          transformFile={(file) =>
+            imageCompression(file, {
+              maxSizeMB: 1,
+              maxWidthOrHeight: 1920,
+              useWebWorker: true,
+            })
+          }
+          fileList={uploadedFiles}
           onChange={(info) => {
+            setUploadedFiles(info.fileList);
             const { status } = info.file;
             if (status === 'done') {
               const { response } = info.file;
@@ -184,7 +197,7 @@ function ImageToolbar({ addImage }) {
             <InboxOutlined />
           </p>
           <p className="ant-upload-text">Upload an Image</p>
-          <p className="ant-upload-hint">File size may not exceed 4 MB.</p>
+          <p className="ant-upload-hint">Large images will be compressed.</p>
         </Dragger>
         <Divider>or</Divider>
         <Input
