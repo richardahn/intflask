@@ -117,7 +117,6 @@ export default function IntflaskEditor({ value, onChange, ...props }) {
     [editorRef],
   );
   const onImageButtonClick = useCallback(() => setModalVisible(true), []);
-  console.log(value);
   return (
     <React.Fragment>
       <ReactQuill
@@ -146,7 +145,7 @@ export default function IntflaskEditor({ value, onChange, ...props }) {
               ['bold', 'italic', 'underline', 'strike'],
               [{ align: [] }],
               [{ font: [] }, { color: [] }, { background: [] }],
-              ['formula', 'link', 'image'],
+              ['formula', 'link', 'image', 'video'],
               ['blockquote', 'code-block'],
               [{ header: 1 }, { header: 2 }],
               [{ list: 'ordered' }, { list: 'bullet' }],

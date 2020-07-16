@@ -73,9 +73,6 @@ export default function TutorialEditorSidebar({
   const showInnerSidebar =
     (currentSelectionPath.length === 1 && currentPage.children) ||
     currentSelectionPath.length === 2;
-
-  console.log('tut', tutorial);
-  console.log('selection', currentSelectionPath);
   return (
     tutorial != null &&
     currentSelectionPath != null && (

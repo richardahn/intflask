@@ -27,19 +27,14 @@ function processTutorialContent(tutorial, func) {
 }
 
 export function parseTutorialContent(tutorial) {
-  return processTutorialContent(tutorial, JSON.parse);
+  return processTutorialContent(tutorial, (val) => val);
 }
 export function stringifyTutorialContent(tutorial) {
-  return processTutorialContent(tutorial, JSON.stringify);
+  return processTutorialContent(tutorial, (val) => val);
 }
 
 function generateNewEditorContent() {
-  return [
-    {
-      type: 'paragraph',
-      children: [{ text: '' }],
-    },
-  ];
+  return '';
 }
 function generateNewPageGroup() {
   return {

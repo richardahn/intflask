@@ -70,6 +70,7 @@ export default function TutorialEditor({
       ),
     [tutorial, currentSelectionPath],
   );
+  console.log('Loaded TutorialEditor');
   return (
     <AppLayout>
       {tutorial && (
@@ -112,8 +113,8 @@ export default function TutorialEditor({
             </Row>
             <Row css={{ flex: 1 }}>
               <IntflaskEditor
-                value={''}
-                // onChange={(value) => onContentChange(value)}
+                value={currentPage.content}
+                onChange={onContentChange}
               />
             </Row>
           </PaddedContent>

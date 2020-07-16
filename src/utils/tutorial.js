@@ -1,12 +1,7 @@
 function getEmptyTutorialContent() {
   return {
     main: {
-      content: JSON.stringify([
-        {
-          type: 'paragraph',
-          children: [{ text: '' }],
-        },
-      ]),
+      content: '',
     },
     children: [],
   };
