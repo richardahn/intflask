@@ -10,7 +10,25 @@ import { AppLayout, PaddedContent, AppHeader } from '../styles';
 const { Content, Header, Footer, Sider } = Layout;
 const { Text, Title } = Typography;
 
+function Profile() {
+  return <h2>Profile</h2>;
+}
+function Tutorials() {
+  return <h2>Tutorials</h2>;
+}
+
 export default function Settings(props) {
+  const [selectedKey, setSelectedKey] = useState('profile');
+
+  let body;
+  switch (selectedKey) {
+    case 'profile':
+      body = <Profile />;
+      break;
+    case 'tutorials':
+      body = <Tutorials />;
+      break;
+  }
   return (
     <AppLayout>
       <AppHeader>
@@ -20,14 +38,16 @@ export default function Settings(props) {
       </AppHeader>
       <AppLayout>
         <Sider theme="light" breakpoint="lg" collapsedWidth="0">
-          <Menu mode="inline" defaultSelectedKeys={['0']}>
-            <Menu.Item key="0">Profile</Menu.Item>
-            <Menu.Item key="1">Teacher Signup</Menu.Item>
+          <Menu
+            mode="inline"
+            defaultSelectedKeys={[selectedKey]}
+            onSelect={({ key }) => setSelectedKey(key)}
+          >
+            <Menu.Item key="profile">Profile</Menu.Item>
+            <Menu.Item key="tutorials">Tutorials</Menu.Item>
           </Menu>
         </Sider>
-        <PaddedContent>
-          <h2>Profile</h2>
-        </PaddedContent>
+        <PaddedContent>{body}</PaddedContent>
       </AppLayout>
     </AppLayout>
   );
