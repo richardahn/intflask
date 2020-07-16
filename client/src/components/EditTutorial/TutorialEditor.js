@@ -1,8 +1,8 @@
 /** @jsx jsx */
 // -- General Imports --
 import { css, jsx } from '@emotion/core';
-import React, { useState, useMemo, useEffect, useCallback } from 'react';
-import { Layout, Spin, Row, Typography, Button } from 'antd';
+import React, { useState, useCallback } from 'react';
+import { Row, Typography, Button } from 'antd';
 import TutorialEditorSidebar from './TutorialEditorSidebar';
 import TutorialEditorStatusBar from './TutorialEditorStatusBar';
 import {
@@ -13,18 +13,8 @@ import {
   reduceTutorialCurrentPageName,
 } from '../../utils/tutorial';
 
-// -- Css --
-import {
-  paddedContentCss,
-  pageHeaderHeight,
-  statusBarHeight,
-  PaddedContent,
-  AppLayout,
-} from '../../styles';
+import { PaddedContent, AppLayout } from '../../styles';
 import IntflaskEditor from '../IntflaskEditor';
-import debounce from '../../utils/debounce';
-import PageSpinner from '../PageSpinner';
-const { Content } = Layout;
 const { Title, Text } = Typography;
 
 function EditableTitle({ children, ...props }) {

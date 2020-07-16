@@ -4,7 +4,7 @@ import { css, jsx } from '@emotion/core';
 import React, { useCallback, useState, useEffect, useMemo } from 'react';
 import axios from 'axios';
 import { message, Typography, Breadcrumb } from 'antd';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, Prompt } from 'react-router-dom';
 import TutorialEditor from '../components/EditTutorial/TutorialEditor';
 import { parseTutorialContent, saveTutorial } from '../utils/tutorial';
 import { HomeOutlined } from '@ant-design/icons';
@@ -36,13 +36,13 @@ export default function EditTutorial({ match }) {
     setTutorial(setTutorialFromPrev);
   }, []);
 
-  useEffect(
-    () =>
+  useEffect(() => {
+    if (tutorial) {
       saveTutorial(tutorial, (state) =>
         setSaveState((prevState) => getNextState(prevState, state)),
-      ),
-    [tutorial],
-  );
+      );
+    }
+  }, [tutorial]);
 
   useEffect(() => {
     axios
@@ -57,6 +57,10 @@ export default function EditTutorial({ match }) {
 
   return (
     <AppLayout>
+      <Prompt
+        when={saveState !== saveStates.SAVED}
+        message="You have unsaved changes, are you sure you want to leave?"
+      />
       {loadingPage ? (
         <PageSpinner />
       ) : tutorial ? (
