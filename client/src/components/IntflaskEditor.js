@@ -1,181 +1,163 @@
 /** @jsx jsx */
-// -- General Imports --
 import { css, jsx } from '@emotion/core';
-import React, { useState, useCallback, useMemo } from 'react';
-import { Slate, Editable, withReact } from 'slate-react';
-import { Editor, Transforms, Range, Point, createEditor } from 'slate';
-import { withHistory } from 'slate-history';
-import debounce from '../utils/debounce';
+import imageCompression from 'browser-image-compression';
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
 
-import { Typography, Button, Alert } from 'antd';
-import { Blockquote } from '../styles';
-import withFeedback from '../hocs/slate/withFeedback';
-const { Text, Paragraph, Title } = Typography;
+import React, { useState, useRef, useCallback } from 'react';
 
-const SHORTCUTS = {
-  '*': 'list-item',
-  '-': 'list-item',
-  '+': 'list-item',
-  '>': 'block-quote',
-  '#': 'heading-one',
-  '##': 'heading-two',
-  '###': 'heading-three',
-  '####': 'heading-four',
-  '#####': 'heading-five',
-  '######': 'heading-six',
-};
+import { Tooltip, Button, Divider, Modal, Upload, message, Input } from 'antd';
+import { PlusOutlined, InboxOutlined } from '@ant-design/icons';
+const { Dragger } = Upload;
 
-const FEEDBACK_TOP = 50;
-const FEEDBACK_WIDTH = 140;
-export default function IntflaskEditor({
-  showFeedback = false,
-  readOnly = false,
-  value,
-  onChange,
-  feedbackWidth = FEEDBACK_WIDTH,
-  feedbackTop = FEEDBACK_TOP,
-  ...props
-}) {
-  // Feedback Column
-  const renderElement = useCallback(
-    (props) =>
-      showFeedback ? (
-        React.createElement(withFeedback(Element, feedbackWidth), props)
-      ) : (
-        <Element {...props} />
-      ),
-    [showFeedback],
-  );
-  const editor = useMemo(
-    () => withShortcuts(withReact(withHistory(createEditor()))),
-    [],
-  );
+function AddImageModal({ visible, onModalVisibleChange, addImage }) {
+  const [imageUrl, setImageUrl] = useState(null);
+  const [uploadedFiles, setUploadedFiles] = useState([]);
+  const [imageFileName, setImageFileName] = useState(null);
+  const addImageUrl = (imageUrl) => {
+    const validUrl = /^(?:(?:(?:https?|ftp):)?\/\/)(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})))(?::\d{2,5})?(?:[/?#]\S*)?$/i.test(
+      imageUrl,
+    );
+    if (validUrl) {
+      addImage(imageUrl);
+      message.success('Successfully added image url');
+      closeModal();
+    } else {
+      message.error('Invalid url provided');
+    }
+  };
+  const closeModal = () => {
+    onModalVisibleChange(false);
+    setImageUrl(null);
+    setImageFileName(null);
+    setUploadedFiles([]);
+  };
   return (
-    <div
-      style={{
-        marginRight: showFeedback ? feedbackWidth : 0,
-        marginTop: showFeedback ? feedbackTop : 0,
-      }}
-      {...props}
-    >
-      <Slate
-        editor={editor}
-        value={value}
-        onChange={(newValue) => {
-          if (value != newValue) {
-            onChange(newValue);
+    <div css={{ position: 'absolute', bottom: '1rem', right: '1rem' }}>
+      <Tooltip title="Add Image">
+        <Button
+          htmlType="button"
+          shape="circle"
+          icon={<PlusOutlined />}
+          onClick={() => onModalVisibleChange(true)}
+        />
+      </Tooltip>
+      <Modal
+        title="Add Image"
+        visible={visible}
+        onOk={() => {
+          if (imageFileName) {
+            addImage(`content/images/${imageFileName}`);
+            message.success(`Successfully added image`);
+            closeModal();
+          } else if (imageUrl) {
+            addImageUrl(imageUrl);
+          } else {
+            message.error('No image provided');
           }
         }}
+        onCancel={() => {
+          closeModal();
+        }}
       >
-        <Editable
-          renderElement={renderElement}
-          placeholder="Write something..."
-          spellCheck="false"
-          readOnly={readOnly}
-          css={{ height: '100%' }}
+        <Dragger
+          name="image-upload"
+          action="/content/images"
+          method="post"
+          multiple={false}
+          name="image"
+          headers={{
+            Authorization: localStorage.jwtToken,
+          }}
+          disabled={uploadedFiles.length === 1}
+          transformFile={(file) =>
+            imageCompression(file, {
+              maxSizeMB: 1,
+              maxWidthOrHeight: 1920,
+              useWebWorker: true,
+            })
+          }
+          fileList={uploadedFiles}
+          onChange={(info) => {
+            setUploadedFiles(info.fileList);
+            const { status } = info.file;
+            if (status === 'done') {
+              const { response } = info.file;
+              message.success('Successfully uploaded image');
+              setImageFileName(response);
+            } else if (status === 'error') {
+              console.error('Upload Failure: ', info);
+              message.error('Failed to upload file');
+            }
+          }}
+        >
+          <p className="ant-upload-drag-icon">
+            <InboxOutlined />
+          </p>
+          <p className="ant-upload-text">Upload an Image</p>
+          <p className="ant-upload-hint">Large images will be compressed.</p>
+        </Dragger>
+        <Divider>or</Divider>
+        <Input
+          placeholder="Enter image url..."
+          value={imageUrl}
+          onChange={(event) => setImageUrl(event.target.value)}
+          onPressEnter={(event) => {
+            addImageUrl(imageUrl);
+            event.preventDefault();
+          }}
         />
-      </Slate>
+      </Modal>
     </div>
   );
 }
 
-const withShortcuts = (editor) => {
-  const { deleteBackward, insertText } = editor;
-
-  editor.insertText = (text) => {
-    const { selection } = editor;
-
-    if (text === ' ' && selection && Range.isCollapsed(selection)) {
-      const { anchor } = selection;
-      const block = Editor.above(editor, {
-        match: (n) => Editor.isBlock(editor, n),
-      });
-      const path = block ? block[1] : [];
-      const start = Editor.start(editor, path);
-      const range = { anchor, focus: start };
-      const beforeText = Editor.string(editor, range);
-      const type = SHORTCUTS[beforeText];
-
-      if (type) {
-        Transforms.select(editor, range);
-        Transforms.delete(editor);
-        Transforms.setNodes(
-          editor,
-          { type },
-          { match: (n) => Editor.isBlock(editor, n) },
-        );
-
-        if (type === 'list-item') {
-          const list = { type: 'bulleted-list', children: [] };
-          Transforms.wrapNodes(editor, list, {
-            match: (n) => n.type === 'list-item',
-          });
-        }
-
-        return;
-      }
-    }
-
-    insertText(text);
-  };
-
-  editor.deleteBackward = (...args) => {
-    const { selection } = editor;
-
-    if (selection && Range.isCollapsed(selection)) {
-      const match = Editor.above(editor, {
-        match: (n) => Editor.isBlock(editor, n),
-      });
-
-      if (match) {
-        const [block, path] = match;
-        const start = Editor.start(editor, path);
-
-        if (
-          block.type !== 'paragraph' &&
-          Point.equals(selection.anchor, start)
-        ) {
-          Transforms.setNodes(editor, { type: 'paragraph' });
-
-          if (block.type === 'list-item') {
-            Transforms.unwrapNodes(editor, {
-              match: (n) => n.type === 'bulleted-list',
-              split: true,
-            });
-          }
-
-          return;
-        }
-      }
-
-      deleteBackward(...args);
-    }
-  };
-
-  return editor;
-};
-
-const Element = ({ attributes, children, element }) => {
-  switch (element.type) {
-    case 'block-quote':
-      return <Blockquote {...attributes}>{children}</Blockquote>;
-    case 'bulleted-list':
-      return <ul {...attributes}>{children}</ul>;
-    case 'heading-one':
-      return <h1 {...attributes}>{children}</h1>;
-    case 'heading-two':
-      return <h2 {...attributes}>{children}</h2>;
-    case 'heading-three':
-      return <h3 {...attributes}>{children}</h3>;
-    case 'heading-four':
-      return <h4 {...attributes}>{children}</h4>;
-    case 'heading-five':
-      return <h5 {...attributes}>{children}</h5>;
-    case 'heading-six':
-      return <h6 {...attributes}>{children}</h6>;
-    case 'list-item':
-      return <li {...attributes}>{children}</li>;
-    default:
-      return <p {...attributes}>{children}</p>;
-  }
-};
+export default function IntflaskEditor({ value, onChange, ...props }) {
+  const [modalVisible, setModalVisible] = useState(false);
+  const editorRef = useRef(null);
+  const addImageHandler = useCallback(
+    (url) => {
+      const editor = editorRef.current.getEditor();
+      editor.focus();
+      const range = editor.getSelection();
+      editor.insertEmbed(range.index, 'image', url, 'user');
+    },
+    [editorRef],
+  );
+  const onImageButtonClick = useCallback(() => setModalVisible(true), []);
+  console.log(value);
+  return (
+    <React.Fragment>
+      <ReactQuill
+        {...props}
+        theme="snow"
+        ref={editorRef}
+        value={value}
+        onChange={onChange}
+        modules={{
+          syntax: true,
+          toolbar: {
+            container: [
+              ['bold', 'italic', 'underline', 'strike'], // toggled buttons
+              [{ align: [] }],
+              [{ font: [] }, { color: [] }, { background: [] }],
+              ['formula', 'link', 'image'],
+              ['blockquote', 'code-block'],
+              [{ header: 1 }, { header: 2 }], // custom button values
+              [{ list: 'ordered' }, { list: 'bullet' }],
+              [{ script: 'sub' }, { script: 'super' }], // superscript/subscript
+            ],
+            handlers: {
+              image: onImageButtonClick,
+            },
+          },
+        }}
+      />
+      <AddImageModal
+        visible={modalVisible}
+        onModalVisibleChange={setModalVisible}
+        addImage={addImageHandler}
+      />
+    </React.Fragment>
+  );
+}
