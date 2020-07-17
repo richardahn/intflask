@@ -54,7 +54,7 @@ export default function TutorialEditor({
   const [currentSelectionPath, setCurrentSelectionPath] = useState([]);
   let currentPage = getCurrentPageFromSelection(tutorial, currentSelectionPath);
   const onContentChange = useCallback(
-    (value, _, source, editor) => {
+    (_, __, source, editor) => {
       if (source === 'api') {
         return;
       }

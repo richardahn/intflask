@@ -4,7 +4,13 @@ import imageCompression from 'browser-image-compression';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 
-import React, { useState, useRef, useCallback, useEffect } from 'react';
+import React, {
+  useState,
+  useRef,
+  useCallback,
+  useEffect,
+  useImperativeHandle,
+} from 'react';
 
 import { Divider, Modal, Upload, message, Input } from 'antd';
 import { InboxOutlined } from '@ant-design/icons';
@@ -104,16 +110,23 @@ function AddImageModal({ visible, onModalVisibleChange, addImage }) {
   );
 }
 
-function IntflaskEditor({ value, onChange }, ref) {
+function IntflaskEditor({ onChange }, ref) {
   const [modalVisible, setModalVisible] = useState(false);
+  const quillRef = useRef();
+  useImperativeHandle(ref, () => ({
+    getEditor: () => quillRef.current.getEditor(),
+  }));
   const addImageHandler = useCallback(
     (url) => {
-      const editor = ref.current.getEditor();
-      editor.focus();
-      const range = editor.getSelection();
-      editor.insertEmbed(range.index, 'image', url, 'user');
+      if (quillRef.current) {
+        console.log('ref', quillRef);
+        const editor = quillRef.current.getEditor();
+        editor.focus();
+        const range = editor.getSelection();
+        editor.insertEmbed(range.index, 'image', url, 'user');
+      }
     },
-    [ref],
+    [quillRef],
   );
   const onImageButtonClick = useCallback(() => setModalVisible(true), []);
   return (
@@ -133,7 +146,7 @@ function IntflaskEditor({ value, onChange }, ref) {
           }
         `}
         theme="snow"
-        ref={ref}
+        ref={quillRef}
         onChange={onChange}
         modules={{
           syntax: true,
