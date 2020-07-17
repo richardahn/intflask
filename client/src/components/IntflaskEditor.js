@@ -169,8 +169,6 @@ export default React.memo(
     (
       { value: prevValue, onChange: prevOnChange },
       { value: nextValue, onChange: nextOnChange },
-    ) => {
-      return prevValue == nextValue && prevOnChange == nextOnChange;
-    },
+    ) => prevValue == nextValue && prevOnChange == nextOnChange,
   ),
 );

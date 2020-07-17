@@ -21,6 +21,7 @@ import TutorialList, {
   PurchasedTutorialListItem,
 } from '../components/TutorialList';
 import { useApiGet } from '../hooks/useApi';
+import CenteredContent from '../components/CenteredContent';
 
 const { Content, Header, Footer, Sider } = Layout;
 const { Text, Title } = Typography;
@@ -31,25 +32,29 @@ export default function Purchases(props) {
   });
   return (
     <AppLayout>
-      <PaddedContent>
-        {loadingPurchases ? (
+      {loadingPurchases ? (
+        <PaddedContent>
           <Skeleton active />
-        ) : purchases ? (
-          purchases.length > 0 ? (
-            <React.Fragment>
-              <Divider orientation="left">Purchased Tutorials</Divider>
-              <TutorialList
-                tutorials={purchases}
-                itemRenderer={PurchasedTutorialListItem}
-              />
-            </React.Fragment>
-          ) : (
-            <Empty description="No purchased tutorials" />
-          )
+        </PaddedContent>
+      ) : purchases ? (
+        purchases.length > 0 ? (
+          <PaddedContent>
+            <Divider orientation="left">Purchased Tutorials</Divider>
+            <TutorialList
+              tutorials={purchases}
+              itemRenderer={PurchasedTutorialListItem}
+            />
+          </PaddedContent>
         ) : (
+          <CenteredContent>
+            <Empty description="No purchased tutorials" />
+          </CenteredContent>
+        )
+      ) : (
+        <CenteredContent>
           <Empty description="Could not fetch purchased tutorials" />
-        )}
-      </PaddedContent>
+        </CenteredContent>
+      )}
     </AppLayout>
   );
 }

@@ -44,6 +44,13 @@ export default function TutorialEditor({
   saveState,
 }) {
   const quillRef = useRef(null);
+  const setQuillRef = useCallback((ref) => {
+    if (ref) {
+      const editor = ref.getEditor();
+      editor.root.setAttribute('spellcheck', false);
+      quillRef.current = ref;
+    }
+  }, []);
   const [currentSelectionPath, setCurrentSelectionPath] = useState([]);
   let currentPage = getCurrentPageFromSelection(tutorial, currentSelectionPath);
   const onContentChange = useCallback(
@@ -51,12 +58,6 @@ export default function TutorialEditor({
       if (source === 'api') {
         return;
       }
-      console.log(
-        'changing content for, ',
-        currentPage,
-        currentSelectionPath,
-        value,
-      );
       onTutorialChange(
         reduceTutorialContent(tutorial, currentSelectionPath, value),
       );
@@ -65,7 +66,6 @@ export default function TutorialEditor({
   );
   useEffect(() => {
     if (quillRef) {
-      console.log('effect for', quillRef, currentPage, currentPage.content);
       const editor = quillRef.current.getEditor();
       editor.clipboard.dangerouslyPasteHTML(currentPage.content);
     }
@@ -88,6 +88,7 @@ export default function TutorialEditor({
         currentPage={currentPage}
       />
       <PaddedContent
+        x={1.5}
         css={{
           marginTop: `${top}px`,
           display: 'flex',
@@ -113,7 +114,7 @@ export default function TutorialEditor({
           </EditableTitle>
         </Row>
         <Row css={{ flex: 1 }}>
-          <IntflaskEditor onChange={onContentChange} ref={quillRef} />
+          <IntflaskEditor onChange={onContentChange} ref={setQuillRef} />
         </Row>
       </PaddedContent>
     </AppLayout>

@@ -70,9 +70,18 @@ export const Blockquote = styled.blockquote`
   padding-left: 1.5rem;
   border-left: 5px solid #ee6e73;
 `;
-export const PaddedContent = styled(Content)`
-  padding: 0 3rem;
-`;
+export function PaddedContent({ x = 3, children, ...props }) {
+  return (
+    <Content
+      css={{
+        padding: `0 ${x}rem`,
+      }}
+      {...props}
+    >
+      {children}
+    </Content>
+  );
+}
 export const AppLayout = styled(Layout)`
   background-color: white;
 `;

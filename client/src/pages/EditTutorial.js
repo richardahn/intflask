@@ -3,7 +3,7 @@
 import { css, jsx } from '@emotion/core';
 import React, { useCallback, useState, useEffect, useMemo } from 'react';
 import axios from 'axios';
-import { message, Typography, Breadcrumb } from 'antd';
+import { message, Typography, Breadcrumb, Layout } from 'antd';
 import { Link as RouterLink, Prompt } from 'react-router-dom';
 import TutorialEditor from '../components/EditTutorial/TutorialEditor';
 import { parseTutorialContent, saveTutorial } from '../utils/tutorial';
@@ -25,6 +25,7 @@ import ErrorContent from '../components/ErrorContent';
 import saveStates, { getNextState } from '../enums/saveStates';
 
 const { Title } = Typography;
+const { Content } = Layout;
 
 export default function EditTutorial({ match }) {
   const { slug } = match.params;
@@ -64,7 +65,7 @@ export default function EditTutorial({ match }) {
       {loadingPage ? (
         <PageSpinner />
       ) : tutorial ? (
-        <React.Fragment>
+        <Content css={{ display: 'flex' }}>
           <AppFixedHeader top={mainHeaderHeight} css={{ height: 'initial' }}>
             <Breadcrumb css={{ marginBottom: '1rem' }}>
               <Breadcrumb.Item>
@@ -89,7 +90,7 @@ export default function EditTutorial({ match }) {
             onTutorialChange={onTutorialChange}
             saveState={saveState}
           />
-        </React.Fragment>
+        </Content>
       ) : (
         <ErrorContent>
           You are not authorized to edit this tutorial

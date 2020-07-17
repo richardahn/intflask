@@ -22,6 +22,7 @@ import TeacherSignup from './pages/TeacherSignup';
 import TutorialDashboard from './pages/TutorialDashboard';
 import TutorialPreview from './pages/TutorialPreview';
 import Purchases from './pages/Purchases';
+import ViewTutorial from './pages/ViewTutorial';
 
 import EditorPlayground from './pages/EditorPlayground';
 
@@ -68,6 +69,11 @@ export default function App() {
               exact
               path="/admin/edit-tutorial/:slug"
               component={EditTutorial}
+            />
+            <PrivateRoute
+              exact
+              path="/view-tutorial/:slug"
+              component={ViewTutorial}
             />
             <PrivateRoute
               exact
