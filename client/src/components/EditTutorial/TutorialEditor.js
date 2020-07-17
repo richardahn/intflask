@@ -71,6 +71,7 @@ export default function TutorialEditor({
   useEffect(() => {
     if (quillRef) {
       const editor = quillRef.current.getEditor();
+      editor.setContents([]);
       editor.setContents(currentPage.content);
       editor.history.clear();
     }
