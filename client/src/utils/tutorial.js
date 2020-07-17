@@ -34,7 +34,7 @@ export function stringifyTutorialContent(tutorial) {
 }
 
 function generateNewEditorContent() {
-  return '';
+  return '{}';
 }
 function generateNewPageGroup() {
   return {

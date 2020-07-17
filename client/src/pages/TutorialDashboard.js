@@ -96,12 +96,19 @@ function StatisticsTab() {
           <Point position="year*value" />
         </Chart>
       </Col>
-      <Col sm={12} xs={24}>
-        <Statistic title="Purchases" value={3} />
+      <Col sm={8} xs={24}>
+        <Statistic title="Total Purchases" value={120} />
       </Col>
-      <Col sm={12} xs={24}>
+      <Col sm={8} xs={24}>
         <Statistic
-          title="Total money earned"
+          title="Average Purchases Per Month"
+          value={5}
+          precision={1}
+        />
+      </Col>
+      <Col sm={8} xs={24}>
+        <Statistic
+          title="Total Money Earned"
           prefix="$"
           value={53.4}
           precision={2}
