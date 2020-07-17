@@ -72,6 +72,7 @@ export default function TutorialEditor({
     if (quillRef) {
       const editor = quillRef.current.getEditor();
       editor.setContents(currentPage.content);
+      editor.history.clear();
     }
   }, [currentSelectionPath]);
   const onPageNameChange = useCallback(
