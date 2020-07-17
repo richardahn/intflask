@@ -27,10 +27,10 @@ function processTutorialContent(tutorial, func) {
 }
 
 export function parseTutorialContent(tutorial) {
-  return processTutorialContent(tutorial, (val) => val);
+  return processTutorialContent(tutorial, JSON.parse);
 }
 export function stringifyTutorialContent(tutorial) {
-  return processTutorialContent(tutorial, (val) => val);
+  return processTutorialContent(tutorial, JSON.stringify);
 }
 
 function generateNewEditorContent() {

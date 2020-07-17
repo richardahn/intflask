@@ -1,7 +1,7 @@
 function getEmptyTutorialContent() {
   return {
     main: {
-      content: '',
+      content: '{}',
     },
     children: [],
   };

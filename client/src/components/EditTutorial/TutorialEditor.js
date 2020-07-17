@@ -54,12 +54,16 @@ export default function TutorialEditor({
   const [currentSelectionPath, setCurrentSelectionPath] = useState([]);
   let currentPage = getCurrentPageFromSelection(tutorial, currentSelectionPath);
   const onContentChange = useCallback(
-    (value, _, source) => {
+    (value, _, source, editor) => {
       if (source === 'api') {
         return;
       }
       onTutorialChange(
-        reduceTutorialContent(tutorial, currentSelectionPath, value),
+        reduceTutorialContent(
+          tutorial,
+          currentSelectionPath,
+          editor.getContents(),
+        ),
       );
     },
     [tutorial, currentSelectionPath, currentPage],
@@ -67,7 +71,7 @@ export default function TutorialEditor({
   useEffect(() => {
     if (quillRef) {
       const editor = quillRef.current.getEditor();
-      editor.clipboard.dangerouslyPasteHTML(currentPage.content);
+      editor.setContents(currentPage.content);
     }
   }, [currentSelectionPath]);
   const onPageNameChange = useCallback(
