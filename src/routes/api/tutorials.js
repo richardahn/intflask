@@ -95,6 +95,7 @@ router.get('/', async (req, res) => {
 
 router.get('/:slug', async (req, res) => {
   try {
+    const projection = {};
     const tutorial = await Tutorial.findOne({
       deployed: true,
       slug: req.params.slug,
@@ -105,6 +106,9 @@ router.get('/:slug', async (req, res) => {
 
     const { content, ...outlinedTutorial } = tutorial;
     outlinedTutorial.outline = convertTutorialContentToOutline(content);
+    if (req.query.content && req.query.content === 'true') {
+      outlinedTutorial.content = content;
+    }
     res.json(outlinedTutorial);
   } catch (error) {
     console.error(error);

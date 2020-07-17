@@ -86,6 +86,7 @@ export function getName(page) {
   return isMain(page) ? 'Main' : page.name;
 }
 export function getCurrentPageFromSelection(tutorial, selectionPath) {
+  console.log('tutorial', tutorial);
   let currentPage = null;
   if (selectionPath.length === 0) {
     currentPage = tutorial.content.main;
