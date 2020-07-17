@@ -15,6 +15,7 @@ import {
   reducePage,
   reduceSubpage,
 } from '../../utils/tutorial';
+import { arrayEquals } from '../../utils/array';
 
 // -- Redux --
 import { connect } from 'react-redux';
@@ -143,7 +144,11 @@ export default function TutorialEditorSidebar({
                 key="-1"
                 css={{ fontWeight: 'bold' }}
                 icon={<HomeOutlined />}
-                onClick={() => onCurrentSelectionChange([])}
+                onClick={() => {
+                  if (!arrayEquals(currentSelectionPath, [])) {
+                    onCurrentSelectionChange([]);
+                  }
+                }}
               >
                 Main
               </Menu.Item>
@@ -153,7 +158,11 @@ export default function TutorialEditorSidebar({
                   <Menu.Item
                     key={i}
                     css={{ fontWeight: 'bold' }}
-                    onClick={() => onCurrentSelectionChange([i])}
+                    onClick={() => {
+                      if (!arrayEquals(currentSelectionPath, [i])) {
+                        onCurrentSelectionChange([i]);
+                      }
+                    }}
                     icon={
                       outer.children != null ? (
                         <FolderOutlined />
@@ -200,9 +209,19 @@ export default function TutorialEditorSidebar({
                   ].children.map((inner, j) => (
                     <Menu.Item
                       key={j}
-                      onClick={() =>
-                        onCurrentSelectionChange([currentSelectionPath[0], j])
-                      }
+                      onClick={() => {
+                        if (
+                          !arrayEquals(currentSelectionPath, [
+                            currentSelectionPath[0],
+                            j,
+                          ])
+                        ) {
+                          onCurrentSelectionChange([
+                            currentSelectionPath[0],
+                            j,
+                          ]);
+                        }
+                      }}
                     >
                       {inner.name}
                     </Menu.Item>

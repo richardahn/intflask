@@ -31,9 +31,9 @@ export default function EditTutorial({ match }) {
   const [loadingPage, setLoadingPage] = useState(true);
   const [saveState, setSaveState] = useState(saveStates.SAVED);
   const [tutorial, setTutorial] = useState(null);
-  const onTutorialChange = useCallback((setTutorialFromPrev) => {
+  const onTutorialChange = useCallback((tutorial) => {
     setSaveState((prevState) => getNextState(prevState, saveStates.MODIFIED));
-    setTutorial(setTutorialFromPrev);
+    setTutorial(tutorial);
   }, []);
 
   useEffect(() => {

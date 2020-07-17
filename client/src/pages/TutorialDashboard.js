@@ -22,6 +22,7 @@ import {
   Checkbox,
   InputNumber,
   Alert,
+  Divider,
 } from 'antd';
 import { PaddedContent, AppLayout, AppHeader } from '../styles';
 import { Link as RouterLink } from 'react-router-dom';
@@ -35,18 +36,92 @@ import TutorialDescriptionForm from '../components/TutorialDescriptionForm';
 import PageSpinner from '../components/PageSpinner';
 import ErrorContent from '../components/ErrorContent';
 
+import { Chart, Line, Point, Tooltip, Legend } from 'bizcharts';
+
 const { Content, Header } = Layout;
 const { Title } = Typography;
 const { TabPane } = Tabs;
 
-// -- Helpers --
+function StatisticsTab() {
+  const data = [
+    {
+      year: '1991',
+      value: 3,
+    },
+    {
+      year: '1992',
+      value: 4,
+    },
+    {
+      year: '1993',
+      value: 3.5,
+    },
+    {
+      year: '1994',
+      value: 5,
+    },
+    {
+      year: '1995',
+      value: 4.9,
+    },
+    {
+      year: '1996',
+      value: 6,
+    },
+    {
+      year: '1997',
+      value: 7,
+    },
+    {
+      year: '1998',
+      value: 9,
+    },
+    {
+      year: '1999',
+      value: 13,
+    },
+  ];
+  return (
+    <Row gutter={16}>
+      <Col span={24}>
+        <Divider orientation="left">Purchase History</Divider>
+        <Chart
+          padding={[10, 20, 50, 40]}
+          autoFit
+          height={500}
+          data={data}
+          scale={{ value: { min: 0 } }}
+        >
+          <Line position="year*value" />
+          <Point position="year*value" />
+        </Chart>
+      </Col>
+      <Col sm={12} xs={24}>
+        <Statistic title="Purchases" value={3} />
+      </Col>
+      <Col sm={12} xs={24}>
+        <Statistic
+          title="Total money earned"
+          prefix="$"
+          value={53.4}
+          precision={2}
+        />
+      </Col>
+
+      <Col lg={8} xs={24}>
+        <Divider orientation="left">User Statistics</Divider>
+        <Statistic title="Average stay time" value={3} />
+      </Col>
+    </Row>
+  );
+}
+
 export default function TutorialDashboard({ match, history }) {
   const { slug } = match.params;
   const [loadingPage, setLoadingPage] = useState(true);
   const [savingForm, setSavingForm] = useState(false);
   const [savingDeploy, setSavingDeploy] = useState(false);
   const [tutorial, setTutorial] = useState(null);
-  console.log(tutorial);
 
   const submitTutorialDescription = useCallback(
     (formValues) => {
@@ -145,14 +220,7 @@ export default function TutorialDashboard({ match, history }) {
             }
           >
             <TabPane tab="Statistics" key="1">
-              <Row gutter={16}>
-                <Col span={8}>
-                  <Statistic title="Purchases" value={3} />
-                </Col>
-                <Col span={8}>
-                  <Statistic title="Average stay time" value={3} />
-                </Col>
-              </Row>
+              <StatisticsTab />
             </TabPane>
             <TabPane tab="Settings" key="2">
               <Card title="General" css={{ marginBottom: '1rem' }}>

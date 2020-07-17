@@ -104,20 +104,18 @@ function AddImageModal({ visible, onModalVisibleChange, addImage }) {
   );
 }
 
-function IntflaskEditor({ value, onChange }) {
+function IntflaskEditor({ value, onChange }, ref) {
   const [modalVisible, setModalVisible] = useState(false);
-  const editorRef = useRef(null);
   const addImageHandler = useCallback(
     (url) => {
-      const editor = editorRef.current.getEditor();
+      const editor = ref.current.getEditor();
       editor.focus();
       const range = editor.getSelection();
       editor.insertEmbed(range.index, 'image', url, 'user');
     },
-    [editorRef],
+    [ref],
   );
   const onImageButtonClick = useCallback(() => setModalVisible(true), []);
-  console.log('loaded editor', value);
   return (
     <React.Fragment>
       <ReactQuill
@@ -135,8 +133,7 @@ function IntflaskEditor({ value, onChange }) {
           }
         `}
         theme="snow"
-        ref={editorRef}
-        value={value}
+        ref={ref}
         onChange={onChange}
         modules={{
           syntax: true,
@@ -167,9 +164,13 @@ function IntflaskEditor({ value, onChange }) {
 }
 
 export default React.memo(
-  IntflaskEditor,
-  (
-    { value: prevValue, onChange: prevOnChange },
-    { value: nextValue, onChange: nextOnChange },
-  ) => prevValue == nextValue && prevOnChange == nextOnChange,
+  React.forwardRef(
+    IntflaskEditor,
+    (
+      { value: prevValue, onChange: prevOnChange },
+      { value: nextValue, onChange: nextOnChange },
+    ) => {
+      return prevValue == nextValue && prevOnChange == nextOnChange;
+    },
+  ),
 );

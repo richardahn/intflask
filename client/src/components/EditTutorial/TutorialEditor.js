@@ -1,7 +1,7 @@
 /** @jsx jsx */
 // -- General Imports --
 import { css, jsx } from '@emotion/core';
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useRef, useEffect } from 'react';
 import { Row, Typography, Button } from 'antd';
 import TutorialEditorSidebar from './TutorialEditorSidebar';
 import TutorialEditorStatusBar from './TutorialEditorStatusBar';
@@ -43,22 +43,39 @@ export default function TutorialEditor({
   onTutorialChange,
   saveState,
 }) {
+  const quillRef = useRef(null);
   const [currentSelectionPath, setCurrentSelectionPath] = useState([]);
   let currentPage = getCurrentPageFromSelection(tutorial, currentSelectionPath);
   const onContentChange = useCallback(
-    (value) => {
-      onTutorialChange((tutorial) =>
+    (value, _, source) => {
+      if (source === 'api') {
+        return;
+      }
+      console.log(
+        'changing content for, ',
+        currentPage,
+        currentSelectionPath,
+        value,
+      );
+      onTutorialChange(
         reduceTutorialContent(tutorial, currentSelectionPath, value),
       );
     },
-    [currentSelectionPath],
+    [tutorial, currentSelectionPath, currentPage],
   );
+  useEffect(() => {
+    if (quillRef) {
+      console.log('effect for', quillRef, currentPage, currentPage.content);
+      const editor = quillRef.current.getEditor();
+      editor.clipboard.dangerouslyPasteHTML(currentPage.content);
+    }
+  }, [currentSelectionPath]);
   const onPageNameChange = useCallback(
     (name) =>
-      onTutorialChange((tutorial) =>
+      onTutorialChange(
         reduceTutorialCurrentPageName(tutorial, currentSelectionPath, name),
       ),
-    [currentSelectionPath],
+    [tutorial, currentSelectionPath],
   );
   return (
     <AppLayout>
@@ -96,10 +113,7 @@ export default function TutorialEditor({
           </EditableTitle>
         </Row>
         <Row css={{ flex: 1 }}>
-          <IntflaskEditor
-            value={currentPage.content}
-            onChange={onContentChange}
-          />
+          <IntflaskEditor onChange={onContentChange} ref={quillRef} />
         </Row>
       </PaddedContent>
     </AppLayout>
