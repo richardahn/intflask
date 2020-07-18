@@ -43,13 +43,7 @@ function IconText({ icon, text }) {
 export function AdminTutorialListItem({ tutorial }) {
   console.log(tutorial);
   return (
-    <List.Item
-      key={tutorial.slug}
-      actions={[
-        <IconText icon={StarOutlined} text="156" key="list-vertical-star-o" />,
-        <IconText icon={LikeOutlined} text="156" key="list-vertical-like-o" />,
-      ]}
-    >
+    <List.Item key={tutorial.slug}>
       <List.Item.Meta
         css={css`
           .ant-list-item-meta-title {
@@ -92,16 +86,7 @@ export function AdminTutorialListItem({ tutorial }) {
 
 export function PurchasedTutorialListItem({ tutorial }) {
   return (
-    <List.Item
-      key={tutorial.slug}
-      actions={[
-        <IconText
-          icon={StarOutlined}
-          text={tutorial.statistics?.purchases}
-          key="list-vertical-star-o"
-        />,
-      ]}
-    >
+    <List.Item key={tutorial.slug}>
       <List.Item.Meta
         css={css`
           .ant-list-item-meta-title {
@@ -126,16 +111,7 @@ export function PurchasedTutorialListItem({ tutorial }) {
 
 export function TutorialListItem({ tutorial }) {
   return (
-    <List.Item
-      key={tutorial.slug}
-      actions={[
-        <IconText
-          icon={StarOutlined}
-          text={tutorial.statistics?.purchases}
-          key="list-vertical-star-o"
-        />,
-      ]}
-    >
+    <List.Item key={tutorial.slug}>
       <List.Item.Meta
         css={css`
           .ant-list-item-meta-title {

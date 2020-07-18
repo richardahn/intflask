@@ -11,12 +11,12 @@ const { Content, Header, Footer, Sider } = Layout;
 const { Text, Title } = Typography;
 
 function Profile() {
-  return <h2>Profile</h2>;
+  return (
+    <div>
+      <h2>Profile</h2>
+    </div>
+  );
 }
-function Tutorials() {
-  return <h2>Tutorials</h2>;
-}
-
 export default function Settings(props) {
   const [selectedKey, setSelectedKey] = useState('profile');
 
@@ -24,9 +24,6 @@ export default function Settings(props) {
   switch (selectedKey) {
     case 'profile':
       body = <Profile />;
-      break;
-    case 'tutorials':
-      body = <Tutorials />;
       break;
   }
   return (
@@ -44,7 +41,6 @@ export default function Settings(props) {
             onSelect={({ key }) => setSelectedKey(key)}
           >
             <Menu.Item key="profile">Profile</Menu.Item>
-            <Menu.Item key="tutorials">Tutorials</Menu.Item>
           </Menu>
         </Sider>
         <PaddedContent>{body}</PaddedContent>
