@@ -86,7 +86,7 @@ function binPurchases(purchases) {
 function StatisticsTab({ tutorial }) {
   const purchases = binPurchases(tutorial.purchases);
   const totalPurchases = tutorial.purchases.length;
-  const totalMoneyEarned = tutorial.purchases.reduce(
+  const totalRevenue = tutorial.purchases.reduce(
     (total, { price }) => total + price,
     0,
   );
@@ -95,7 +95,7 @@ function StatisticsTab({ tutorial }) {
       <Col span={24}>
         <Divider orientation="left">Purchase History</Divider>
         <Chart
-          padding={[10, 20, 50, 40]}
+          padding={[10, 40, 50, 40]}
           autoFit
           height={400}
           data={purchases}
@@ -113,9 +113,9 @@ function StatisticsTab({ tutorial }) {
       </Col>
       <Col sm={12} xs={24}>
         <Statistic
-          title="Total Money Earned"
+          title="Total Revenue"
           prefix="$"
-          value={totalMoneyEarned}
+          value={totalRevenue}
           precision={2}
         />
       </Col>

@@ -204,7 +204,11 @@ export default function TutorialPreview({ match }) {
               <h2 css={{ display: 'inline', marginRight: '0.5rem' }}>
                 {tutorial.name}
               </h2>
-              <Text type="secondary">200+ people enrolled</Text>
+              <Text type="secondary">
+                ({tutorial.purchases.length}{' '}
+                {tutorial.purchases.length === 1 ? 'person' : 'people'}{' '}
+                purchased)
+              </Text>
             </div>
             {tutorial.purchased ? (
               <RouterLink to={`/view-tutorial/${slug}`}>
