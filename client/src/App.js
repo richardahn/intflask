@@ -16,7 +16,6 @@ import CreateTutorial from './pages/CreateTutorial';
 import EditTutorial from './pages/EditTutorial';
 import Home from './pages/Home';
 import Login from './pages/Login';
-import Settings from './pages/Settings';
 import Signup from './pages/Signup';
 import TeacherSignup from './pages/TeacherSignup';
 import TutorialDashboard from './pages/TutorialDashboard';
@@ -52,7 +51,6 @@ export default function App() {
             />
             <NonAuthenticatedRoute exact path="/login" component={Login} />
             <NonAuthenticatedRoute exact path="/signup" component={Signup} />
-            <PrivateRoute exact path="/settings" component={Settings} />
             <PrivateRoute exact path="/purchases" component={Purchases} />
             <PrivateRoute
               exact
