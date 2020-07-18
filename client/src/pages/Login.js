@@ -103,9 +103,9 @@ function LoginForm({ onLogin, serversideValidationErrors }) {
           <Form.Item name="remember" valuePropName="checked" noStyle>
             <Checkbox>Remember me</Checkbox>
           </Form.Item>
-          <Text>
+          {/* <Text>
             <Link>Forgot your password?</Link>
-          </Text>
+          </Text> */}
         </div>
       </Form.Item>
       <Form.Item {...tailLayout} css={{ marginBottom: 0 }}>
