@@ -87,6 +87,7 @@ function Reviews({ tutorial, onSubmitReview }) {
       submitReview();
     }
   }, [ratingInput, commentInput]);
+  console.log('xxx', tutorial);
   return (
     <div>
       <div css={{ display: 'flex', justifyContent: 'space-between' }}>
@@ -109,7 +110,7 @@ function Reviews({ tutorial, onSubmitReview }) {
           </Space>
           <Text type="secondary">{numRatings} ratings</Text>
         </div>
-        {tutorial.purchased && (
+        {tutorial.purchased && !tutorial.reviewed && (
           <Button onClick={() => setWriteReviewModalVisible(true)}>
             Write A Review
           </Button>

@@ -122,6 +122,9 @@ router.get(
             match: { tutorialId: tutorial._id },
           })
           .exec();
+        outlinedTutorial.reviewed = tutorial.reviews.some(
+          (review) => review.userId._id.toString() === req.user.id,
+        );
         outlinedTutorial.purchased = user.purchases.length > 0;
       } else {
         outlinedTutorial.purchased = false;
@@ -146,11 +149,12 @@ router.post(
         { reviews: true, _id: true },
       ).exec();
       // Make sure user purchased tutorial
-      const userWithTutorialPurchased = await User.findOne({
+      const user = await User.findOne({
         _id: req.user.id,
-        purchasedTutorials: tutorial._id,
-      }).exec();
-      if (userWithTutorialPurchased) {
+      })
+        .populate({ path: 'purchases', match: { tutorialId: tutorial.id } })
+        .exec();
+      if (user.purchases.length > 0) {
         if (
           tutorial.reviews.some(
             (review) => review.userId.toString() === req.user.id,

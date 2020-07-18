@@ -58,12 +58,27 @@ function binPurchases(purchases) {
   }));
   histogramArray.sort((a, b) => (new Date(a.date) < new Date(b.date) ? 1 : -1));
   if (histogramArray.length > 0) {
+    // Add 0 just before the first date
     const zeroDate = new Date(histogramArray[0].date);
     zeroDate.setDate(zeroDate.getDate() - 1);
     histogramArray.unshift({
       date: zeroDate.toLocaleDateString('en-US'),
       purchases: 0,
     });
+
+    // Add today as the last date
+    const lastDate = new Date(histogramArray[histogramArray.length - 1].date);
+    const today = new Date();
+    const lastDateIsToday =
+      lastDate.getDate() == today.getDate() &&
+      lastDate.getMonth() == today.getMonth() &&
+      lastDate.getFullYear() == today.getFullYear();
+    if (!lastDateIsToday) {
+      histogramArray.push({
+        date: today.toLocaleDateString('en-US'),
+        purchases: 0,
+      });
+    }
   }
   return histogramArray;
 }
