@@ -21,15 +21,18 @@ export function signupUser(userData, onSuccess) {
   };
 }
 
-export function loginUser(userData) {
+export function loginUser({ remember, ...userData }) {
   return (dispatch) => {
     axios
       .post('/api/users/login', userData)
       .then((res) => {
-        // Save token to localStorage
         const { token } = res.data;
-        localStorage.setItem('jwtToken', token);
-        dispatch(authenticateJwtFromLocalStorage());
+        if (remember) {
+          localStorage.setItem('jwtToken', token);
+        } else {
+          sessionStorage.setItem('jwtToken', token);
+        }
+        dispatch(authenticateJwtFromStorage());
       })
       .catch((err) => dispatch(getErrors(err)));
   };
@@ -39,6 +42,7 @@ export function logoutUser(history) {
   return (dispatch) => {
     // Remove token from localStorage
     localStorage.removeItem('jwtToken');
+    sessionStorage.removeItem('jwtToken');
     // Remove auth header from future requests
     setAuthTokenOnHeader(false);
     history.push('/login');
@@ -56,9 +60,14 @@ export function setCurrentUser(decodedToken) {
 }
 
 // -- Retrieving JWT Token and authenticating user
-export function authenticateJwtFromLocalStorage() {
+export function authenticateJwtFromStorage() {
   return (dispatch) => {
-    const { jwtToken: token } = localStorage;
+    let token;
+    if (localStorage.jwtToken) {
+      token = localStorage.jwtToken;
+    } else {
+      token = sessionStorage.jwtToken;
+    }
     if (token) {
       setAuthTokenOnHeader(token);
       const decodedToken = jwt_decode(token);

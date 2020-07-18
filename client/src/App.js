@@ -28,13 +28,13 @@ import EditorPlayground from './pages/EditorPlayground';
 // -- Actions --
 import {
   moveJwtFromCookiesToLocalStorage,
-  authenticateJwtFromLocalStorage,
+  authenticateJwtFromStorage,
 } from './actions/auth';
 
 // Setup store
 const store = createAppStore();
 store.dispatch(moveJwtFromCookiesToLocalStorage());
-store.dispatch(authenticateJwtFromLocalStorage());
+store.dispatch(authenticateJwtFromStorage());
 
 export default function App() {
   return (
