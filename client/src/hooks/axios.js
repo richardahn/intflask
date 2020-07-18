@@ -154,3 +154,48 @@ export function useGetEffect(
   useEffect(() => callback(), callbackDependencies);
   return [loadingValue, value];
 }
+
+/** Convenience hook to get callback to get data from api.*/
+export function useDeleteCallback(
+  endpoint,
+  {
+    onSuccess = null,
+    onError = null,
+    onFinally = null,
+    defaultLoadingValue = false,
+    defaultValue = null,
+    transformValue = null,
+  } = {},
+  callbackDependencies,
+) {
+  const [loadingValue, setLoadingValue] = useState(defaultLoadingValue);
+  const [value, setValue] = useState(defaultValue);
+  const callback = useCallback(() => {
+    setLoadingValue(true);
+    axios
+      .delete(endpoint)
+      .then((response) => {
+        let responseValue = response.data;
+        if (transformValue) {
+          responseValue = transformValue(responseValue);
+        }
+        setValue(responseValue);
+        if (onSuccess) {
+          onSuccess(response);
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+        if (onError) {
+          onError(error);
+        }
+      })
+      .finally(() => {
+        setLoadingValue(false);
+        if (onFinally) {
+          onFinally();
+        }
+      });
+  }, callbackDependencies);
+  return [callback, loadingValue, value];
+}

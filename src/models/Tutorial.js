@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const slug = require('mongoose-slug-updater');
+const Purchase = require('./Purchase');
 mongoose.plugin(slug);
 
 const PageSchema = new mongoose.Schema(
@@ -51,6 +52,12 @@ const TutorialSchema = new mongoose.Schema({
   modifiedDate: { type: Date },
   reviews: [ReviewSchema],
   purchases: [{ type: mongoose.Types.ObjectId, ref: 'purchases' }],
+});
+
+TutorialSchema.pre('remove', async function (next) {
+  const purchase = await Purchase.findOne({ tutorialId: this._id }).exec();
+  await purchase.remove();
+  next();
 });
 
 module.exports = mongoose.model('tutorials', TutorialSchema);

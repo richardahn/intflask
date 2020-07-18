@@ -23,6 +23,7 @@ import {
   InputNumber,
   Alert,
   Divider,
+  Popconfirm,
 } from 'antd';
 import { PaddedContent, AppLayout, AppHeader } from '../styles';
 import { Link as RouterLink } from 'react-router-dom';
@@ -38,6 +39,8 @@ import ErrorContent from '../components/ErrorContent';
 
 import { Chart, Line, Point, Tooltip, Legend } from 'bizcharts';
 import { parseTutorialDates } from '../utils/tutorial';
+import Modal from 'antd/lib/modal/Modal';
+import { useDeleteCallback } from '../hooks/axios';
 
 const { Content, Header } = Layout;
 const { Title } = Typography;
@@ -194,6 +197,22 @@ export default function TutorialDashboard({ match, history }) {
     description: tutorial?.description,
     technologyStack: tutorial?.technologyStack,
   };
+
+  const [deleteTutorialModalVisible, setDeleteTutorialModalVisible] = useState(
+    false,
+  );
+  const [deleteTutorial, loadingDeleteTutorial] = useDeleteCallback(
+    `/api/admin/tutorials/${slug}`,
+    {
+      onSuccess: () => {
+        setDeleteTutorialModalVisible(false);
+        message.success('Successfully deleted tutorial');
+        history.push('/admin');
+      },
+      onError: () => message.error('Failed to delete tutorial'),
+    },
+    [],
+  );
   return (
     <AppLayout>
       <AppHeader css={{ height: 'initial' }}>
@@ -229,49 +248,81 @@ export default function TutorialDashboard({ match, history }) {
               <StatisticsTab tutorial={tutorial} />
             </TabPane>
             <TabPane tab="Settings" key="2">
-              <Card title="General" css={{ marginBottom: '1rem' }}>
-                <TutorialDescriptionForm
-                  initialState={initialDescriptionFormState}
-                  onSubmit={submitTutorialDescription}
-                  saving={savingForm}
-                />
-              </Card>
-              <Card title="Deployment">
-                <div css={{ display: 'flex', justifyContent: 'space-between' }}>
-                  {tutorial?.deployed ? (
-                    <React.Fragment>
-                      <span>
-                        Status:{' '}
-                        <Tag icon={<CheckCircleOutlined />} color="success">
-                          deployed
-                        </Tag>
-                      </span>
-                      <Button
-                        loading={savingDeploy}
-                        onClick={() => deployTutorial(false)}
-                      >
-                        Hide
-                      </Button>
-                    </React.Fragment>
-                  ) : (
-                    <React.Fragment>
-                      <span>
-                        Status:{' '}
-                        <Tag icon={<MinusCircleOutlined />} color="default">
-                          hidden
-                        </Tag>
-                      </span>
-                      <Button
-                        loading={savingDeploy}
-                        type="primary"
-                        onClick={() => deployTutorial(true)}
-                      >
-                        Deploy
-                      </Button>
-                    </React.Fragment>
-                  )}
-                </div>
-              </Card>
+              <Row gutter={[0, 12]}>
+                <Col span={24}>
+                  <Card title="General" css={{ flex: 1 }}>
+                    <TutorialDescriptionForm
+                      initialState={initialDescriptionFormState}
+                      onSubmit={submitTutorialDescription}
+                      saving={savingForm}
+                    />
+                  </Card>
+                </Col>
+                <Col span={24}>
+                  <Card title="Deployment" css={{ flex: 1 }}>
+                    <div
+                      css={{ display: 'flex', justifyContent: 'space-between' }}
+                    >
+                      {tutorial?.deployed ? (
+                        <React.Fragment>
+                          <span>
+                            Status:{' '}
+                            <Tag icon={<CheckCircleOutlined />} color="success">
+                              deployed
+                            </Tag>
+                          </span>
+                          <Button
+                            loading={savingDeploy}
+                            onClick={() => deployTutorial(false)}
+                          >
+                            Hide
+                          </Button>
+                        </React.Fragment>
+                      ) : (
+                        <React.Fragment>
+                          <span>
+                            Status:{' '}
+                            <Tag icon={<MinusCircleOutlined />} color="default">
+                              hidden
+                            </Tag>
+                          </span>
+                          <Button
+                            loading={savingDeploy}
+                            type="primary"
+                            onClick={() => deployTutorial(true)}
+                          >
+                            Deploy
+                          </Button>
+                        </React.Fragment>
+                      )}
+                    </div>
+                  </Card>
+                </Col>
+                <Col span={24}>
+                  <Card title="Delete" css={{ flex: 1 }}>
+                    <Button
+                      type="primary"
+                      danger
+                      onClick={() => setDeleteTutorialModalVisible(true)}
+                    >
+                      Delete Tutorial
+                    </Button>
+                    <Modal
+                      title="Delete Tutorial"
+                      visible={deleteTutorialModalVisible}
+                      onOk={deleteTutorial}
+                      onCancel={() => setDeleteTutorialModalVisible(false)}
+                      okButtonProps={{
+                        danger: true,
+                      }}
+                      confirmLoading={loadingDeleteTutorial}
+                    >
+                      Are you sure you want to delete this tutorial? This action
+                      cannot be undone.
+                    </Modal>
+                  </Card>
+                </Col>
+              </Row>
             </TabPane>
           </Tabs>
         </PaddedContent>

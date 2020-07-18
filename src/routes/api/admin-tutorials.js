@@ -110,4 +110,22 @@ router.put(
   },
 );
 
+router.delete(
+  '/:slug',
+  passport.authenticate('jwt', { session: false }),
+  async (req, res) => {
+    try {
+      const tutorial = await Tutorial.findOne({
+        userId: req.user.id,
+        slug: req.params.slug,
+      }).exec();
+      await tutorial.remove();
+      res.status(204).end();
+    } catch (error) {
+      console.error(error);
+      res.status(500).send('Failed to delete tutorial');
+    }
+  },
+);
+
 module.exports = router;
