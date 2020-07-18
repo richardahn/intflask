@@ -2,15 +2,24 @@
 // -- General Imports --
 import { css, jsx } from '@emotion/core';
 import React, { useCallback, useState } from 'react';
-import { Layout, Menu } from 'antd';
+import { Layout, Menu, Popover, Space, Button, Typography } from 'antd';
 import { EmptyMenuItem } from './intflask-antd';
 import {
   HomeOutlined,
   PlusOutlined,
   FolderOutlined,
   FileOutlined,
+  CaretUpOutlined,
+  CaretDownOutlined,
+  CloseOutlined,
 } from '@ant-design/icons';
-import { reducePageGroup, reducePage, reduceSubpage } from '../utils/tutorial';
+import {
+  reducePageGroup,
+  reducePage,
+  reduceSubpage,
+  reduceMovePage,
+  reduceDeletePage,
+} from '../utils/tutorial';
 import { arrayEquals } from '../utils/array';
 
 // -- Redux --
@@ -24,6 +33,7 @@ import {
   statusBarHeight,
   tutorialSidebarWidth,
 } from '../styles';
+import Modal from 'antd/lib/modal/Modal';
 
 // -- Setup --
 const scrollbarCss = [
@@ -35,6 +45,7 @@ const scrollbarCss = [
   baseScrollbarCss,
 ];
 const { Sider } = Layout;
+const { Text } = Typography;
 
 export default function TwoLevelFixedSidebar({
   top,
@@ -129,6 +140,27 @@ export default function TwoLevelFixedSidebar({
   );
 }
 
+function PopupItemControls({ onMoveUp, onMoveDown, onDelete, children }) {
+  return (
+    <Popover
+      placement="right"
+      content={
+        <Space onClick={(event) => event.stopPropagation()}>
+          <Button icon={<CaretUpOutlined />} size="small" onClick={onMoveUp} />
+          <Button
+            icon={<CaretDownOutlined />}
+            size="small"
+            onClick={onMoveDown}
+          />
+          <Button icon={<CloseOutlined />} size="small" onClick={onDelete} />
+        </Space>
+      }
+    >
+      {children}
+    </Popover>
+  );
+}
+
 export function TutorialEditorSidebarOuterContent({
   tutorial,
   currentSelectionPath,
@@ -141,6 +173,47 @@ export function TutorialEditorSidebarOuterContent({
   const addPage = useCallback(() => {
     onTutorialChange(reducePage(tutorial));
   }, [tutorial]);
+  const movePageUp = useCallback(
+    (i) => {
+      onTutorialChange(reduceMovePage(tutorial, i, i - 1));
+      if (currentSelectionPath === i) {
+        onCurrentSelectionChange([i - 1]);
+      }
+    },
+    [tutorial, currentSelectionPath],
+  );
+  const movePageDown = useCallback(
+    (i) => {
+      onTutorialChange(reduceMovePage(tutorial, i, i + 1));
+      if (currentSelectionPath === i) {
+        onCurrentSelectionChange([i + 1]);
+      }
+    },
+    [tutorial, currentSelectionPath],
+  );
+
+  const [deletePagePromptVisible, setDeletePagePromptVisible] = useState(false);
+  const [pageToDelete, setPageToDelete] = useState(null);
+  const deletePage = useCallback(
+    (i) => {
+      onTutorialChange(reduceDeletePage(tutorial, i));
+      let selection = [];
+      if (currentSelectionPath.length > 0) {
+        selection = [
+          Math.min(
+            tutorial.content.children.length - 2,
+            currentSelectionPath[0],
+          ),
+        ];
+      }
+      onCurrentSelectionChange(selection);
+    },
+    [tutorial, currentSelectionPath],
+  );
+  const closeDeletePagePrompt = useCallback(() => {
+    setDeletePagePromptVisible(false);
+    setPageToDelete(null);
+  }, []);
   return (
     <Menu
       theme="light"
@@ -151,14 +224,30 @@ export function TutorialEditorSidebarOuterContent({
           : String(currentSelectionPath[0]),
       ]}
     >
+      <Modal
+        title="Delete Page"
+        visible={deletePagePromptVisible}
+        onOk={() => {
+          deletePage(pageToDelete);
+          closeDeletePagePrompt();
+        }}
+        onCancel={closeDeletePagePrompt}
+        okButtonProps={{
+          danger: true,
+        }}
+        okText="Delete"
+      >
+        <Text strong>
+          Are you sure you want to delete this page? All nested subpages will be
+          deleted as well.
+        </Text>
+      </Modal>
       <Menu.Item
         key="-1"
         css={{ fontWeight: 'bold' }}
         icon={<HomeOutlined />}
         onClick={() => {
-          if (!arrayEquals(currentSelectionPath, [])) {
-            onCurrentSelectionChange([]);
-          }
+          onCurrentSelectionChange([]);
         }}
       >
         Main
@@ -170,15 +259,22 @@ export function TutorialEditorSidebarOuterContent({
             key={i}
             css={{ fontWeight: 'bold' }}
             onClick={() => {
-              if (!arrayEquals(currentSelectionPath, [i])) {
-                onCurrentSelectionChange([i]);
-              }
+              onCurrentSelectionChange([i]);
             }}
             icon={
               outer.children != null ? <FolderOutlined /> : <FileOutlined />
             }
           >
-            {outer.name}
+            <PopupItemControls
+              onMoveUp={() => movePageUp(i)}
+              onMoveDown={() => movePageDown(i)}
+              onDelete={() => {
+                setDeletePagePromptVisible(true);
+                setPageToDelete(i);
+              }}
+            >
+              {outer.name}
+            </PopupItemControls>
           </Menu.Item>
         ))
       ) : (

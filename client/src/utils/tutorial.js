@@ -94,6 +94,77 @@ export function reduceSubpage(tutorial, current) {
     },
   };
 }
+function move(array, from, to) {
+  console.log('moving from', from, to);
+  console.log('old arr', array);
+  const res = array.slice();
+  res.splice(to, 0, res.splice(from, 1)[0]);
+  console.log('new arr', res);
+  return res;
+}
+
+function clamp(number, min, max) {
+  return Math.max(Math.min(number, max), min);
+}
+
+export function reduceMovePage(tutorial, i, iNewRaw) {
+  const iNew = clamp(iNewRaw, 0, tutorial.content.children.length - 1);
+  return {
+    ...tutorial,
+    content: {
+      ...tutorial.content,
+      children: move(tutorial.content.children, i, iNew),
+    },
+  };
+}
+export function reduceDeletePage(tutorial, iTarget) {
+  return {
+    ...tutorial,
+    content: {
+      ...tutorial.content,
+      children: tutorial.content.children.filter((_, i) => i !== iTarget),
+    },
+  };
+}
+export function deleteSubpage(tutorial, iTarget, jTarget) {
+  return {
+    ...tutorial,
+    content: {
+      ...tutorial.content,
+      children: tutorial.content.children.map((page, i) =>
+        i === iTarget
+          ? {
+              ...page,
+              children: tutorial.content.children.filter(
+                (_, j) => j === jTarget,
+              ),
+            }
+          : page,
+      ),
+    },
+  };
+}
+export function moveSubpage(tutorial, iCurrent, j, jNewRaw) {
+  const jNew = clamp(
+    jNewRaw,
+    0,
+    tutorial.content.children[iCurrent].children.length - 1,
+  );
+  return {
+    ...tutorial,
+    content: {
+      ...tutorial.content,
+      children: tutorial.content.children.map((page, i) =>
+        i === iCurrent
+          ? {
+              ...page,
+              children: move(page.children, j, jNew),
+            }
+          : page,
+      ),
+    },
+  };
+}
 
 export function isMain(page) {
   return !('name' in page);
