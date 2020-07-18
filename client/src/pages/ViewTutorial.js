@@ -3,7 +3,7 @@
 import { css, jsx } from '@emotion/core';
 import React, { useCallback, useState, useEffect, useMemo } from 'react';
 import axios from 'axios';
-import { message, Typography, Breadcrumb, Layout, Menu } from 'antd';
+import { message, Typography, Breadcrumb, Layout, Menu, Row } from 'antd';
 import { Link as RouterLink, Prompt } from 'react-router-dom';
 import TutorialEditor from '../components/EditTutorial/TutorialEditor';
 import { parseTutorialContent, saveTutorial } from '../utils/tutorial';
@@ -51,7 +51,7 @@ import TwoLevelFixedSidebar, {
 import IntflaskViewer from '../components/IntflaskViewer';
 // -- Css --
 const { Title } = Typography;
-const { Sider } = Layout;
+const { Sider, Content } = Layout;
 const scrollbarCss = [
   {
     overflowY: 'auto',
@@ -67,7 +67,7 @@ function TutorialViewer({ tutorial, top }) {
   return (
     <AppLayout>
       <TwoLevelFixedSidebar
-        top={mainHeaderHeight + pageHeaderHeight + statusBarHeight}
+        top={top + mainHeaderHeight}
         outerVisible={true}
         innerVisible={
           (currentSelectionPath.length === 1 && currentPage.children) ||
@@ -96,7 +96,12 @@ function TutorialViewer({ tutorial, top }) {
           flexDirection: 'column',
         }}
       >
-        <IntflaskViewer value={currentPage.content} />
+        <Row>
+          <Title level={4}>{getName(currentPage)}</Title>
+        </Row>
+        <Row css={{ flex: 1 }}>
+          <IntflaskViewer value={currentPage.content} />
+        </Row>
       </PaddedContent>
     </AppLayout>
   );
@@ -114,15 +119,16 @@ export default function ViewTutorial({ match }) {
       {loadingTutorial ? (
         <PageSpinner />
       ) : tutorial ? (
-        <PaddedContent>
-          <Title level={4} css={{ marginBottom: 0 }}>
-            {tutorial.name}
-          </Title>
-          <TutorialViewer
-            top={pageHeaderHeight + statusBarHeight}
-            tutorial={tutorial}
-          />
-        </PaddedContent>
+        <AppLayout>
+          <AppFixedHeader css={{ height: 'initial' }}>
+            <Title level={4} css={{ marginBottom: 0 }}>
+              {tutorial.name}
+            </Title>
+          </AppFixedHeader>
+          <Content>
+            <TutorialViewer top={38} tutorial={tutorial} />
+          </Content>
+        </AppLayout>
       ) : (
         <ErrorContent>Failed to load tutorial</ErrorContent>
       )}

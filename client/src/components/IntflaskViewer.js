@@ -30,6 +30,7 @@ export default function IntflaskViewer({ value }) {
         }
         .ql-editor {
           flex: 1;
+          padding: 0;
         }
       `}
       theme="bubble"
