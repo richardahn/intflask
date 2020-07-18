@@ -22,6 +22,13 @@ const PageGroupSchema = new mongoose.Schema(
 const StatisticsSchema = new mongoose.Schema({
   purchases: Number,
 });
+
+const ReviewSchema = new mongoose.Schema({
+  userId: { type: mongoose.Types.ObjectId, required: true, ref: 'users' },
+  rating: { type: Number, required: true },
+  comment: { type: String, required: true },
+  date: { type: Date, required: true },
+});
 const TutorialSchema = new mongoose.Schema({
   userId: { type: mongoose.Types.ObjectId, required: true, ref: 'users' },
   slug: { type: String, slug: 'name', unique: true },
@@ -39,6 +46,9 @@ const TutorialSchema = new mongoose.Schema({
   ),
   statistics: StatisticsSchema,
   approximateCompletionTime: { type: Number },
+  creationDate: { type: Date, required: true },
+  modifiedDate: { type: Date },
+  reviews: [ReviewSchema],
 });
 
 module.exports = mongoose.model('tutorials', TutorialSchema);

@@ -36,6 +36,9 @@ export default function IntflaskViewer({ value }) {
       theme="bubble"
       value={value}
       readOnly
+      modules={{
+        syntax: true,
+      }}
     />
   );
 }

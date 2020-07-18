@@ -26,6 +26,18 @@ function processTutorialContent(tutorial, func) {
   };
 }
 
+export function parseTutorialDates(tutorial) {
+  return {
+    ...tutorial,
+    creationDate: new Date(tutorial.creationDate),
+    modifiedDate: new Date(tutorial.modifiedDate),
+    reviews: tutorial.reviews.map((review) => ({
+      ...review,
+      date: new Date(review.date),
+    })),
+  };
+}
+
 export function parseTutorialContent(tutorial) {
   return processTutorialContent(tutorial, JSON.parse);
 }

@@ -16,6 +16,7 @@ router.post(
   '/',
   passport.authenticate('jwt', { session: false }),
   (req, res) => {
+    const currentDate = Date.now();
     const tutorial = new Tutorial({
       userId: mongoose.Types.ObjectId(req.user.id),
       name: req.body.name,
@@ -24,6 +25,9 @@ router.post(
       price: req.body.price,
       deployed: false,
       content: getEmptyTutorialContent(),
+      creationDate: currentDate,
+      modifiedDate: currentDate,
+      reviews: [],
     });
 
     tutorial
@@ -87,7 +91,7 @@ router.put(
     try {
       const tutorial = await Tutorial.findOneAndUpdate(
         { userId: req.user.id, slug: req.params.slug },
-        req.body,
+        { ...req.body, modifiedDate: Date.now() },
         { new: true },
       ).exec(); // exec() returns a Promise
       res.status(200).send(tutorial.slug);

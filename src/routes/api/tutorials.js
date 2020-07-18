@@ -105,6 +105,7 @@ router.get(
         slug: req.params.slug,
       })
         .populate('userId', { firstName: true, lastName: true })
+        .populate('reviews.userId', { firstName: true, lastName: true })
         .lean() // Mongoose objects can't be modified, use lean() to get a regular js object
         .exec();
 
@@ -126,6 +127,43 @@ router.get(
     } catch (error) {
       console.error(error);
       res.status(500).send('Could not find tutorial');
+    }
+  },
+);
+
+router.post(
+  '/:slug/review',
+  passport.authenticate('jwt', { session: false }),
+  async (req, res) => {
+    try {
+      const tutorial = await Tutorial.findOne(
+        {
+          slug: req.params.slug,
+        },
+        { reviews: true, _id: true },
+      ).exec();
+      // Make sure user purchased tutorial
+      const userWithTutorialPurchased = await User.findOne({
+        _id: req.user.id,
+        purchasedTutorials: tutorial._id,
+      }).exec();
+      if (userWithTutorialPurchased) {
+        tutorial.reviews.push({
+          userId: req.user.id,
+          date: Date.now(),
+          ...req.body,
+        });
+        await tutorial.save();
+        res.status(204).end();
+      } else {
+        const err =
+          "User attempted to write a review for a tutorial they didn't purchase";
+        console.error(err);
+        res.status(500, err);
+      }
+    } catch (error) {
+      console.error(error);
+      res.status(500).send('Failed to submit review');
     }
   },
 );
