@@ -19,6 +19,8 @@ import {
   reduceSubpage,
   reduceMovePage,
   reduceDeletePage,
+  reduceMoveSubpage,
+  reduceDeleteSubpage,
 } from '../utils/tutorial';
 import { arrayEquals } from '../utils/array';
 
@@ -303,12 +305,78 @@ export function TutorialEditorSidebarInnerContent({
     },
     [tutorial],
   );
+  const moveSubpageUp = useCallback(
+    (i, j) => {
+      onTutorialChange(reduceMoveSubpage(tutorial, i, j, j - 1));
+      if (currentSelectionPath[0] === i && currentSelectionPath[1] === j) {
+        onCurrentSelectionChange([i, j - 1]);
+      }
+    },
+    [tutorial, currentSelectionPath],
+  );
+  const moveSubpageDown = useCallback(
+    (i, j) => {
+      onTutorialChange(reduceMoveSubpage(tutorial, i, j, j + 1));
+      if (currentSelectionPath[0] === i && currentSelectionPath[1] === j) {
+        onCurrentSelectionChange([i, j + 1]);
+      }
+    },
+    [tutorial, currentSelectionPath],
+  );
+
+  const [deleteSubpagePromptVisible, setDeleteSubpagePromptVisible] = useState(
+    false,
+  );
+  const [subpageToDelete, setSubpageToDelete] = useState(null);
+  const deleteSubpage = useCallback(
+    (i, j) => {
+      onTutorialChange(reduceDeleteSubpage(tutorial, i, j));
+      if (currentSelectionPath.length === 2) {
+        const newMaxIndex =
+          tutorial.content.children[currentSelectionPath[0]].children.length -
+          2;
+        if (newMaxIndex < 0) {
+          onCurrentSelectionChange([currentSelectionPath[0]]);
+        } else {
+          const selection = [
+            currentSelectionPath[0],
+            Math.min(
+              tutorial.content.children[currentSelectionPath[0]].children
+                .length - 2,
+              currentSelectionPath[1],
+            ),
+          ];
+          onCurrentSelectionChange(selection);
+        }
+      }
+    },
+    [tutorial, currentSelectionPath],
+  );
+  const closeDeleteSubpagePrompt = useCallback(() => {
+    setDeleteSubpagePromptVisible(false);
+    setSubpageToDelete(null);
+  }, []);
   return (
     <Menu
       theme="light"
       mode="inline"
       selectedKeys={[String(currentSelectionPath[1])]}
     >
+      <Modal
+        title="Delete Subpage"
+        visible={deleteSubpagePromptVisible}
+        onOk={() => {
+          deleteSubpage(...subpageToDelete);
+          closeDeleteSubpagePrompt();
+        }}
+        onCancel={closeDeleteSubpagePrompt}
+        okButtonProps={{
+          danger: true,
+        }}
+        okText="Delete"
+      >
+        <Text strong>Are you sure you want to delete this subpage?</Text>
+      </Modal>
       {tutorial.content.children[currentSelectionPath[0]].children.length >
       0 ? (
         tutorial.content.children[currentSelectionPath[0]].children.map(
@@ -326,7 +394,16 @@ export function TutorialEditorSidebarInnerContent({
                 }
               }}
             >
-              {inner.name}
+              <PopupItemControls
+                onMoveUp={() => moveSubpageUp(currentSelectionPath[0], j)}
+                onMoveDown={() => moveSubpageDown(currentSelectionPath[0], j)}
+                onDelete={() => {
+                  setDeleteSubpagePromptVisible(true);
+                  setSubpageToDelete([currentSelectionPath[0], j]);
+                }}
+              >
+                {inner.name}
+              </PopupItemControls>
             </Menu.Item>
           ),
         )

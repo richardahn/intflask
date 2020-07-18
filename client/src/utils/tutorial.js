@@ -126,7 +126,7 @@ export function reduceDeletePage(tutorial, iTarget) {
     },
   };
 }
-export function deleteSubpage(tutorial, iTarget, jTarget) {
+export function reduceDeleteSubpage(tutorial, iTarget, jTarget) {
   return {
     ...tutorial,
     content: {
@@ -135,16 +135,14 @@ export function deleteSubpage(tutorial, iTarget, jTarget) {
         i === iTarget
           ? {
               ...page,
-              children: tutorial.content.children.filter(
-                (_, j) => j === jTarget,
-              ),
+              children: page.children.filter((_, j) => j !== jTarget),
             }
           : page,
       ),
     },
   };
 }
-export function moveSubpage(tutorial, iCurrent, j, jNewRaw) {
+export function reduceMoveSubpage(tutorial, iCurrent, j, jNewRaw) {
   const jNew = clamp(
     jNewRaw,
     0,
