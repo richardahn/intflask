@@ -28,6 +28,7 @@ router.post(
       creationDate: currentDate,
       modifiedDate: currentDate,
       reviews: [],
+      purchases: [],
     });
 
     tutorial
@@ -63,23 +64,29 @@ router.get(
 router.get(
   '/:slug',
   passport.authenticate('jwt', { session: false }),
-  (req, res) => {
-    const projection = {};
-    if (req.query.content === 'false') {
-      projection.content = false;
+  async (req, res) => {
+    try {
+      const projection = {};
+      if (req.query.content === 'false') {
+        projection.content = false;
+      }
+      const tutorial = await Tutorial.findOne(
+        { userId: req.user.id, slug: req.params.slug },
+        projection,
+      )
+        .populate('purchases')
+        .exec();
+
+      if (tutorial) {
+        res.json(tutorial);
+      } else {
+        console.error(err);
+        res.status(404).send('Could not find tutorial.');
+      }
+    } catch (error) {
+      console.error(error);
+      res.status(500).send('Failed to get tutorial');
     }
-    Tutorial.findOne(
-      { userId: req.user.id, slug: req.params.slug },
-      projection,
-      (err, tutorial) => {
-        if (tutorial) {
-          res.json(tutorial);
-        } else {
-          console.error(err);
-          res.status(404).send('Could not find tutorial.');
-        }
-      },
-    );
   },
 );
 

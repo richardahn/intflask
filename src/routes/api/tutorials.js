@@ -99,7 +99,6 @@ router.get(
   passport.authenticate(['jwt', 'anonymous'], { session: false }),
   async (req, res) => {
     try {
-      const projection = {};
       const tutorial = await Tutorial.findOne({
         deployed: true,
         slug: req.params.slug,
@@ -115,11 +114,15 @@ router.get(
         outlinedTutorial.content = content;
       }
       if (req.user) {
-        const userWithTutorialPurchased = await User.findOne({
+        const user = await User.findOne({
           _id: req.user.id,
-          purchasedTutorials: tutorial._id,
-        }).exec();
-        outlinedTutorial.purchased = !!userWithTutorialPurchased;
+        })
+          .populate({
+            path: 'purchases',
+            match: { tutorialId: tutorial._id },
+          })
+          .exec();
+        outlinedTutorial.purchased = user.purchases.length > 0;
       } else {
         outlinedTutorial.purchased = false;
       }

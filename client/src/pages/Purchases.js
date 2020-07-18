@@ -30,6 +30,7 @@ export default function Purchases(props) {
   const [loadingPurchases, purchases] = useGetEffect(
     '/api/purchased-tutorials',
     {
+      transformValue: (tutorials) => tutorials.map((t) => t.tutorialId),
       onError: () => message.error('Failed to load purchased tutorials'),
     },
     [],

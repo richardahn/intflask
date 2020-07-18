@@ -37,50 +37,44 @@ import PageSpinner from '../components/PageSpinner';
 import ErrorContent from '../components/ErrorContent';
 
 import { Chart, Line, Point, Tooltip, Legend } from 'bizcharts';
+import { parseTutorialDates } from '../utils/tutorial';
 
 const { Content, Header } = Layout;
 const { Title } = Typography;
 const { TabPane } = Tabs;
 
-function StatisticsTab() {
-  const data = [
-    {
-      year: '1991',
-      value: 3,
-    },
-    {
-      year: '1992',
-      value: 4,
-    },
-    {
-      year: '1993',
-      value: 3.5,
-    },
-    {
-      year: '1994',
-      value: 5,
-    },
-    {
-      year: '1995',
-      value: 4.9,
-    },
-    {
-      year: '1996',
-      value: 6,
-    },
-    {
-      year: '1997',
-      value: 7,
-    },
-    {
-      year: '1998',
-      value: 9,
-    },
-    {
-      year: '1999',
-      value: 13,
-    },
-  ];
+function binPurchases(purchases) {
+  const histogram = {};
+  for (const purchase of purchases) {
+    const day = purchase.date.toLocaleDateString('en-US');
+    if (!(day in histogram)) {
+      histogram[day] = 0;
+    }
+    histogram[day]++;
+  }
+  const histogramArray = Object.entries(histogram).map(([key, value]) => ({
+    date: key,
+    purchases: value,
+  }));
+  histogramArray.sort((a, b) => (new Date(a.date) < new Date(b.date) ? 1 : -1));
+  if (histogramArray.length > 0) {
+    const zeroDate = new Date(histogramArray[0].date);
+    zeroDate.setDate(zeroDate.getDate() - 1);
+    histogramArray.unshift({
+      date: zeroDate.toLocaleDateString('en-US'),
+      purchases: 0,
+    });
+  }
+  return histogramArray;
+}
+
+function StatisticsTab({ tutorial }) {
+  const purchases = binPurchases(tutorial.purchases);
+  const totalPurchases = tutorial.purchases.length;
+  const totalMoneyEarned = tutorial.purchases.reduce(
+    (total, { price }) => total + price,
+    0,
+  );
   return (
     <Row gutter={16}>
       <Col span={24}>
@@ -88,36 +82,27 @@ function StatisticsTab() {
         <Chart
           padding={[10, 20, 50, 40]}
           autoFit
-          height={500}
-          data={data}
-          scale={{ value: { min: 0 } }}
+          height={400}
+          data={purchases}
+          scale={{
+            purchases: { min: 0 },
+            date: { type: 'time' },
+          }}
         >
-          <Line position="year*value" />
-          <Point position="year*value" />
+          <Line position="date*purchases" shape="hv" />
+          <Point position="date*purchases" />
         </Chart>
       </Col>
-      <Col sm={8} xs={24}>
-        <Statistic title="Total Purchases" value={120} />
+      <Col sm={12} xs={24}>
+        <Statistic title="Total Purchases" value={totalPurchases} />
       </Col>
-      <Col sm={8} xs={24}>
-        <Statistic
-          title="Average Purchases Per Month"
-          value={5}
-          precision={1}
-        />
-      </Col>
-      <Col sm={8} xs={24}>
+      <Col sm={12} xs={24}>
         <Statistic
           title="Total Money Earned"
           prefix="$"
-          value={53.4}
+          value={totalMoneyEarned}
           precision={2}
         />
-      </Col>
-
-      <Col lg={8} xs={24}>
-        <Divider orientation="left">User Statistics</Divider>
-        <Statistic title="Average stay time" value={3} />
       </Col>
     </Row>
   );
@@ -175,7 +160,7 @@ export default function TutorialDashboard({ match, history }) {
           content: false,
         },
       })
-      .then((response) => setTutorial(response.data))
+      .then((response) => setTutorial(parseTutorialDates(response.data)))
       .catch((error) => {
         console.error(error);
         message.error('Failed to get tutorial');
@@ -188,7 +173,6 @@ export default function TutorialDashboard({ match, history }) {
       setSavingForm(false);
     };
   }, [slug]);
-
   const initialDescriptionFormState = {
     name: tutorial?.name,
     price: tutorial?.price,
@@ -227,7 +211,7 @@ export default function TutorialDashboard({ match, history }) {
             }
           >
             <TabPane tab="Statistics" key="1">
-              <StatisticsTab />
+              <StatisticsTab tutorial={tutorial} />
             </TabPane>
             <TabPane tab="Settings" key="2">
               <Card title="General" css={{ marginBottom: '1rem' }}>

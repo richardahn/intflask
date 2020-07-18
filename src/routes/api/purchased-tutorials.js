@@ -19,17 +19,17 @@ router.get(
   async (req, res) => {
     // Get user with purchased tutorials populated, exclude content in populated ones, also make sure they're deployed once again
     try {
-      const user = await User.findOne(
-        { _id: req.user.id },
-        { purchasedTutorials: true },
-      )
+      const user = await User.findOne({ _id: req.user.id }, { purchases: true })
         .populate({
-          path: 'purchasedTutorials',
-          match: { deployed: true },
-          select: '-content',
+          path: 'purchases',
+          populate: {
+            path: 'tutorialId',
+            match: { deployed: true },
+            select: '-content',
+          },
         })
         .exec();
-      res.json(user.purchasedTutorials);
+      res.json(user.purchases);
     } catch (error) {
       console.error(error);
       res.status(500).send('Failed to get purchased tutorials');

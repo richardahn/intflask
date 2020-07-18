@@ -8,7 +8,7 @@ const PurchaseSchema = new mongoose.Schema({
     ref: 'tutorials',
   },
   price: { type: Number, required: true },
-  purchaseDate: { type: Date, required: true },
+  date: { type: Date, required: true },
 });
 
 module.exports = mongoose.model('purchases', PurchaseSchema);

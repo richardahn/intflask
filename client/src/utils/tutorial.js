@@ -35,6 +35,10 @@ export function parseTutorialDates(tutorial) {
       ...review,
       date: new Date(review.date),
     })),
+    purchases: tutorial.purchases.map((purchase) => ({
+      ...purchase,
+      date: new Date(purchase.date),
+    })),
   };
 }
 
