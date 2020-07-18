@@ -23,20 +23,28 @@ import { GoogleOutlined, StarOutlined } from '@ant-design/icons';
 import { PaddedContent, AppLayout } from '../styles';
 import axios from 'axios';
 import TutorialList, { TutorialListItem } from '../components/TutorialList';
-import { useApiGet } from '../hooks/useApi';
+import { useGetEffect } from '../hooks/axios';
 const { Content, Header, Footer, Sider } = Layout;
 const { Text, Title } = Typography;
 const { TabPane } = Tabs;
 
 export default function Home() {
-  const [loadingTopTutorials, topTutorials] = useApiGet('/api/tutorials', {
-    params: { top: true },
-    onError: () => message.error('Failed to retrieve top tutorials'),
-  });
-  const [loadingFreeTutorials, freeTutorials] = useApiGet('/api/tutorials', {
-    params: { free: true },
-    onError: () => message.error('Failed to load free tutorials'),
-  });
+  const [loadingTopTutorials, topTutorials] = useGetEffect(
+    '/api/tutorials',
+    {
+      params: { top: true },
+      onError: () => message.error('Failed to retrieve top tutorials'),
+    },
+    [],
+  );
+  const [loadingFreeTutorials, freeTutorials] = useGetEffect(
+    '/api/tutorials',
+    {
+      params: { free: true },
+      onError: () => message.error('Failed to load free tutorials'),
+    },
+    [],
+  );
   return (
     <AppLayout>
       <PaddedContent>

@@ -11,6 +11,7 @@ const convertTutorialContentToOutline = require('../../utils/tutorial')
 const Tutorial = require('../../models/Tutorial');
 const User = require('../../models/User');
 
+// -- Create --
 router.post(
   '/:slug',
   passport.authenticate('jwt', { session: false }),

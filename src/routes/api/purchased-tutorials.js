@@ -23,7 +23,11 @@ router.get(
         { _id: req.user.id },
         { purchasedTutorials: true },
       )
-        .populate('purchasedTutorials', { content: false })
+        .populate({
+          path: 'purchasedTutorials',
+          match: { deployed: true },
+          select: '-content',
+        })
         .exec();
       res.json(user.purchasedTutorials);
     } catch (error) {

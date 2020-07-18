@@ -29,7 +29,7 @@ const UserSchema = new mongoose.Schema({
     type: Date,
     required: true,
   },
-  purchasedTutorials: [{ type: mongoose.Types.ObjectId, ref: 'tutorials' }],
+  purchases: [{ type: mongoose.Types.ObjectId, ref: 'purchases' }],
 });
 
 module.exports = mongoose.model('users', UserSchema);

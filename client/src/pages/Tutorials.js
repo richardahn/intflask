@@ -27,7 +27,6 @@ import {
   MessageOutlined,
 } from '@ant-design/icons';
 import TutorialList, { TutorialListItem } from '../components/TutorialList';
-import { useApiGet } from '../hooks/useApi';
 import Filter from '../components/Filter';
 import { mainHeaderHeight } from '../styles';
 

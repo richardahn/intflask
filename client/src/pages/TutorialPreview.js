@@ -1,6 +1,6 @@
 /** @jsx jsx */
 import { css, jsx } from '@emotion/core';
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useState, useEffect } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import {
   Layout,
@@ -27,7 +27,12 @@ import { DownOutlined } from '@ant-design/icons';
 import Tags from '../components/Tags';
 import ErrorContent from '../components/ErrorContent';
 import { AppLayout, PaddedContent } from '../styles';
-import { useApiGet, useApiPost, useApiPostCallback } from '../hooks/useApi';
+import {
+  useGetEffect,
+  usePostEffect,
+  usePostCallback,
+  useGetCallback,
+} from '../hooks/axios';
 import axios from 'axios';
 import { parseTutorialDates } from '../utils/tutorial';
 import Modal from 'antd/lib/modal/Modal';
@@ -57,10 +62,10 @@ function Reviews({ tutorial, onSubmitReview }) {
     setRatingInput(defaultRatingInput);
     setCommentInput(defaultCommentInput);
   }, []);
-  const [submitReview, submittingReview] = useApiPostCallback(
+  const [submitReview, submittingReview] = usePostCallback(
     `/api/tutorials/${tutorial.slug}/review`,
     {
-      payload: {
+      data: {
         rating: ratingInput,
         comment: commentInput,
       },
@@ -71,18 +76,33 @@ function Reviews({ tutorial, onSubmitReview }) {
           onSubmitReview();
         }
       },
-      onError: (error) => message.error(error),
+      onError: (error) => message.error(error.response.data),
     },
     [ratingInput, commentInput],
   );
+  const validateThenSubmitReview = useCallback(() => {
+    if (commentInput === '') {
+      message.error('You must enter a comment');
+    } else {
+      submitReview();
+    }
+  }, [ratingInput, commentInput]);
   return (
     <div>
       <div css={{ display: 'flex', justifyContent: 'space-between' }}>
         <div css={{ display: 'flex', flexDirection: 'column' }}>
           <Space css={{ display: 'flex', alignItems: 'center' }}>
-            <Rate disabled value={averageRating} />{' '}
+            <Rate
+              disabled
+              value={Math.floor(averageRating * 2) / 2}
+              allowHalf
+            />{' '}
             {numRatings > 0 ? (
-              <Statistic value={averageRating} suffix="out of 5" />
+              <Statistic
+                value={averageRating}
+                suffix="out of 5"
+                precision={1}
+              />
             ) : (
               <Text>No Ratings</Text>
             )}
@@ -97,7 +117,7 @@ function Reviews({ tutorial, onSubmitReview }) {
         <Modal
           title="Write A Review"
           visible={writeReviewModalVisible}
-          onOk={submitReview}
+          onOk={validateThenSubmitReview}
           onCancel={closeWriteReviewModal}
           confirmLoading={submittingReview}
         >
@@ -149,10 +169,16 @@ function Reviews({ tutorial, onSubmitReview }) {
 
 export default function TutorialPreview({ match }) {
   const { slug } = match.params;
-  const [loadingTutorial, tutorial] = useApiGet(`/api/tutorials/${slug}`, {
-    transformData: (tutorial) => parseTutorialDates(tutorial),
-    onError: () => message.error('Failed to fetch tutorial'),
-  });
+  const [loadTutorial, loadingTutorial, tutorial] = useGetCallback(
+    `/api/tutorials/${slug}`,
+    {
+      defaultLoadingValue: true,
+      transformValue: (tutorial) => parseTutorialDates(tutorial),
+      onError: () => message.error('Failed to fetch tutorial'),
+    },
+    [],
+  );
+  useEffect(() => loadTutorial(), []);
   const purchaseTutorial = useCallback(() => {
     axios
       .post(`/api/purchase/${slug}`)
@@ -216,7 +242,7 @@ export default function TutorialPreview({ match }) {
             showLine
           />
           <Divider orientation="left">Reviews</Divider>
-          <Reviews tutorial={tutorial} />
+          <Reviews tutorial={tutorial} onSubmitReview={loadTutorial} />
         </PaddedContent>
       ) : (
         <ErrorContent>Failed to fetch tutorial</ErrorContent>

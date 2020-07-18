@@ -20,16 +20,20 @@ import { AppLayout, PaddedContent } from '../styles';
 import TutorialList, {
   PurchasedTutorialListItem,
 } from '../components/TutorialList';
-import { useApiGet } from '../hooks/useApi';
+import { useGetEffect } from '../hooks/axios';
 import CenteredContent from '../components/CenteredContent';
 
 const { Content, Header, Footer, Sider } = Layout;
 const { Text, Title } = Typography;
 
 export default function Purchases(props) {
-  const [loadingPurchases, purchases] = useApiGet('/api/purchased-tutorials', {
-    onError: () => message.error('Failed to load purchased tutorials'),
-  });
+  const [loadingPurchases, purchases] = useGetEffect(
+    '/api/purchased-tutorials',
+    {
+      onError: () => message.error('Failed to load purchased tutorials'),
+    },
+    [],
+  );
   return (
     <AppLayout>
       {loadingPurchases ? (

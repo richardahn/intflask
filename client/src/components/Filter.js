@@ -28,7 +28,7 @@ import {
   MessageOutlined,
 } from '@ant-design/icons';
 import TutorialList, { TutorialListItem } from '../components/TutorialList';
-import { useApiGet } from '../hooks/useApi';
+import { useGetEffect } from '../hooks/axios';
 
 const { Content, Header, Footer, Sider } = Layout;
 const { Text, Title } = Typography;
@@ -55,10 +55,14 @@ function Label({ children, inline, ...props }) {
 
 export default function Filter({ filters, onChange, onReset }) {
   // Get search value from string query in url
-  const [, allTechnologies] = useApiGet('/api/technologies', {
-    onError: () => message.error('Failed to load technology filters'),
-    defaultData: [],
-  });
+  const [, allTechnologies] = useGetEffect(
+    '/api/technologies',
+    {
+      onError: () => message.error('Failed to load technology filters'),
+      defaultValue: [],
+    },
+    [],
+  );
   const {
     selectedTechnologies = [],
     selectedFree = false,

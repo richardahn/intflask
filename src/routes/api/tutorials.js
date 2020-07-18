@@ -148,6 +148,13 @@ router.post(
         purchasedTutorials: tutorial._id,
       }).exec();
       if (userWithTutorialPurchased) {
+        if (
+          tutorial.reviews.some(
+            (review) => review.userId.toString() === req.user.id,
+          )
+        ) {
+          return res.status(400).send('User has already submitted a review');
+        }
         tutorial.reviews.push({
           userId: req.user.id,
           date: Date.now(),

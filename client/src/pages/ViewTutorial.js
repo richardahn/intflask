@@ -34,7 +34,7 @@ import {
 import PageSpinner from '../components/PageSpinner';
 import ErrorContent from '../components/ErrorContent';
 import saveStates, { getNextState } from '../enums/saveStates';
-import { useApiGet } from '../hooks/useApi';
+import { useGetEffect } from '../hooks/axios';
 import { EmptyMenuItem } from '../components/intflask-antd';
 
 import {
@@ -109,11 +109,15 @@ function TutorialViewer({ tutorial, top }) {
 
 export default function ViewTutorial({ match }) {
   const { slug } = match.params;
-  const [loadingTutorial, tutorial] = useApiGet(`/api/tutorials/${slug}`, {
-    params: { content: true },
-    transformData: (data) => parseTutorialContent(data),
-    onError: () => message.error('Failed to load tutorial'),
-  });
+  const [loadingTutorial, tutorial] = useGetEffect(
+    `/api/tutorials/${slug}`,
+    {
+      params: { content: true },
+      transformValue: (value) => parseTutorialContent(value),
+      onError: () => message.error('Failed to load tutorial'),
+    },
+    [],
+  );
   return (
     <AppLayout>
       {loadingTutorial ? (

@@ -19,16 +19,17 @@ const PageGroupSchema = new mongoose.Schema(
   { _id: false },
 );
 
-const StatisticsSchema = new mongoose.Schema({
-  purchases: Number,
-});
+const StatisticsSchema = new mongoose.Schema({}, { _id: false });
 
-const ReviewSchema = new mongoose.Schema({
-  userId: { type: mongoose.Types.ObjectId, required: true, ref: 'users' },
-  rating: { type: Number, required: true },
-  comment: { type: String, required: true },
-  date: { type: Date, required: true },
-});
+const ReviewSchema = new mongoose.Schema(
+  {
+    userId: { type: mongoose.Types.ObjectId, required: true, ref: 'users' },
+    rating: { type: Number, required: true },
+    comment: { type: String, required: true },
+    date: { type: Date, required: true },
+  },
+  { _id: false },
+);
 const TutorialSchema = new mongoose.Schema({
   userId: { type: mongoose.Types.ObjectId, required: true, ref: 'users' },
   slug: { type: String, slug: 'name', unique: true },
@@ -49,6 +50,7 @@ const TutorialSchema = new mongoose.Schema({
   creationDate: { type: Date, required: true },
   modifiedDate: { type: Date },
   reviews: [ReviewSchema],
+  purchases: [{ type: mongoose.Types.ObjectId, ref: 'purchases' }],
 });
 
 module.exports = mongoose.model('tutorials', TutorialSchema);

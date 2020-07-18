@@ -32,15 +32,19 @@ import FloatingActionButton from '../components/FloatingActionButton';
 import TutorialList, {
   AdminTutorialListItem,
 } from '../components/TutorialList';
-import { useApiGet } from '../hooks/useApi';
+import { useGetEffect } from '../hooks/axios';
 
 const { Content, Header } = Layout;
 const { Title, Text, Link } = Typography;
 
 export default function Administrator() {
-  const [loadingTutorials, tutorials] = useApiGet('/api/admin/tutorials', {
-    onError: () => message.error('Failed to load tutorials'),
-  });
+  const [loadingTutorials, tutorials] = useGetEffect(
+    '/api/admin/tutorials',
+    {
+      onError: () => message.error('Failed to load tutorials'),
+    },
+    [],
+  );
 
   return (
     <AppLayout>
