@@ -56,7 +56,11 @@ export default function TutorialPreview({ match }) {
               </h2>
               <Text type="secondary">200+ people enrolled</Text>
             </div>
-            {tutorial.price === 0 ? (
+            {tutorial.purchased ? (
+              <RouterLink to={`/view-tutorial/${slug}`}>
+                <Button>Go To Tutorial</Button>
+              </RouterLink>
+            ) : tutorial.price === 0 ? (
               <Button onClick={purchaseTutorial}>Enroll</Button>
             ) : (
               <Button type="primary" onClick={purchaseTutorial}>

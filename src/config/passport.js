@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const User = mongoose.model('users');
 const config = require('../config');
 const GoogleStrategy = require('passport-google-oauth2').Strategy;
+const AnonymousStrategy = require('passport-anonymous').Strategy;
 
 const jwtOpts = {
   jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(), // Since we're getting an encrypted JWT token as a parameter, it'd be better if we could just have it decrypted automatically, this is what this option does
@@ -17,6 +18,9 @@ const googleOpts = {
 };
 
 module.exports = (passport) => {
+  // To make optional protected(can be authenticated or anonymous) endpoints
+  passport.use(new AnonymousStrategy());
+
   // This is called as middleware to make protected endpoints
   passport.use(
     new JwtStrategy(jwtOpts, (jwt_payload, done) => {

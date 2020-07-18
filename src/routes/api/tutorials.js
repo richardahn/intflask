@@ -9,6 +9,7 @@ const convertTutorialContentToOutline = require('../../utils/tutorial')
   .convertTutorialContentToOutline;
 
 const Tutorial = require('../../models/Tutorial');
+const User = require('../../models/User');
 
 // -- Read --
 /** Sends back all the tutorials' metadata(excludes the tutorial content) */
@@ -93,28 +94,40 @@ router.get('/', async (req, res) => {
   }
 });
 
-router.get('/:slug', async (req, res) => {
-  try {
-    const projection = {};
-    const tutorial = await Tutorial.findOne({
-      deployed: true,
-      slug: req.params.slug,
-    })
-      .populate('userId', { firstName: true, lastName: true })
-      .lean() // Mongoose objects can't be modified, use lean() to get a regular js object
-      .exec();
+router.get(
+  '/:slug',
+  passport.authenticate(['jwt', 'anonymous'], { session: false }),
+  async (req, res) => {
+    try {
+      const projection = {};
+      const tutorial = await Tutorial.findOne({
+        deployed: true,
+        slug: req.params.slug,
+      })
+        .populate('userId', { firstName: true, lastName: true })
+        .lean() // Mongoose objects can't be modified, use lean() to get a regular js object
+        .exec();
 
-    console.log('tutorial', tutorial);
-    const { content, ...outlinedTutorial } = tutorial;
-    outlinedTutorial.outline = convertTutorialContentToOutline(content);
-    if (req.query.content && req.query.content === 'true') {
-      outlinedTutorial.content = content;
+      const { content, ...outlinedTutorial } = tutorial;
+      outlinedTutorial.outline = convertTutorialContentToOutline(content);
+      if (req.query.content && req.query.content === 'true') {
+        outlinedTutorial.content = content;
+      }
+      if (req.user) {
+        const userWithTutorialPurchased = await User.findOne({
+          _id: req.user.id,
+          purchasedTutorials: tutorial._id,
+        }).exec();
+        outlinedTutorial.purchased = !!userWithTutorialPurchased;
+      } else {
+        outlinedTutorial.purchased = false;
+      }
+      res.json(outlinedTutorial);
+    } catch (error) {
+      console.error(error);
+      res.status(500).send('Could not find tutorial');
     }
-    res.json(outlinedTutorial);
-  } catch (error) {
-    console.error(error);
-    res.status(500).send('Could not find tutorial');
-  }
-});
+  },
+);
 
 module.exports = router;
