@@ -13,7 +13,13 @@ import {
   reduceTutorialCurrentPageName,
 } from '../../utils/tutorial';
 
-import { PaddedContent, AppLayout } from '../../styles';
+import {
+  PaddedContent,
+  AppLayout,
+  mainHeaderHeight,
+  pageHeaderHeight,
+  statusBarHeight,
+} from '../../styles';
 import IntflaskEditor from '../IntflaskEditor';
 const { Title, Text } = Typography;
 
@@ -99,6 +105,7 @@ export default function TutorialEditor({
           marginTop: `${top}px`,
           display: 'flex',
           flexDirection: 'column',
+          overflowX: 'inherit !important',
         }}
       >
         <Row>
@@ -120,7 +127,13 @@ export default function TutorialEditor({
           </EditableTitle>
         </Row>
         <Row css={{ flex: 1 }}>
-          <IntflaskEditor onChange={onContentChange} ref={setQuillRef} />
+          <IntflaskEditor
+            onChange={onContentChange}
+            ref={setQuillRef}
+            toolbarTop={
+              mainHeaderHeight + pageHeaderHeight + statusBarHeight - 1
+            }
+          />
         </Row>
       </PaddedContent>
     </AppLayout>

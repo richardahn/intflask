@@ -104,6 +104,7 @@ router.get('/:slug', async (req, res) => {
       .lean() // Mongoose objects can't be modified, use lean() to get a regular js object
       .exec();
 
+    console.log('tutorial', tutorial);
     const { content, ...outlinedTutorial } = tutorial;
     outlinedTutorial.outline = convertTutorialContentToOutline(content);
     if (req.query.content && req.query.content === 'true') {

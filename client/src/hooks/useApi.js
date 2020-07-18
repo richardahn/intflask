@@ -4,7 +4,13 @@ import { useState, useEffect } from 'react';
 /** Convenience hook to fetch data from api. Returns loading boolean and data(null if unable to fetch) */
 export function useApiGet(
   endpoint,
-  { params = {}, onSuccess = null, onError = null, defaultData = null } = {},
+  {
+    params = {},
+    onSuccess = null,
+    onError = null,
+    defaultData = null,
+    transformData = null,
+  } = {},
 ) {
   const [loadingData, setLoadingData] = useState(true);
   const [data, setData] = useState(defaultData);
@@ -13,7 +19,11 @@ export function useApiGet(
     axios
       .get(endpoint, { params })
       .then((response) => {
-        setData(response.data);
+        let data = response.data;
+        if (transformData) {
+          data = transformData(data);
+        }
+        setData(data);
         if (onSuccess) {
           onSuccess();
         }

@@ -110,7 +110,7 @@ function AddImageModal({ visible, onModalVisibleChange, addImage }) {
   );
 }
 
-function IntflaskEditor({ onChange }, ref) {
+function IntflaskEditor({ onChange, toolbarTop }, ref) {
   const [modalVisible, setModalVisible] = useState(false);
   const quillRef = useRef();
   useImperativeHandle(ref, () => ({
@@ -140,9 +140,17 @@ function IntflaskEditor({ onChange }, ref) {
             flex: 1;
             display: flex;
             flex-direction: column;
+            /* border: none; */
           }
           .ql-editor {
             flex: 1;
+          }
+          .ql-toolbar {
+            position: sticky;
+            top: ${toolbarTop}px;
+            background-color: white;
+            z-index: 1;
+            /* border: none; */
           }
         `}
         theme="snow"

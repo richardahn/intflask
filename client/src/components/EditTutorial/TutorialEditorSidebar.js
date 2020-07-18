@@ -29,6 +29,11 @@ import {
   tutorialSidebarWidth,
 } from '../../styles';
 
+import TwoLevelFixedSidebar, {
+  TutorialEditorSidebarOuterContent,
+  TutorialEditorSidebarInnerContent,
+} from '../TwoLevelFixedSidebar';
+
 // -- Setup --
 const scrollbarCss = [
   {
@@ -47,200 +52,30 @@ export default function TutorialEditorSidebar({
   onCurrentSelectionChange,
   currentPage,
 }) {
-  const [collapsedOuter, setCollapsedOuter] = useState(false);
-  const onCollapseOuter = useCallback(
-    (collapsed) => setCollapsedOuter(collapsed),
-    [],
-  );
-  const [collapsedInner, setCollapsedInner] = useState(false);
-  const onCollapseInner = useCallback(
-    (collapsed) => setCollapsedInner(collapsed),
-    [],
-  );
-
-  const addPageGroup = useCallback(() => {
-    onTutorialChange(reducePageGroup(tutorial));
-  }, [tutorial]);
-  const addPage = useCallback(() => {
-    onTutorialChange(reducePage(tutorial));
-  }, [tutorial]);
-  const addSubpage = useCallback(
-    (currentI) => {
-      onTutorialChange(reduceSubpage(tutorial, currentI));
-    },
-    [tutorial],
-  );
-
-  const showInnerSidebar =
-    (currentSelectionPath.length === 1 && currentPage.children) ||
-    currentSelectionPath.length === 2;
   return (
-    tutorial != null &&
-    currentSelectionPath != null && (
-      <div
-        css={{
-          height: `calc(100vh - ${
-            mainHeaderHeight + pageHeaderHeight + statusBarHeight
-          }px)`,
-          display: 'flex',
-          flexDirection: 'row',
-          height: '100%',
-        }}
-      >
-        {/* Filler Sidebar(takes up the space that the fixed sidebar would use) */}
-        <Sider
-          theme="light"
-          collapsible
-          collapsed={collapsedOuter}
-          onCollapse={onCollapseOuter}
-          width={tutorialSidebarWidth}
-          key="outerSidebarFiller"
-        ></Sider>
-        {showInnerSidebar && (
-          <Sider
-            theme="light"
-            collapsible
-            collapsed={collapsedInner}
-            onCollapse={onCollapseInner}
-            width={tutorialSidebarWidth}
-            key="innerSidebarFiller"
-          ></Sider>
-        )}
-
-        {/* Fixed Sidebar Container */}
-        <div
-          css={{
-            position: 'fixed',
-            left: 0,
-            top: `${mainHeaderHeight + pageHeaderHeight + statusBarHeight}px`,
-            height: `calc(100vh - ${
-              mainHeaderHeight + pageHeaderHeight + statusBarHeight
-            }px)`,
-            display: 'flex',
-            flexDirection: 'row',
-          }}
-          key="fixedSidebarContainer"
-        >
-          {/* Outer Sidebar */}
-          <Sider
-            theme="light"
-            collapsible
-            collapsed={collapsedOuter}
-            onCollapse={onCollapseOuter}
-            width={tutorialSidebarWidth}
-            css={scrollbarCss}
-            key="fixedOuterSidebar"
-          >
-            <Menu
-              theme="light"
-              mode="inline"
-              selectedKeys={[
-                currentSelectionPath.length === 0
-                  ? '-1'
-                  : String(currentSelectionPath[0]),
-              ]}
-            >
-              <Menu.Item
-                key="-1"
-                css={{ fontWeight: 'bold' }}
-                icon={<HomeOutlined />}
-                onClick={() => {
-                  if (!arrayEquals(currentSelectionPath, [])) {
-                    onCurrentSelectionChange([]);
-                  }
-                }}
-              >
-                Main
-              </Menu.Item>
-              <Menu.Divider />
-              {tutorial.content.children.length > 0 ? (
-                tutorial.content.children.map((outer, i) => (
-                  <Menu.Item
-                    key={i}
-                    css={{ fontWeight: 'bold' }}
-                    onClick={() => {
-                      if (!arrayEquals(currentSelectionPath, [i])) {
-                        onCurrentSelectionChange([i]);
-                      }
-                    }}
-                    icon={
-                      outer.children != null ? (
-                        <FolderOutlined />
-                      ) : (
-                        <FileOutlined />
-                      )
-                    }
-                  >
-                    {outer.name}
-                  </Menu.Item>
-                ))
-              ) : (
-                <EmptyMenuItem />
-              )}
-              <Menu.Divider />
-              <Menu.Item icon={<PlusOutlined />} onClick={addPageGroup}>
-                Add Page Group
-              </Menu.Item>
-              <Menu.Item icon={<PlusOutlined />} onClick={addPage}>
-                Add Page
-              </Menu.Item>
-            </Menu>
-          </Sider>
-          {/* Inner Sidebar */}
-          {showInnerSidebar && (
-            <Sider
-              theme="light"
-              collapsible
-              collapsed={collapsedInner}
-              onCollapse={onCollapseInner}
-              width={tutorialSidebarWidth}
-              css={scrollbarCss}
-              key="fixedInnerSidebar"
-            >
-              <Menu
-                theme="light"
-                mode="inline"
-                selectedKeys={[String(currentSelectionPath[1])]}
-              >
-                {tutorial.content.children[currentSelectionPath[0]].children
-                  .length > 0 ? (
-                  tutorial.content.children[
-                    currentSelectionPath[0]
-                  ].children.map((inner, j) => (
-                    <Menu.Item
-                      key={j}
-                      onClick={() => {
-                        if (
-                          !arrayEquals(currentSelectionPath, [
-                            currentSelectionPath[0],
-                            j,
-                          ])
-                        ) {
-                          onCurrentSelectionChange([
-                            currentSelectionPath[0],
-                            j,
-                          ]);
-                        }
-                      }}
-                    >
-                      {inner.name}
-                    </Menu.Item>
-                  ))
-                ) : (
-                  <EmptyMenuItem />
-                )}
-                <Menu.Divider />
-                <Menu.Item
-                  icon={<PlusOutlined />}
-                  onClick={() => addSubpage(currentSelectionPath[0])}
-                >
-                  Add Page
-                </Menu.Item>
-              </Menu>
-            </Sider>
-          )}
-        </div>
-      </div>
-    )
+    <TwoLevelFixedSidebar
+      top={mainHeaderHeight + pageHeaderHeight + statusBarHeight}
+      outerVisible={true}
+      innerVisible={
+        (currentSelectionPath.length === 1 && currentPage.children) ||
+        currentSelectionPath.length === 2
+      }
+      outerContent={
+        <TutorialEditorSidebarOuterContent
+          tutorial={tutorial}
+          currentSelectionPath={currentSelectionPath}
+          onTutorialChange={onTutorialChange}
+          onCurrentSelectionChange={onCurrentSelectionChange}
+        />
+      }
+      innerContent={
+        <TutorialEditorSidebarInnerContent
+          tutorial={tutorial}
+          currentSelectionPath={currentSelectionPath}
+          onTutorialChange={onTutorialChange}
+          onCurrentSelectionChange={onCurrentSelectionChange}
+        />
+      }
+    />
   );
 }
