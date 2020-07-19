@@ -4,7 +4,6 @@ const router = express.Router();
 const bcrypt = require('bcryptjs');
 const passport = require('passport');
 const jwt = require('jsonwebtoken');
-const config = require('../../config');
 const convertTutorialContentToOutline = require('../../utils/tutorial')
   .convertTutorialContentToOutline;
 

@@ -3,7 +3,6 @@ const mongoose = require('mongoose');
 require('dotenv').config();
 const addRoutes = require('./routes/index');
 const addMiddleware = require('./middleware');
-const connectionString = require('./config').mongoUri;
 const path = require('path');
 
 // -- Globals --
@@ -16,7 +15,7 @@ addRoutes(app);
 
 // -- Connect mongoose --
 mongoose
-  .connect(connectionString, {
+  .connect(process.env.MONGO_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })

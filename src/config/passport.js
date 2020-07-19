@@ -2,19 +2,18 @@ const JwtStrategy = require('passport-jwt').Strategy;
 const ExtractJwt = require('passport-jwt').ExtractJwt;
 const mongoose = require('mongoose');
 const User = mongoose.model('users');
-const config = require('../config');
 const GoogleStrategy = require('passport-google-oauth2').Strategy;
 const AnonymousStrategy = require('passport-anonymous').Strategy;
 
 const jwtOpts = {
   jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(), // Since we're getting an encrypted JWT token as a parameter, it'd be better if we could just have it decrypted automatically, this is what this option does
-  secretOrKey: config.secretOrKey,
+  secretOrKey: process.env.SECRET_OR_KEY,
 };
 
 const googleOpts = {
-  clientID: config.google.clientId,
-  clientSecret: config.google.clientSecret,
-  callbackURL: config.google.callbackUrl, // After logging in, we should be redirected to the home page
+  clientID: process.env.GOOGLE_CLIENT_ID,
+  clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+  callbackURL: process.env.GOOGLE_CALLBACK_URL, // After logging in, we should be redirected to the home page
 };
 
 module.exports = (passport) => {
