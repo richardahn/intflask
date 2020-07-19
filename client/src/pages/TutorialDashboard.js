@@ -219,7 +219,7 @@ export default function TutorialDashboard({ match, history }) {
         <Breadcrumb css={{ marginBottom: '1rem' }}>
           <Breadcrumb.Item>
             <RouterLink to="/admin">
-              <HomeOutlined /> Created Tutorials
+              <HomeOutlined /> Admin Home
             </RouterLink>
           </Breadcrumb.Item>
           <Breadcrumb.Item>Dashboard</Breadcrumb.Item>

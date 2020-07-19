@@ -22,6 +22,7 @@ import TutorialPreview from './pages/TutorialPreview';
 import Purchases from './pages/Purchases';
 import ViewTutorial from './pages/ViewTutorial';
 import Settings from './pages/Settings';
+import VerifyAccount from './pages/VerifyAccount';
 
 // -- Actions --
 import {
@@ -67,6 +68,11 @@ export default function App() {
               exact
               path="/admin/edit-tutorial/:slug"
               component={EditTutorial}
+            />
+            <PrivateRoute
+              exact
+              path="/verify/:token"
+              component={VerifyAccount}
             />
             <PrivateRoute
               exact

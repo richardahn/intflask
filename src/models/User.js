@@ -30,6 +30,7 @@ const UserSchema = new mongoose.Schema({
     required: true,
   },
   purchases: [{ type: mongoose.Types.ObjectId, ref: 'purchases' }],
+  verified: { type: Boolean, required: true, default: false },
 });
 
 module.exports = mongoose.model('users', UserSchema);

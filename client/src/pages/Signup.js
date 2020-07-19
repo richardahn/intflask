@@ -20,6 +20,7 @@ import {
   Button,
   Checkbox,
   message,
+  notification,
 } from 'antd';
 import Sider from 'antd/lib/layout/Sider';
 import { GoogleLoginButton } from '../components/intflask-antd';
@@ -143,6 +144,11 @@ function Signup({ signupUser, errors, history }) {
       signupUser(values, () => {
         history.push('/login');
         message.success('Successfully created an account');
+        notification.open({
+          message: 'Verification email has been sent',
+          description: 'Please verify your account as soon as possible',
+          placement: 'bottomRight',
+        });
       });
     },
     [signupUser, history],

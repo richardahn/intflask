@@ -1,8 +1,8 @@
 const bodyParser = require('body-parser');
 const passport = require('passport');
-const setupPassport = require('./config/passport');
+const setupPassport = require('../setup/passport');
 
-function addMiddleware(app) {
+function useApplicationMiddleware(app) {
   app.use(bodyParser.json({ limit: '50mb' }));
   app.use(
     bodyParser.urlencoded({
@@ -14,4 +14,4 @@ function addMiddleware(app) {
   setupPassport(passport);
 }
 
-module.exports = addMiddleware;
+module.exports = useApplicationMiddleware;

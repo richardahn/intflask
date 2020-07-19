@@ -1,17 +1,17 @@
+require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
-require('dotenv').config();
-const addRoutes = require('./routes/index');
-const addMiddleware = require('./middleware');
 const path = require('path');
+const useRoutes = require('./routes/index');
+const useApplicationMiddleware = require('./middleware/useApplicationMiddleware');
 
 // -- Globals --
 global.appRoot = path.join(__dirname, '..');
 
 // -- Configure App --
 const app = express();
-addMiddleware(app);
-addRoutes(app);
+useApplicationMiddleware(app);
+useRoutes(app);
 
 // -- Connect mongoose --
 mongoose

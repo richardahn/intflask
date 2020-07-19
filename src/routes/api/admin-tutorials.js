@@ -5,6 +5,7 @@ const bcrypt = require('bcryptjs');
 const passport = require('passport');
 const jwt = require('jsonwebtoken');
 
+const userVerified = require('../../middleware/userVerified');
 const getEmptyTutorialContent = require('../../utils/tutorial')
   .getEmptyTutorialContent;
 
@@ -13,7 +14,7 @@ const Tutorial = require('../../models/Tutorial');
 // -- Create --
 router.post(
   '/',
-  passport.authenticate('jwt', { session: false }),
+  [passport.authenticate('jwt', { session: false }), userVerified],
   (req, res) => {
     const currentDate = Date.now();
     const tutorial = new Tutorial({
@@ -44,7 +45,7 @@ router.post(
 /** Sends back all the author's tutorials' metadata(excludes the tutorial content) */
 router.get(
   '/',
-  passport.authenticate('jwt', { session: false }),
+  [passport.authenticate('jwt', { session: false }), userVerified],
   (req, res) => {
     Tutorial.find(
       { userId: req.user.id },
@@ -62,7 +63,7 @@ router.get(
 );
 router.get(
   '/:slug',
-  passport.authenticate('jwt', { session: false }),
+  [passport.authenticate('jwt', { session: false }), userVerified],
   async (req, res) => {
     try {
       const projection = {};
@@ -92,7 +93,7 @@ router.get(
 // -- Update --
 router.put(
   '/:slug',
-  passport.authenticate('jwt', { session: false }),
+  [passport.authenticate('jwt', { session: false }), userVerified],
   async (req, res) => {
     try {
       const tutorial = await Tutorial.findOneAndUpdate(
@@ -111,7 +112,7 @@ router.put(
 
 router.delete(
   '/:slug',
-  passport.authenticate('jwt', { session: false }),
+  [passport.authenticate('jwt', { session: false }), userVerified],
   async (req, res) => {
     try {
       const tutorial = await Tutorial.findOne({
