@@ -107,7 +107,7 @@ function TutorialViewer({ tutorial, top }) {
   );
 }
 
-export default function ViewTutorial({ match }) {
+export default function ViewTutorial({ match, history }) {
   const { slug } = match.params;
   const [loadingTutorial, tutorial] = useGetEffect(
     `/api/tutorials/${slug}`,
@@ -118,6 +118,10 @@ export default function ViewTutorial({ match }) {
     },
     [],
   );
+  if (tutorial && !tutorial.purchased) {
+    history.push(`/tutorial-preview/${slug}`);
+    message.error('You have not purchased this course yet');
+  }
   return (
     <AppLayout>
       {loadingTutorial ? (

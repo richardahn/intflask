@@ -17,19 +17,17 @@ import EditTutorial from './pages/EditTutorial';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
-import TeacherSignup from './pages/TeacherSignup';
 import TutorialDashboard from './pages/TutorialDashboard';
 import TutorialPreview from './pages/TutorialPreview';
 import Purchases from './pages/Purchases';
 import ViewTutorial from './pages/ViewTutorial';
-
-import EditorPlayground from './pages/EditorPlayground';
 
 // -- Actions --
 import {
   moveJwtFromCookiesToLocalStorage,
   authenticateJwtFromStorage,
 } from './actions/auth';
+import PurchaseTutorial from './pages/PurchaseTutorial';
 
 // Setup store
 const store = createAppStore();
@@ -54,8 +52,8 @@ export default function App() {
             <PrivateRoute exact path="/purchases" component={Purchases} />
             <PrivateRoute
               exact
-              path="/teacher-signup"
-              component={TeacherSignup}
+              path="/purchase-tutorial/:slug"
+              component={PurchaseTutorial}
             />
             <PrivateRoute
               exact
@@ -77,12 +75,6 @@ export default function App() {
               exact
               path="/admin/create-tutorial"
               component={CreateTutorial}
-            />
-
-            <Route
-              exact
-              path="/editor-playground"
-              component={EditorPlayground}
             />
           </Switch>
         </IntflaskLayout>

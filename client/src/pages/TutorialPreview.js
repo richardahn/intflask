@@ -180,17 +180,6 @@ export default function TutorialPreview({ match }) {
     [],
   );
   useEffect(() => loadTutorial(), []);
-  const purchaseTutorial = useCallback(() => {
-    axios
-      .post(`/api/purchase/${slug}`)
-      .then(() => {
-        message.success('Successfully purchased tutorial');
-      })
-      .catch((error) => {
-        console.error(error);
-        message.error('Failed to purchase tutorial');
-      });
-  }, [slug]);
   return (
     <AppLayout>
       {loadingTutorial ? (
@@ -215,11 +204,13 @@ export default function TutorialPreview({ match }) {
                 <Button>Go To Tutorial</Button>
               </RouterLink>
             ) : tutorial.price === 0 ? (
-              <Button onClick={purchaseTutorial}>Enroll</Button>
+              <RouterLink to={`/purchase-tutorial/${slug}`}>
+                <Button>Get</Button>
+              </RouterLink>
             ) : (
-              <Button type="primary" onClick={purchaseTutorial}>
-                Buy ${tutorial.price}
-              </Button>
+              <RouterLink to={`/purchase-tutorial/${slug}`}>
+                <Button type="primary">Buy ${tutorial.price}</Button>
+              </RouterLink>
             )}
           </div>
           <Divider orientation="left">Details</Divider>

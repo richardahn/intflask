@@ -1,5 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
+require('dotenv').config();
 const addRoutes = require('./routes/index');
 const addMiddleware = require('./middleware');
 const connectionString = require('./config').mongoUri;
