@@ -17,6 +17,7 @@ import {
   Skeleton,
   Divider,
   Alert,
+  Spin,
 } from 'antd';
 import PageSpinner from '../components/PageSpinner';
 import {
@@ -33,19 +34,22 @@ import FloatingActionButton from '../components/FloatingActionButton';
 import TutorialList, {
   AdminTutorialListItem,
 } from '../components/TutorialList';
-import { useGetEffect } from '../hooks/axios';
+import { useGetEffect, useGetCallback, usePostCallback } from '../hooks/axios';
 
 const { Content, Header } = Layout;
 const { Title, Text, Link } = Typography;
 
 export default function Administrator() {
   const [notVerified, setNotVerified] = useState(null);
+  const [notConnectedToStripe, setNotConnectedToStripe] = useState(null);
   const [loadingTutorials, tutorials] = useGetEffect(
     '/api/admin/tutorials',
     {
       onError: (error) => {
         if (error.response.data.notVerified) {
           setNotVerified(true);
+        } else if (error.response.data.notConnectedToStripe) {
+          setNotConnectedToStripe(true);
         } else {
           message.error('Failed to load tutorials');
         }
@@ -53,7 +57,21 @@ export default function Administrator() {
     },
     [],
   );
+  const [resendVerificationEmail, resendingVerificationEmail] = usePostCallback(
+    '/api/users/resend',
+    {
+      onSuccess: () => message.success('Successfully sent verification email'),
+      onError: () => message.error('Failed to resend verification email'),
+    },
+  );
 
+  const [setupStripeAccount, settingUpStripeAccount] = useGetCallback(
+    '/auth/stripe',
+    {
+      onSuccess: (response) => (window.location = response.data),
+      onError: () => message.error('Failed to setup an account with stripe'),
+    },
+  );
   return (
     <AppLayout>
       <AppHeader css={{ height: 'initial' }}>
@@ -67,7 +85,14 @@ export default function Administrator() {
         <PaddedContent css={{ marginTop: '1rem' }}>
           <Alert
             message="Unauthorized"
-            description="You must verify your account to start creating tutorials"
+            description={
+              <div>
+                You must verify your account to start creating tutorials. Click{' '}
+                {resendingVerificationEmail && <Spin />}{' '}
+                <Link onClick={resendVerificationEmail}>here</Link> to resend a
+                verification email.
+              </div>
+            }
             type="warning"
             showIcon
             css={{ marginBottom: '1rem' }}
@@ -77,6 +102,17 @@ export default function Administrator() {
               Go Back Home
             </Button>
           </RouterLink>
+        </PaddedContent>
+      ) : notConnectedToStripe ? (
+        <PaddedContent css={{ marginTop: '2rem' }}>
+          <h2>Setup an Account with Stripe</h2>
+          <p>
+            In order to use our service and make money, you will need to setup
+            an account with Stripe, a secure money transfer protocol.
+          </p>
+          <Button onClick={setupStripeAccount} loading={settingUpStripeAccount}>
+            Setup an Account
+          </Button>
         </PaddedContent>
       ) : (
         <PaddedContent>

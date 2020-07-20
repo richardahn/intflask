@@ -17,6 +17,10 @@ function generateVerificationToken(userId) {
   return new Token({ userId, token: crypto.randomBytes(16).toString('hex') });
 }
 
+function getVerificationLink(token) {
+  return `${process.env.BASE_CLIENT_URL}/verify/${token}`;
+}
+
 router.post('/signup', async (req, res) => {
   const { errors, isValid } = validateSignupInput(req.body);
   if (!isValid) {
@@ -44,7 +48,7 @@ router.post('/signup', async (req, res) => {
     // Send a verification email
     const verificationToken = generateVerificationToken(user.id);
     await verificationToken.save();
-    const verificationLink = `${req.protocol}://${process.env.BASE_CLIENT_URL}/verify/${verificationToken.token}`;
+    const verificationLink = getVerificationLink(verificationToken.token);
     await sendVerificationEmail(user, verificationLink);
 
     res.json(user);
@@ -89,7 +93,7 @@ router.post(
 
       const verificationToken = generateVerificationToken(user.id);
       await verificationToken.save();
-      const verificationLink = `${process.env.BASE_CLIENT_URL}/verify/${verificationToken.token}`;
+      const verificationLink = getVerificationLink(verificationToken.token);
       await sendVerificationEmail(user, verificationLink);
       res.status(204).end();
     } catch (error) {

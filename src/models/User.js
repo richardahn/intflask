@@ -31,6 +31,7 @@ const UserSchema = new mongoose.Schema({
   },
   purchases: [{ type: mongoose.Types.ObjectId, ref: 'purchases' }],
   verified: { type: Boolean, required: true, default: false },
+  stripeConnectedAccountId: { type: String },
 });
 
 module.exports = mongoose.model('users', UserSchema);

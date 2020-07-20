@@ -2,8 +2,8 @@ require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const path = require('path');
-const useRoutes = require('./routes/index');
-const useApplicationMiddleware = require('./middleware/useApplicationMiddleware');
+const useRoutes = require('./routes');
+const useApplicationMiddleware = require('./middleware');
 
 // -- Globals --
 global.appRoot = path.join(__dirname, '..');

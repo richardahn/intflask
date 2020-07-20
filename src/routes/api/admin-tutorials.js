@@ -10,11 +10,16 @@ const getEmptyTutorialContent = require('../../utils/tutorial')
   .getEmptyTutorialContent;
 
 const Tutorial = require('../../models/Tutorial');
+const userConnectedToStripe = require('../../middleware/userConnectedWithStripe');
 
 // -- Create --
 router.post(
   '/',
-  [passport.authenticate('jwt', { session: false }), userVerified],
+  [
+    passport.authenticate('jwt', { session: false }),
+    userVerified,
+    userConnectedToStripe,
+  ],
   (req, res) => {
     const currentDate = Date.now();
     const tutorial = new Tutorial({
@@ -45,7 +50,11 @@ router.post(
 /** Sends back all the author's tutorials' metadata(excludes the tutorial content) */
 router.get(
   '/',
-  [passport.authenticate('jwt', { session: false }), userVerified],
+  [
+    passport.authenticate('jwt', { session: false }),
+    userVerified,
+    userConnectedToStripe,
+  ],
   (req, res) => {
     Tutorial.find(
       { userId: req.user.id },
@@ -63,7 +72,11 @@ router.get(
 );
 router.get(
   '/:slug',
-  [passport.authenticate('jwt', { session: false }), userVerified],
+  [
+    passport.authenticate('jwt', { session: false }),
+    userVerified,
+    userConnectedToStripe,
+  ],
   async (req, res) => {
     try {
       const projection = {};
@@ -93,7 +106,11 @@ router.get(
 // -- Update --
 router.put(
   '/:slug',
-  [passport.authenticate('jwt', { session: false }), userVerified],
+  [
+    passport.authenticate('jwt', { session: false }),
+    userVerified,
+    userConnectedToStripe,
+  ],
   async (req, res) => {
     try {
       const tutorial = await Tutorial.findOneAndUpdate(
@@ -112,7 +129,11 @@ router.put(
 
 router.delete(
   '/:slug',
-  [passport.authenticate('jwt', { session: false }), userVerified],
+  [
+    passport.authenticate('jwt', { session: false }),
+    userVerified,
+    userConnectedToStripe,
+  ],
   async (req, res) => {
     try {
       const tutorial = await Tutorial.findOne({

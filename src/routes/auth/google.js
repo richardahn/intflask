@@ -5,12 +5,12 @@ const generateJwtToken = require('../../utils/jwt');
 
 // Redirect to google login page
 router.get(
-  '/google',
+  '/',
   passport.authenticate('google', { scope: ['profile', 'email'] }),
 );
 
 router.get(
-  '/google/callback',
+  '/callback',
   passport.authenticate('google', {
     session: false,
     failureRedirect: '/login',
