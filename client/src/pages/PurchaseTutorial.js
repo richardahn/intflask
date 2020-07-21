@@ -237,6 +237,7 @@ function Success({ tutorial }) {
     <Result
       status="success"
       title="Successfully Purchased Tutorial!"
+      subTitle="Thank you for purchasing this tutorial. Please allow a short moment for Stripe to process the payment."
       extra={[
         <RouterLink to={`/view-tutorial/${tutorial.slug}`}>
           <Button type="primary" key="tutorial">

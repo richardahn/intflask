@@ -32,7 +32,7 @@ export function usePostCallback(
         }
       })
       .catch((error) => {
-        console.error(error);
+        console.error(error, error.response);
         if (onError) {
           onError(error);
         }
@@ -109,7 +109,7 @@ export function useGetCallback(
         }
       })
       .catch((error) => {
-        console.error(error);
+        console.error(error, error.response);
         if (onError) {
           onError(error);
         }
@@ -185,7 +185,7 @@ export function useDeleteCallback(
         }
       })
       .catch((error) => {
-        console.error(error);
+        console.error(error, error.response);
         if (onError) {
           onError(error);
         }

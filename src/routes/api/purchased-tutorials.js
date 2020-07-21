@@ -38,8 +38,7 @@ router.get(
         })
         .exec();
 
-      const tutorials = user.purchases
-        .filter((p) => validPurchase(p))
+      const tutorials = user.purchases // Don't filter out purchases that haven't been confirmed by stripe. This is intentional
         .map((p) => p.tutorialId);
       res.json(tutorials);
     } catch (error) {
@@ -69,7 +68,8 @@ router.get(
       if (!validPurchase(purchase)) {
         throw new ResponseError(
           400,
-          'Stripe has not yet validated the purchase. Please allow a short moment for stripe to confirm the purchase.',
+          'Stripe has not yet validated the purchase. Please allow a short moment for stripe to confirm the purchase and then try again.',
+          { stripeNotConfirmed: true },
         );
       }
 

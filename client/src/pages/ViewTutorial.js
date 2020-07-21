@@ -3,7 +3,15 @@
 import { css, jsx } from '@emotion/core';
 import React, { useCallback, useState, useEffect, useMemo } from 'react';
 import axios from 'axios';
-import { message, Typography, Breadcrumb, Layout, Menu, Row } from 'antd';
+import {
+  message,
+  Typography,
+  Breadcrumb,
+  Layout,
+  Menu,
+  Row,
+  notification,
+} from 'antd';
 import { Link as RouterLink, Prompt } from 'react-router-dom';
 import TutorialEditor from '../components/EditTutorial/TutorialEditor';
 import { parseTutorialContent, saveTutorial } from '../utils/tutorial';
@@ -114,7 +122,14 @@ export default function ViewTutorial({ match, history }) {
     {
       transformValue: (value) => parseTutorialContent(value),
       onError: (error) => {
-        if (error.response.data.reason) {
+        if (error.response.data.stripeNotConfirmed) {
+          notification.info({
+            message: 'Waiting for Purchase Confirmation',
+            description: error.response.data.reason,
+            duration: 0,
+            placement: 'topLeft',
+          });
+        } else if (error.response.data.reason) {
           message.error(error.response.data.reason);
         } else {
           message.error('Failed to get tutorial.');
