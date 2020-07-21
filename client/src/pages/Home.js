@@ -17,18 +17,29 @@ import {
   Skeleton,
   Empty,
   List,
+  Alert,
+  Spin,
 } from 'antd';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, Link } from 'react-router-dom';
 import { GoogleOutlined, StarOutlined } from '@ant-design/icons';
 import { PaddedContent, AppLayout } from '../styles';
 import axios from 'axios';
 import TutorialList, { TutorialListItem } from '../components/TutorialList';
-import { useGetEffect } from '../hooks/axios';
+import { useGetEffect, usePostCallback } from '../hooks/axios';
 const { Content, Header, Footer, Sider } = Layout;
 const { Text, Title } = Typography;
 const { TabPane } = Tabs;
 
 export default function Home() {
+  const [, verified] = useGetEffect('/api/users/is-verified', {}, []);
+  const [resendVerificationEmail, resendingVerificationEmail] = usePostCallback(
+    '/api/users/resend',
+    {
+      onSuccess: () => message.success('Successfully sent verification email'),
+      onError: () => message.error('Failed to resend verification email'),
+    },
+  );
+
   const [loadingTopTutorials, topTutorials] = useGetEffect(
     '/api/tutorials',
     {
@@ -48,6 +59,22 @@ export default function Home() {
   return (
     <AppLayout>
       <PaddedContent>
+        {verified !== null && !verified && (
+          <Alert
+            message="Unauthorized"
+            description={
+              <div>
+                You must verify your account to start creating tutorials. Click{' '}
+                {resendingVerificationEmail && <Spin />}{' '}
+                <Link onClick={resendVerificationEmail}>here</Link> to resend a
+                verification email.
+              </div>
+            }
+            type="warning"
+            showIcon
+            css={{ marginBottom: '1rem' }}
+          />
+        )}
         <Divider orientation="left">
           <Space>
             Tutorials{' '}

@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcryptjs');
-const crypto = require('crypto');
 const passport = require('passport');
 
 const validateSignupInput = require('../../utils/validation/signup');
@@ -9,17 +8,28 @@ const validateLoginInput = require('../../utils/validation/login');
 const generateJwtToken = require('../../utils/jwt');
 const sendVerificationEmail = require('../../setup/email')
   .sendVerificationEmail;
+const generateVerificationToken = require('../../utils/emailVerification')
+  .generateVerificationToken;
+const getVerificationLink = require('../../utils/emailVerification')
+  .getVerificationLink;
 
 const User = require('../../models/User');
 const Token = require('../../models/Token');
 
-function generateVerificationToken(userId) {
-  return new Token({ userId, token: crypto.randomBytes(16).toString('hex') });
-}
-
-function getVerificationLink(token) {
-  return `${process.env.BASE_CLIENT_URL}/verify/${token}`;
-}
+router.get(
+  '/is-verified',
+  passport.authenticate('jwt', { session: false }),
+  async (req, res) => {
+    try {
+      const user = await User.findById(req.user.id).exec();
+      if (user) return res.json(user.verified);
+      throw 'User could not be found';
+    } catch (error) {
+      console.error(error);
+      return res.status(400).send('Could not find user');
+    }
+  },
+);
 
 router.post('/signup', async (req, res) => {
   const { errors, isValid } = validateSignupInput(req.body);

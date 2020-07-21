@@ -2,14 +2,16 @@ const mongoose = require('mongoose');
 const User = require('./User');
 
 const PurchaseSchema = new mongoose.Schema({
-  userId: { type: mongoose.Types.ObjectId, required: true, ref: 'users' },
+  stripePaymentIntentId: { type: String, required: true },
+  intflaskConfirmation: { type: Boolean },
+  stripeConfirmation: { type: Boolean },
+  userId: { type: mongoose.Types.ObjectId, ref: 'users' },
   tutorialId: {
     type: mongoose.Types.ObjectId,
-    required: true,
     ref: 'tutorials',
   },
-  price: { type: Number, required: true },
-  date: { type: Date, required: true },
+  price: { type: Number },
+  date: { type: Date, required: true, default: Date.now },
 });
 
 PurchaseSchema.pre('remove', async function (next) {

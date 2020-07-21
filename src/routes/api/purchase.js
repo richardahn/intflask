@@ -6,6 +6,7 @@ const passport = require('passport');
 const Tutorial = require('../../models/Tutorial');
 const User = require('../../models/User');
 const Purchase = require('../../models/Purchase');
+const bodyParser = require('body-parser');
 
 async function sendPaymentIntentToStripe(
   amount,
@@ -26,6 +27,88 @@ async function sendPaymentIntentToStripe(
 function convertPriceForStripe(price) {
   return price.toFixed(2).replace('.', '');
 }
+
+router.post(
+  '/webhook',
+  bodyParser.raw({ type: 'application/json' }),
+  async (req, res) => {
+    const sig = req.headers['stripe-signature'];
+    let event;
+    try {
+      event = stripe.webhooks.constructEvent(
+        req.body,
+        sig,
+        process.env.STRIPE_WEBHOOK_SECRET,
+      );
+    } catch (err) {
+      console.error(err);
+      return res.status(400).send(`Webhook Error: ${err.message}`);
+    }
+
+    if (event.type === 'payment_intent.succeeded') {
+      const paymentIntent = event.data.object;
+
+      // See if intflask added the purchase first
+      let purchase = await Purchase.findOne({
+        stripePaymentIntentId: paymentIntent.id,
+      }).exec();
+      if (purchase) {
+        purchase.stripeConfirmation = true;
+      } else {
+        purchase = new Purchase({
+          stripePaymentIntentId: paymentIntent.id,
+          stripeConfirmation: true,
+        });
+      }
+      await purchase.save();
+    }
+
+    res.json({ received: true });
+  },
+);
+
+router.post(
+  '/complete-intflask-side',
+  passport.authenticate('jwt', { session: false }),
+  async (req, res) => {
+    try {
+      const { tutorialSlug, stripePaymentIntentId } = req.body;
+      let purchase = await Purchase.findOne({ stripePaymentIntentId }).exec();
+      const user = await User.findById(req.user.id).exec();
+      const tutorial = await Tutorial.findOne({ slug: tutorialSlug }).exec();
+      if (!purchase) {
+        // We got the purchase first, so fill it up
+        purchase = new Purchase({
+          stripePaymentIntentId,
+          intflaskConfirmation: true,
+          userId: req.user.id,
+          tutorialId: tutorial.id,
+          price: tutorial.price,
+        });
+      } else {
+        // Stripe's webhook arrived first so fill up the rest of the information
+        purchase.intflaskConfirmation = true;
+        purchase.userId = req.user.id;
+        purchase.tutorialId = tutorial.id;
+        purchase.price = tutorial.price;
+      }
+      await purchase.save();
+
+      // Add connections to user/tutorial
+      user.purchases.push(purchase.id);
+      tutorial.purchases.push(purchase.id);
+      await user.save();
+      await tutorial.save();
+
+      res.status(204).end();
+    } catch (error) {
+      console.error(error);
+      res
+        .status(500)
+        .send("Failed to complete intflask's side of the purchase");
+    }
+  },
+);
 
 router.post(
   '/intent/:slug',
@@ -62,19 +145,6 @@ router.post(
           tutorial.userId.stripeConnectedAccountId,
         );
       }
-
-      // // Add purchase to database
-      // const purchase = new Purchase({
-      //   userId: user.id,
-      //   tutorialId: tutorial.id,
-      //   price: tutorial.price,
-      //   date: Date.now(),
-      // });
-      // await purchase.save();
-      // user.purchases.push(purchase.id);
-      // tutorial.purchases.push(purchase.id);
-      // await user.save();
-      // await tutorial.save();
 
       if (paymentIntent) {
         res.status(200).json({

@@ -4,7 +4,13 @@ const session = require('express-session');
 const setupPassport = require('../setup/passport');
 
 function useApplicationMiddleware(app) {
-  app.use(bodyParser.json({ limit: '50mb' }));
+  app.use((req, res, next) => {
+    if (req.originalUrl === '/api/purchase/webhook') {
+      next();
+    } else {
+      bodyParser.json({ limit: '50mb' })(req, res, next);
+    }
+  });
   app.use(
     bodyParser.urlencoded({
       extended: false,
