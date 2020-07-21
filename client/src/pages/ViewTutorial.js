@@ -110,18 +110,20 @@ function TutorialViewer({ tutorial, top }) {
 export default function ViewTutorial({ match, history }) {
   const { slug } = match.params;
   const [loadingTutorial, tutorial] = useGetEffect(
-    `/api/tutorials/${slug}`,
+    `/api/purchased-tutorials/${slug}`,
     {
-      params: { content: true },
       transformValue: (value) => parseTutorialContent(value),
-      onError: () => message.error('Failed to load tutorial'),
+      onError: (error) => {
+        if (error.response.data.reason) {
+          message.error(error.response.data.reason);
+        } else {
+          message.error('Failed to get tutorial.');
+        }
+        history.push(`/tutorial-preview/${slug}`);
+      },
     },
     [],
   );
-  if (tutorial && !tutorial.purchased) {
-    history.push(`/tutorial-preview/${slug}`);
-    message.error('You have not purchased this course yet');
-  }
   return (
     <AppLayout>
       {loadingTutorial ? (
