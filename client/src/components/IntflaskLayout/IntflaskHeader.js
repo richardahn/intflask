@@ -67,10 +67,6 @@ function IntflaskHeader({ logoutUser, history, auth }) {
           to: '/admin',
         },
         {
-          name: 'Settings',
-          to: '/settings',
-        },
-        {
           name: 'Logout',
           to: '',
           onClick: onLogoutClick,

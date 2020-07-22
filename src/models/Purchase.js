@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const User = require('./User');
 
 const PurchaseSchema = new mongoose.Schema({
-  stripePaymentIntentId: { type: String, required: true },
+  stripePaymentIntentId: { type: String },
   intflaskConfirmation: { type: Boolean },
   stripeConfirmation: { type: Boolean },
   userId: { type: mongoose.Types.ObjectId, ref: 'users' },

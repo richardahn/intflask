@@ -7,6 +7,7 @@ const Tutorial = require('../../models/Tutorial');
 const User = require('../../models/User');
 const Purchase = require('../../models/Purchase');
 const bodyParser = require('body-parser');
+const ResponseError = require('../../errors/ResponseError');
 
 async function sendPaymentIntentToStripe(
   amount,
@@ -64,6 +65,42 @@ router.post(
     }
 
     res.json({ received: true });
+  },
+);
+
+router.post(
+  '/free/:slug',
+  passport.authenticate('jwt', { session: false }),
+  async (req, res) => {
+    try {
+      const user = await User.findById(req.user.id).exec();
+      const tutorial = await Tutorial.findOne({ slug: req.params.slug }).exec();
+      if (tutorial.price !== 0) {
+        throw new ResponseError(
+          400,
+          'Only free tutorials can be purchased from this endpoint',
+        );
+      }
+      const purchase = new Purchase({
+        intflaskConfirmation: true,
+        stripeConfirmation: true,
+        userId: user.id,
+        tutorialId: tutorial.id,
+        price: tutorial.price,
+      });
+      await purchase.save();
+      user.purchases.push(purchase.id);
+      tutorial.purchases.push(purchase.id);
+      await user.save();
+      await tutorial.save();
+      res.status(204).end();
+    } catch (error) {
+      if (error instanceof ResponseError) {
+        error.send(res);
+      } else {
+        res.status(500).send('Failed to purchase free tutorial');
+      }
+    }
   },
 );
 

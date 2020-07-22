@@ -21,7 +21,6 @@ import TutorialDashboard from './pages/TutorialDashboard';
 import TutorialPreview from './pages/TutorialPreview';
 import Purchases from './pages/Purchases';
 import ViewTutorial from './pages/ViewTutorial';
-import Settings from './pages/Settings';
 import VerifyAccount from './pages/VerifyAccount';
 
 // -- Actions --
@@ -52,7 +51,6 @@ export default function App() {
             <NonAuthenticatedRoute exact path="/login" component={Login} />
             <NonAuthenticatedRoute exact path="/signup" component={Signup} />
             <PrivateRoute exact path="/purchases" component={Purchases} />
-            <PrivateRoute exact path="/settings" component={Settings} />
             <PrivateRoute
               exact
               path="/purchase-tutorial/:slug"

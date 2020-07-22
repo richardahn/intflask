@@ -64,7 +64,7 @@ router.get(
           },
         })
         .exec();
-      const purchase = user.purchases[0];
+      const purchase = user.purchases.filter((p) => p.tutorialId != null)[0];
       if (!validPurchase(purchase)) {
         throw new ResponseError(
           400,

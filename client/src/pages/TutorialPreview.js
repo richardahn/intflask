@@ -168,7 +168,7 @@ function Reviews({ tutorial, onSubmitReview }) {
   );
 }
 
-export default function TutorialPreview({ match }) {
+export default function TutorialPreview({ match, history }) {
   const { slug } = match.params;
   const [loadTutorial, loadingTutorial, tutorial] = useGetCallback(
     `/api/tutorials/${slug}`,
@@ -180,6 +180,23 @@ export default function TutorialPreview({ match }) {
     [],
   );
   useEffect(() => loadTutorial(), []);
+
+  const [getFreeTutorial, gettingFreeTutorial] = usePostCallback(
+    `/api/purchase/free/${slug}`,
+    {
+      onSuccess: () => {
+        message.success('Successfully obtained tutorial');
+        history.push(`/view-tutorial/${slug}`);
+      },
+      onError: (error) => {
+        if (error.response && error.response.data.reason) {
+          message.error(error.response.data.reason);
+        } else {
+          message.error('Failed to get free tutorial');
+        }
+      },
+    },
+  );
   return (
     <AppLayout>
       {loadingTutorial ? (
@@ -204,8 +221,8 @@ export default function TutorialPreview({ match }) {
                 <Button>Go To Tutorial</Button>
               </RouterLink>
             ) : tutorial.price === 0 ? (
-              <RouterLink to={`/purchase-tutorial/${slug}`}>
-                <Button>Get</Button>
+              <RouterLink onClick={getFreeTutorial}>
+                <Button loading={gettingFreeTutorial}>Get</Button>
               </RouterLink>
             ) : (
               <RouterLink to={`/purchase-tutorial/${slug}`}>
