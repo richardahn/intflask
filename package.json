@@ -17,10 +17,13 @@
   "scripts": {
     "client-install": "npm install --prefix client",
     "start": "node src/server.js",
-    "server": "nodemon --inspect=9222 src/server.js",
-    "client": "npm start --prefix client",
-    "dev": "concurrently \"yarn server\" \"yarn client\"",
+    "server:dev": "nodemon --inspect=9222 src/server.js",
+    "client:dev": "npm start --prefix client",
+    "dev": "concurrently \"yarn server:dev\" \"yarn client:dev\"",
     "prettier": "prettier --write \"**/*.js\"",
+    "server": "node src/server.js",
+    "client": "npm start --prefix client",
+    "prod": "concurrently \"yarn server\" \"yarn client\"",
     "heroku-postbuild": "npm install --prefix client && npm run build --prefix client"
   },
   "dependencies": {
