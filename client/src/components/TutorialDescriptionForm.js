@@ -1,8 +1,8 @@
 /** @jsx jsx */
 // -- General Imports --
-import { css, jsx } from '@emotion/core';
-import React, { useCallback, useState, useEffect, useMemo } from 'react';
+import { jsx } from '@emotion/core';
 import { Button, Form, Input, InputNumber } from 'antd';
+import { useCallback, useState } from 'react';
 import InputTags from '../components/InputTags';
 
 export default function TutorialDescriptionForm({

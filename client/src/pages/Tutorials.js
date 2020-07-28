@@ -1,38 +1,14 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
+import { Divider, Empty, Layout, message, Skeleton, Typography } from 'antd';
 import axios from 'axios';
-import React, { useState, useCallback, useEffect } from 'react';
-import { Link as RouterLink } from 'react-router-dom';
-import {
-  Layout,
-  Menu,
-  Typography,
-  Row,
-  Col,
-  List,
-  Space,
-  Avatar,
-  message,
-  Skeleton,
-  Empty,
-  Divider,
-  Dropdown,
-  Select,
-  Checkbox,
-} from 'antd';
-import {
-  GoogleOutlined,
-  StarOutlined,
-  LikeOutlined,
-  MessageOutlined,
-} from '@ant-design/icons';
-import TutorialList, { TutorialListItem } from '../components/TutorialList';
+import { useEffect, useState } from 'react';
 import Filter from '../components/Filter';
+import TutorialList, { TutorialListItem } from '../components/TutorialList';
 import { mainHeaderHeight } from '../styles';
 
-const { Content, Header, Footer, Sider } = Layout;
-const { Text, Title } = Typography;
-const { Option } = Select;
+const { Content, Sider } = Layout;
+const { Text } = Typography;
 
 export default function Tutorials({ match }) {
   const { query } = match.params;

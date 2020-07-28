@@ -1,36 +1,12 @@
 /** @jsx jsx */
+import { CheckCircleOutlined, MinusCircleOutlined } from '@ant-design/icons';
 import { css, jsx } from '@emotion/core';
-
-import React, { useEffect, useState } from 'react';
+import { List, Space, Statistic, Tag, Typography } from 'antd';
+import React from 'react';
 import { Link as RouterLink } from 'react-router-dom';
-import {
-  Layout,
-  Button,
-  Typography,
-  Space,
-  List,
-  Tag,
-  Breadcrumb,
-  Tooltip,
-  Statistic,
-} from 'antd';
-import PageSpinner from '../components/PageSpinner';
-import {
-  LikeOutlined,
-  StarOutlined,
-  CheckCircleOutlined,
-  MinusCircleOutlined,
-  HomeOutlined,
-  PlusOutlined,
-  DollarCircleOutlined,
-} from '@ant-design/icons';
-import axios from 'axios';
-import { AppLayout, PaddedContent, AppHeader } from '../styles';
-import FloatingActionButton from '../components/FloatingActionButton';
 import Tags from './Tags';
 
-const { Content, Header } = Layout;
-const { Title, Text, Link } = Typography;
+const { Text } = Typography;
 
 function IconText({ icon, text }) {
   return (

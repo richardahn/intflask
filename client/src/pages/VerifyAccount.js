@@ -1,11 +1,10 @@
+import { Button, message, Result } from 'antd';
 import React, { useState } from 'react';
-import { AppLayout, PaddedContent } from '../styles';
-import { usePostEffect, usePostCallback } from '../hooks/axios';
-import PageSpinner from '../components/PageSpinner';
-import ErrorContent from '../components/ErrorContent';
-import CenteredContent from '../components/CenteredContent';
-import { Result, Button, message } from 'antd';
 import { Link as RouterLink } from 'react-router-dom';
+import CenteredContent from '../components/CenteredContent';
+import PageSpinner from '../components/PageSpinner';
+import { usePostCallback, usePostEffect } from '../hooks/axios';
+import { AppLayout } from '../styles';
 
 export default function VerifyAccount({ match }) {
   const { token } = match.params;

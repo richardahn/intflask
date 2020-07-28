@@ -1,17 +1,15 @@
 /** @jsx jsx */
+import { MenuOutlined } from '@ant-design/icons';
 import { css, jsx } from '@emotion/core';
-
+// -- Design --
+import { Button, Dropdown, Input, Layout, Menu } from 'antd';
 // -- General Imports --
-import React, { Component, useCallback, useState } from 'react';
-import { Link as RouterLink, withRouter } from 'react-router-dom';
+import { useCallback } from 'react';
 import { connect } from 'react-redux';
+import { Link as RouterLink, withRouter } from 'react-router-dom';
 import { logoutUser } from '../../actions/auth';
 
-// -- Design --
-import { Layout, Menu, Typography, Button, Input, Space, Dropdown } from 'antd';
-import { MoreOutlined, MenuOutlined } from '@ant-design/icons';
 const { Header } = Layout;
-const { Text } = Typography;
 function Logo(props) {
   return (
     <RouterLink

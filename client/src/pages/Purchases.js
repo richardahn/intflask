@@ -1,30 +1,12 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
-
-import React, { useState, useCallback } from 'react';
-import {
-  Layout,
-  Menu,
-  Typography,
-  Row,
-  Col,
-  Space,
-  Divider,
-  message,
-  Skeleton,
-  Empty,
-} from 'antd';
-import { Link as RouterLink } from 'react-router-dom';
-import { GoogleOutlined } from '@ant-design/icons';
-import { AppLayout, PaddedContent } from '../styles';
+import { Divider, Empty, message, Skeleton } from 'antd';
+import CenteredContent from '../components/CenteredContent';
 import TutorialList, {
   PurchasedTutorialListItem,
 } from '../components/TutorialList';
 import { useGetEffect } from '../hooks/axios';
-import CenteredContent from '../components/CenteredContent';
-
-const { Content, Header, Footer, Sider } = Layout;
-const { Text, Title } = Typography;
+import { AppLayout, PaddedContent } from '../styles';
 
 export default function Purchases(props) {
   const [loadingPurchases, purchases] = useGetEffect(

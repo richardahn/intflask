@@ -1,9 +1,8 @@
 /** @jsx jsx */
-import { css, jsx } from '@emotion/core';
-
-import React from 'react';
-import { Tag, Input, Tooltip } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
+import { css, jsx } from '@emotion/core';
+import { Input, Tag, Tooltip } from 'antd';
+import React from 'react';
 
 export default class InputTags extends React.Component {
   state = {

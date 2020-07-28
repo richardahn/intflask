@@ -1,6 +1,5 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
-import React from 'react';
 import { Spin } from 'antd';
 
 export default function PageSpinner() {

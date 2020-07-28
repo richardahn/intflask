@@ -1,26 +1,15 @@
 /** @jsx jsx */
 // -- General Imports --
-import { css, jsx } from '@emotion/core';
-import React, { useState, useEffect } from 'react';
-import { Tag, Space } from 'antd';
-import {
-  HomeOutlined,
-  SyncOutlined,
-  CheckCircleOutlined,
-  ClockCircleOutlined,
-} from '@ant-design/icons';
+import { CheckCircleOutlined, SyncOutlined } from '@ant-design/icons';
+import { jsx } from '@emotion/core';
+import { Space, Tag } from 'antd';
 import saveStates from '../../enums/saveStates';
-
-// -- Redux --
-import { connect } from 'react-redux';
-
 // -- Css --
 import {
-  fixedHeaderCssAtHeight,
+  AppFixedHeader,
   mainHeaderHeight,
   pageHeaderHeight,
   statusBarHeight,
-  AppFixedHeader,
 } from '../../styles';
 
 function saveStateToTag(saveState) {

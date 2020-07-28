@@ -1,31 +1,27 @@
 /** @jsx jsx */
-import { css, jsx } from '@emotion/core';
-import React, { Component, useCallback, useEffect } from 'react';
-import { Link as RouterLink } from 'react-router-dom';
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import { signupUser } from '../actions/auth';
-import SignupImage from '../assets/signup.jpg';
-import SignupImageTiny from '../assets/signup-tiny.jpg';
-
+import { jsx } from '@emotion/core';
 import {
-  Card,
-  Layout,
+  Button,
   Col,
-  Row,
-  Typography,
   Divider,
   Form,
   Input,
-  Button,
-  Checkbox,
+  Layout,
   message,
   notification,
+  Row,
+  Typography,
 } from 'antd';
-import Sider from 'antd/lib/layout/Sider';
+import { useCallback, useEffect } from 'react';
+import { connect } from 'react-redux';
+import { Link as RouterLink } from 'react-router-dom';
+import { signupUser } from '../actions/auth';
+import SignupImageTiny from '../assets/signup-tiny.jpg';
+import SignupImage from '../assets/signup.jpg';
 import { GoogleLoginButton } from '../components/intflask-antd';
 import ProgressiveImage from '../components/ProgressiveImage';
-const { Content, Header } = Layout;
+
+const { Content } = Layout;
 const { Title, Text, Link } = Typography;
 
 function SignupForm({ onSignup, errors }) {

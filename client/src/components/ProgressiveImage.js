@@ -12,6 +12,7 @@ export default function ProgressiveImage({ src, placeholderSrc, ...props }) {
             transition: 'opacity ease-in 70ms',
             WebkitTransition: '-webkit-filter 140ms ease-in',
           }}
+          alt="progressive"
           src={src}
           {...props}
         />

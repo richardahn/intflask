@@ -1,34 +1,22 @@
 /** @jsx jsx */
-import { css, jsx } from '@emotion/core';
-
-import React, { useState, useCallback, useEffect } from 'react';
+import { jsx } from '@emotion/core';
 import {
-  Layout,
-  Menu,
-  Typography,
-  Row,
-  Col,
-  Space,
-  Tabs,
+  Alert,
   Button,
   Card,
+  Col,
   Divider,
-  message,
-  Skeleton,
   Empty,
-  List,
-  Alert,
+  message,
+  Row,
+  Skeleton,
+  Space,
   Spin,
 } from 'antd';
-import { Link as RouterLink, Link } from 'react-router-dom';
-import { GoogleOutlined, StarOutlined } from '@ant-design/icons';
-import { PaddedContent, AppLayout } from '../styles';
-import axios from 'axios';
+import { Link, Link as RouterLink } from 'react-router-dom';
 import TutorialList, { TutorialListItem } from '../components/TutorialList';
 import { useGetEffect, usePostCallback } from '../hooks/axios';
-const { Content, Header, Footer, Sider } = Layout;
-const { Text, Title } = Typography;
-const { TabPane } = Tabs;
+import { AppLayout, PaddedContent } from '../styles';
 
 export default function Home() {
   const [, verified] = useGetEffect('/api/users/is-verified', {}, []);

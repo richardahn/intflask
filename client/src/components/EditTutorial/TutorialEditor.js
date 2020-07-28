@@ -1,27 +1,27 @@
 /** @jsx jsx */
 // -- General Imports --
 import { css, jsx } from '@emotion/core';
-import React, { useState, useCallback, useRef, useEffect } from 'react';
-import { Row, Typography, Button } from 'antd';
-import TutorialEditorSidebar from './TutorialEditorSidebar';
-import TutorialEditorStatusBar from './TutorialEditorStatusBar';
+import { Row, Typography } from 'antd';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import {
-  reduceTutorialContent,
-  getCurrentPageFromSelection,
-  isMain,
-  getName,
-  reduceTutorialCurrentPageName,
-} from '../../utils/tutorial';
-
-import {
-  PaddedContent,
   AppLayout,
   mainHeaderHeight,
+  PaddedContent,
   pageHeaderHeight,
   statusBarHeight,
 } from '../../styles';
+import {
+  getCurrentPageFromSelection,
+  getName,
+  isMain,
+  reduceTutorialContent,
+  reduceTutorialCurrentPageName,
+} from '../../utils/tutorial';
 import IntflaskEditor from '../IntflaskEditor';
-const { Title, Text } = Typography;
+import TutorialEditorSidebar from './TutorialEditorSidebar';
+import TutorialEditorStatusBar from './TutorialEditorStatusBar';
+
+const { Title } = Typography;
 
 function EditableTitle({ children, ...props }) {
   return (

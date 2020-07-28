@@ -1,43 +1,32 @@
 /** @jsx jsx */
-import { css, jsx } from '@emotion/core';
-import React, { useCallback, useState, useEffect } from 'react';
-import { Link as RouterLink } from 'react-router-dom';
-import {
-  Layout,
-  Carousel,
-  Button,
-  Divider,
-  message,
-  Skeleton,
-  Empty,
-  Descriptions,
-  Typography,
-  Rate,
-  Tree,
-  Comment,
-  Tooltip,
-  List,
-  Statistic,
-  Row,
-  Input,
-  Space,
-  Avatar,
-} from 'antd';
 import { DownOutlined } from '@ant-design/icons';
-import Tags from '../components/Tags';
-import ErrorContent from '../components/ErrorContent';
-import { AppLayout, PaddedContent } from '../styles';
+import { jsx } from '@emotion/core';
 import {
-  useGetEffect,
-  usePostEffect,
-  usePostCallback,
-  useGetCallback,
-} from '../hooks/axios';
-import axios from 'axios';
-import { parseTutorialDates } from '../utils/tutorial';
+  Avatar,
+  Button,
+  Comment,
+  Descriptions,
+  Divider,
+  Empty,
+  Input,
+  List,
+  message,
+  Rate,
+  Skeleton,
+  Space,
+  Statistic,
+  Tree,
+  Typography,
+} from 'antd';
 import Modal from 'antd/lib/modal/Modal';
+import { useCallback, useEffect, useState } from 'react';
+import { Link as RouterLink } from 'react-router-dom';
+import ErrorContent from '../components/ErrorContent';
+import Tags from '../components/Tags';
+import { useGetCallback, usePostCallback } from '../hooks/axios';
+import { AppLayout, PaddedContent } from '../styles';
+import { parseTutorialDates } from '../utils/tutorial';
 
-const { Content } = Layout;
 const { Text } = Typography;
 const { TextArea } = Input;
 

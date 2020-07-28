@@ -1,28 +1,24 @@
 /** @jsx jsx */
 // -- General Imports --
-import { css, jsx } from '@emotion/core';
-import React, { useCallback, useState, useEffect, useMemo } from 'react';
+import { HomeOutlined } from '@ant-design/icons';
+import { jsx } from '@emotion/core';
+import { Breadcrumb, Layout, message, Typography } from 'antd';
 import axios from 'axios';
-import { message, Typography, Breadcrumb, Layout } from 'antd';
+import { useCallback, useEffect, useState } from 'react';
 import { Link as RouterLink, Prompt } from 'react-router-dom';
 import TutorialEditor from '../components/EditTutorial/TutorialEditor';
-import { parseTutorialContent, saveTutorial } from '../utils/tutorial';
-import { HomeOutlined } from '@ant-design/icons';
-
+import ErrorContent from '../components/ErrorContent';
+import PageSpinner from '../components/PageSpinner';
+import saveStates, { getNextState } from '../enums/saveStates';
 // -- Css --
 import {
-  fixedHeaderCssAtHeight,
+  AppFixedHeader,
+  AppLayout,
   mainHeaderHeight,
   pageHeaderHeight,
   statusBarHeight,
-  paddedContentCss,
-  AppLayout,
-  AppHeader,
-  AppFixedHeader,
 } from '../styles';
-import PageSpinner from '../components/PageSpinner';
-import ErrorContent from '../components/ErrorContent';
-import saveStates, { getNextState } from '../enums/saveStates';
+import { parseTutorialContent, saveTutorial } from '../utils/tutorial';
 
 const { Title } = Typography;
 const { Content } = Layout;

@@ -1,25 +1,25 @@
 /** @jsx jsx */
+import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { jsx } from '@emotion/core';
-import React, { useCallback, useEffect } from 'react';
-import { Link as RouterLink } from 'react-router-dom';
-import { connect } from 'react-redux';
-import { loginUser } from '../actions/auth';
-import { GoogleLoginButton } from '../components/intflask-antd';
-import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import {
+  Button,
   Card,
-  Layout,
+  Checkbox,
   Col,
-  Row,
-  Typography,
   Divider,
   Form,
   Input,
-  Button,
-  Checkbox,
+  Layout,
+  Row,
+  Typography,
 } from 'antd';
+import { useCallback, useEffect } from 'react';
+import { connect } from 'react-redux';
+import { Link as RouterLink } from 'react-router-dom';
+import { loginUser } from '../actions/auth';
+import { GoogleLoginButton } from '../components/intflask-antd';
 const { Content } = Layout;
-const { Title, Text, Link } = Typography;
+const { Title, Text } = Typography;
 
 const layout = {
   labelCol: {

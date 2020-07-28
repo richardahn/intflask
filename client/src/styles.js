@@ -1,14 +1,7 @@
 /** @jsx jsx */
 import { css, jsx } from '@emotion/core';
 import styled from '@emotion/styled';
-import React, { useState } from 'react';
-import { Button, Tooltip, Space, Popover, Badge, Layout } from 'antd';
-import {
-  QuestionOutlined,
-  HeartOutlined,
-  CommentOutlined,
-} from '@ant-design/icons';
-import Sider from 'antd/lib/layout/Sider';
+import { Layout } from 'antd';
 
 const { Content, Header } = Layout;
 

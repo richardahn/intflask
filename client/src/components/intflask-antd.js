@@ -1,24 +1,8 @@
 /** @jsx jsx */
 import { css, jsx } from '@emotion/core';
-import React from 'react';
-import { Link as RouterLink } from 'react-router-dom';
+import { Button, Typography } from 'antd';
 
-import {
-  Card,
-  Layout,
-  Col,
-  Row,
-  Typography,
-  Divider,
-  Form,
-  Input,
-  Button,
-  Breadcrumb,
-  Checkbox,
-  notification,
-} from 'antd';
-const { Content, Header } = Layout;
-const { Title, Text, Link } = Typography;
+const { Text } = Typography;
 
 export function GoogleLoginButton(props) {
   return (

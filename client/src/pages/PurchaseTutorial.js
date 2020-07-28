@@ -1,56 +1,32 @@
 /** @jsx jsx */
 import { css, jsx } from '@emotion/core';
-import React, { useCallback, useState, useEffect } from 'react';
-import { Link as RouterLink, withRouter } from 'react-router-dom';
 import {
-  Layout,
-  Carousel,
-  Button,
-  Divider,
-  message,
-  Skeleton,
-  Empty,
-  Descriptions,
-  Typography,
-  Rate,
-  Tree,
-  Comment,
-  Tooltip,
-  List,
-  Statistic,
-  Row,
-  Input,
-  Space,
-  Avatar,
-  Result,
-  Card,
-  Col,
-  Steps,
-} from 'antd';
-import { DownOutlined } from '@ant-design/icons';
-import Tags from '../components/Tags';
-import ErrorContent from '../components/ErrorContent';
-import { AppLayout, PaddedContent } from '../styles';
-import {
-  useGetEffect,
-  usePostEffect,
-  usePostCallback,
-  useGetCallback,
-} from '../hooks/axios';
-import axios from 'axios';
-import { parseTutorialDates } from '../utils/tutorial';
-import Modal from 'antd/lib/modal/Modal';
-import PageSpinner from '../components/PageSpinner';
-import CenteredContent from '../components/CenteredContent';
-
-import {
-  Elements,
   CardElement,
-  useStripe,
+  Elements,
   useElements,
+  useStripe,
 } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
+import {
+  Button,
+  Card,
+  Col,
+  Descriptions,
+  message,
+  Result,
+  Row,
+  Space,
+  Steps,
+  Typography,
+} from 'antd';
+import axios from 'axios';
+import { useCallback, useState } from 'react';
 import { connect } from 'react-redux';
+import { Link as RouterLink } from 'react-router-dom';
+import CenteredContent from '../components/CenteredContent';
+import PageSpinner from '../components/PageSpinner';
+import { useGetEffect, usePostCallback } from '../hooks/axios';
+import { AppLayout, PaddedContent } from '../styles';
 
 const { Step } = Steps;
 const { Text } = Typography;

@@ -1,49 +1,36 @@
 /** @jsx jsx */
 // -- General Imports --
-import { css, jsx } from '@emotion/core';
-import React, { useCallback, useState, useEffect, useMemo } from 'react';
-import axios from 'axios';
 import {
-  PageHeader,
-  message,
-  Layout,
-  Typography,
-  Button,
-  Tag,
+  CheckCircleOutlined,
+  HomeOutlined,
+  MinusCircleOutlined,
+} from '@ant-design/icons';
+import { jsx } from '@emotion/core';
+import {
+  Alert,
   Breadcrumb,
-  Space,
+  Button,
   Card,
   Col,
+  Divider,
+  message,
   Row,
   Statistic,
   Tabs,
-  Form,
-  Input,
-  Checkbox,
-  InputNumber,
-  Alert,
-  Divider,
-  Popconfirm,
+  Tag,
 } from 'antd';
-import { PaddedContent, AppLayout, AppHeader } from '../styles';
-import { Link as RouterLink } from 'react-router-dom';
-import {
-  HomeOutlined,
-  CheckCircleOutlined,
-  MinusCircleOutlined,
-} from '@ant-design/icons';
-import TutorialDescriptionForm from '../components/TutorialDescriptionForm';
-
-import PageSpinner from '../components/PageSpinner';
-import ErrorContent from '../components/ErrorContent';
-
-import { Chart, Line, Point, Tooltip, Legend } from 'bizcharts';
-import { parseTutorialDates } from '../utils/tutorial';
 import Modal from 'antd/lib/modal/Modal';
+import axios from 'axios';
+import { Chart, Line, Point } from 'bizcharts';
+import React, { useCallback, useEffect, useState } from 'react';
+import { Link as RouterLink } from 'react-router-dom';
+import ErrorContent from '../components/ErrorContent';
+import PageSpinner from '../components/PageSpinner';
+import TutorialDescriptionForm from '../components/TutorialDescriptionForm';
 import { useDeleteCallback } from '../hooks/axios';
+import { AppHeader, AppLayout, PaddedContent } from '../styles';
+import { parseTutorialDates } from '../utils/tutorial';
 
-const { Content, Header } = Layout;
-const { Title } = Typography;
 const { TabPane } = Tabs;
 
 function binPurchases(purchases) {

@@ -1,9 +1,6 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
-import React from 'react';
-import { Spin, Typography, Layout } from 'antd';
-import { CloseCircleOutlined } from '@ant-design/icons';
-const { Text } = Typography;
+import { Layout } from 'antd';
 const { Content } = Layout;
 
 export default function CenteredContent({ children, ...props }) {

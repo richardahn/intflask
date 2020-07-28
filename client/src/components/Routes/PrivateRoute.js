@@ -1,8 +1,7 @@
-import React, { Component, useEffect } from 'react';
-import { Route, Redirect } from 'react-router-dom';
-import { connect } from 'react-redux';
-
 import { message } from 'antd';
+import React, { useEffect } from 'react';
+import { connect } from 'react-redux';
+import { Redirect, Route } from 'react-router-dom';
 
 function PrivateRoute({
   component: Component,

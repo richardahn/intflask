@@ -1,14 +1,9 @@
 /** @jsx jsx */
 import { css, jsx } from '@emotion/core';
-
-// -- General --
-import React from 'react';
-
 // -- Components --
 import { Layout } from 'antd';
-import IntflaskHeader from './IntflaskHeader';
 import IntflaskFooter from './IntflaskFooter';
-const { Content } = Layout;
+import IntflaskHeader from './IntflaskHeader';
 
 /** Renders the general page layout and general styles/themes */
 export default function IntflaskLayout({ children, ...props }) {

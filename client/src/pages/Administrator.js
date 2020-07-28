@@ -1,43 +1,28 @@
 /** @jsx jsx */
-import { css, jsx } from '@emotion/core';
-
-import React, { useEffect, useState } from 'react';
-import { Link as RouterLink } from 'react-router-dom';
+import { HomeOutlined, PlusOutlined } from '@ant-design/icons';
+import { jsx } from '@emotion/core';
 import {
-  Layout,
-  Button,
-  Typography,
-  Space,
-  List,
-  Tag,
-  Breadcrumb,
-  Tooltip,
-  message,
-  Empty,
-  Skeleton,
-  Divider,
   Alert,
+  Breadcrumb,
+  Button,
+  Divider,
+  Empty,
+  message,
+  Skeleton,
   Spin,
+  Tooltip,
+  Typography,
 } from 'antd';
-import PageSpinner from '../components/PageSpinner';
-import {
-  LikeOutlined,
-  StarOutlined,
-  CheckCircleOutlined,
-  MinusCircleOutlined,
-  HomeOutlined,
-  PlusOutlined,
-} from '@ant-design/icons';
-import axios from 'axios';
-import { AppLayout, PaddedContent, AppHeader } from '../styles';
+import { useState } from 'react';
+import { Link as RouterLink } from 'react-router-dom';
 import FloatingActionButton from '../components/FloatingActionButton';
 import TutorialList, {
   AdminTutorialListItem,
 } from '../components/TutorialList';
-import { useGetEffect, useGetCallback, usePostCallback } from '../hooks/axios';
+import { useGetCallback, useGetEffect, usePostCallback } from '../hooks/axios';
+import { AppHeader, AppLayout, PaddedContent } from '../styles';
 
-const { Content, Header } = Layout;
-const { Title, Text, Link } = Typography;
+const { Link } = Typography;
 
 export default function Administrator() {
   const [notVerified, setNotVerified] = useState(null);

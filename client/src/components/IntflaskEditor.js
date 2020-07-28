@@ -1,19 +1,17 @@
 /** @jsx jsx */
+import { InboxOutlined } from '@ant-design/icons';
 import { css, jsx } from '@emotion/core';
+import { Divider, Input, message, Modal, Upload } from 'antd';
 import imageCompression from 'browser-image-compression';
+import React, {
+  useCallback,
+  useImperativeHandle,
+  useRef,
+  useState,
+} from 'react';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 
-import React, {
-  useState,
-  useRef,
-  useCallback,
-  useEffect,
-  useImperativeHandle,
-} from 'react';
-
-import { Divider, Modal, Upload, message, Input } from 'antd';
-import { InboxOutlined } from '@ant-design/icons';
 const { Dragger } = Upload;
 
 function AddImageModal({ visible, onModalVisibleChange, addImage }) {

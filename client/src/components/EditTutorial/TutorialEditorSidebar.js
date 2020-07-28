@@ -1,49 +1,16 @@
 /** @jsx jsx */
 // -- General Imports --
-import { css, jsx } from '@emotion/core';
-import React, { useCallback, useState } from 'react';
-import { Layout, Menu } from 'antd';
-import { EmptyMenuItem } from '../intflask-antd';
-import {
-  HomeOutlined,
-  PlusOutlined,
-  FolderOutlined,
-  FileOutlined,
-} from '@ant-design/icons';
-import {
-  reducePageGroup,
-  reducePage,
-  reduceSubpage,
-} from '../../utils/tutorial';
-import { arrayEquals } from '../../utils/array';
-
-// -- Redux --
-import { connect } from 'react-redux';
-
+import { jsx } from '@emotion/core';
 // -- Css --
 import {
-  scrollbarCss as baseScrollbarCss,
   mainHeaderHeight,
   pageHeaderHeight,
   statusBarHeight,
-  tutorialSidebarWidth,
 } from '../../styles';
-
 import TwoLevelFixedSidebar, {
-  TutorialEditorSidebarOuterContent,
   TutorialEditorSidebarInnerContent,
+  TutorialEditorSidebarOuterContent,
 } from '../TwoLevelFixedSidebar';
-
-// -- Setup --
-const scrollbarCss = [
-  {
-    overflowY: 'auto',
-    overflowX: 'hidden',
-    height: 'calc(100% - 48px)', // 48px comes from the fixed footer to minimize the sidebar
-  },
-  baseScrollbarCss,
-];
-const { Sider } = Layout;
 
 export default function TutorialEditorSidebar({
   tutorial,

@@ -1,41 +1,34 @@
 /** @jsx jsx */
 // -- General Imports --
-import { css, jsx } from '@emotion/core';
-import React, { useCallback, useState } from 'react';
-import { Layout, Menu, Popover, Space, Button, Typography } from 'antd';
-import { EmptyMenuItem } from './intflask-antd';
 import {
+  CaretDownOutlined,
+  CaretUpOutlined,
+  CloseOutlined,
+  FileOutlined,
+  FolderOutlined,
   HomeOutlined,
   PlusOutlined,
-  FolderOutlined,
-  FileOutlined,
-  CaretUpOutlined,
-  CaretDownOutlined,
-  CloseOutlined,
 } from '@ant-design/icons';
-import {
-  reducePageGroup,
-  reducePage,
-  reduceSubpage,
-  reduceMovePage,
-  reduceDeletePage,
-  reduceMoveSubpage,
-  reduceDeleteSubpage,
-} from '../utils/tutorial';
-import { arrayEquals } from '../utils/array';
-
-// -- Redux --
-import { connect } from 'react-redux';
-
+import { jsx } from '@emotion/core';
+import { Button, Layout, Menu, Popover, Space, Typography } from 'antd';
+import Modal from 'antd/lib/modal/Modal';
+import { useCallback, useState } from 'react';
 // -- Css --
 import {
   scrollbarCss as baseScrollbarCss,
-  mainHeaderHeight,
-  pageHeaderHeight,
-  statusBarHeight,
   tutorialSidebarWidth,
 } from '../styles';
-import Modal from 'antd/lib/modal/Modal';
+import { arrayEquals } from '../utils/array';
+import {
+  reduceDeletePage,
+  reduceDeleteSubpage,
+  reduceMovePage,
+  reduceMoveSubpage,
+  reducePage,
+  reducePageGroup,
+  reduceSubpage,
+} from '../utils/tutorial';
+import { EmptyMenuItem } from './intflask-antd';
 
 // -- Setup --
 const scrollbarCss = [
