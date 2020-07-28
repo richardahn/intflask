@@ -12,7 +12,7 @@ global.appRoot = path.join(__dirname, '..');
 const app = express();
 useApplicationMiddleware(app);
 useRoutes(app);
-if (process.env.NODE.ENV === 'production') {
+if (process.env.NODE_ENV === 'production') {
   // Serve built react files for production
   app.use(express.static(path.join(__dirname, 'client', 'build')));
   app.get('*', (req, res) => {
