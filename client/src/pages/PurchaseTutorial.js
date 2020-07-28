@@ -31,7 +31,9 @@ import { AppLayout, PaddedContent } from '../styles';
 const { Step } = Steps;
 const { Text } = Typography;
 
-const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY);
+const stripePromise = loadStripe(
+  'pk_live_51H6STZHFlstueRplkq76r9Xnd01pWAvJ5Ut7ap3NxJAH3XCiZmeuqrNUtTI7bBJbNMVdmNclv46h2owTfCIvZVgk00r1cb1YSu',
+);
 
 function CardSection() {
   return (
